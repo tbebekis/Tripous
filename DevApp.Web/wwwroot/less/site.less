@@ -1,0 +1,69 @@
+﻿@import "tp-Variables.less";
+
+
+html {
+    font-family: 'Segoe UI', Tahoma, Verdana, Arial, sans-serif; // 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; // Verdana, Geneva, Arial, Helvetica, sans-serif; Verdana, Arial, sans-serif;
+    font-size: 13px;
+}
+
+body {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: WhiteSmoke;
+    line-height: @LineHeight;
+    zoom: 1;
+    margin: 0 0;
+    padding: 20px;
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+}
+
+
+.tp-Page {
+    padding: 20px;
+    outline: none;
+}
+
+input,
+select,
+textarea,
+button {
+    outline: none;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    outline: thin dotted;
+}
+
+input[type=checkbox]:focus,
+input[type=radio]:focus {
+    outline: none;
+}
+
+button:focus {
+    outline: thin dotted;
+}
+
+input,
+select,
+textarea,
+button,
+label,
+legend {
+    font: inherit;
+}
+
+.tp-DataView {
+    display: flex;
+    flex-direction: column;
+    height: 600px;
+    background-color: @BackColor;
+}
+
+.tp-DataView > .tp-PanelList {
+    flex-grow: 1;
+}

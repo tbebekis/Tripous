@@ -1,0 +1,127 @@
+﻿--------------------------------------------------------------------------------
+Bundle and minification
+--------------------------------------------------------------------------------
+- Install NodeJS. 
+On Windows https://nodejs.org/en/download/
+On CentOS  sudo yum install nodejs
+
+- Read the documentation
+https://docs.microsoft.com/en-us/aspnet/core/client-side/bundling-and-minification
+
+- Install BuildBundlerMinifier Nuget package
+https://www.nuget.org/packages/BuildBundlerMinifier/
+On Visual Studio use the package manager.
+On VSCode use: dotnet add package BuildBundlerMinifier
+
+- Add a bundleconfig.jsonfile
+Example:
+[
+  {
+    "outputFileName": "wwwroot/site.min.css",
+    "inputFiles": [ "wwwroot/css/*.css" ]
+  },
+  {
+    "outputFileName": "wwwroot/site.min.js",
+    "inputFiles": [ "wwwroot/js/*.js" ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    },
+    "sourceMap": false
+  }
+]
+
+--------------------------------------------------------------------------------
+Less
+--------------------------------------------------------------------------------
+- Install NodeJS. 
+On Windows https://nodejs.org/en/download/
+On CentOS  sudo yum install nodejs
+
+- Install Less
+npm install -g less
+
+- Add a LessBuild.ps1 file to the project.
+Example:
+Set-Location wwwroot\less
+
+# Less
+lessc less.less ..\css\less.css
+
+- Add a pre-build event to the project, as the following
+powershell -ExecutionPolicy Unrestricted $(ProjectDir)LessBuild.ps1 -ProjectDir $(ProjectDir)  -TargetPath $(TargetPath)
+--------------------------------------------------------------------------------
+JSDoc
+--------------------------------------------------------------------------------
+- Install NodeJS. 
+On Windows https://nodejs.org/en/download/
+On CentOS  sudo yum install nodejs
+
+- Install JSDoc
+npm install -g jsdoc
+
+- JSDoc folder
+C:\Users\USER\AppData\Roaming\npm\node_modules\jsdoc
+
+- JSDoc templates folder
+C:\Users\USER\AppData\Roaming\npm\node_modules\jsdoc\templates
+
+https://stackoverflow.com/questions/21314791/how-to-generate-jsdoc-comments-for-functions-when-no-comment-exists
+
+--------------------------------------------------------------------------------
+baseline JSDoc template
+--------------------------------------------------------------------------------
+- Get the .zip file from 
+https://github.com/hegemonic/jsdoc-baseline
+
+- Unzip into JSDoc templates folder and rename unzipped folder to baseline
+
+- To use a JSDoc template, a settings json file is needed in the project root folder.
+Create one an name it JSDocBaseline.json.
+WARNING: It seems that JSDoc doesn't like underscores (_) as the first character in file or folder names.
+NOTE: Replace source.excludePattern with an empty string the following if any path, source or destination, contains a folder with a leading underscore.
+
+Example:
+{
+    "plugins": [],
+    "recurseDepth": 10,
+    "source": {
+        "includePattern": ".+\\.js(doc|x)?$",
+        "excludePattern": "(^|\\/|\\\\)_",
+        "include": [ ".\\wwwroot\\js\\tp\\" ],
+        "exclude": [  ]
+    },
+ 
+    "tags": {
+        "allowUnknownTags": true,
+        "dictionaries": ["jsdoc","closure"]
+    },
+    "templates": {
+        "cleverLinks": true,
+        "monospaceLinks": false
+    },
+  "opts": {
+    "template": "templates/baseline",
+    "encoding": "utf8",
+    "destination": ".\\ScriptDocs\\baseline\\",
+    "recurse": true,
+    "private": false
+  }
+}
+
+ 
+
+- Add a JSDocBaseline.bat in the project root folder.
+Example:
+jsdoc -c JSDocBaseline.json
+
+- Open a terminal, cd to where the JSDocBaseline.bat is, i.e. the project root folder path.
+WARNING: Use real paths. Not links or anything similar.
+
+- Execute JSDocBaseline.bat
+It may complain that certain NodeJS modules are missing.
+Install those modules one-by-one.
+
+Example:
+npm install -g MODULE_NAME
+

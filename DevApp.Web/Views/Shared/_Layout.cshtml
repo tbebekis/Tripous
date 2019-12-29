@@ -1,0 +1,66 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - DevApp.WebMvc</title>
+
+    <environment include="Development">
+        <link href="~/css/font-awesome.css" rel="stylesheet" />
+        <link href="~/css/glyphicons.css" rel="stylesheet" />
+        <link href="~/css/tp-UI.css" rel="stylesheet" />
+        <link href="~/css/site.css" rel="stylesheet" />
+
+        <script src="~/js/tp/tp.js"></script>
+        <script src="~/js/tp/tp-Data.js"></script>
+        <script src="~/js/tp/tp-TestData.js"></script>
+        <script src="~/js/tp/tp-UI.js"></script>
+        <script src="~/js/tp/tp-Grid.js"></script>
+        <script src="~/js/tp/tp-Model.js"></script>
+        <script src="~/js/site.js"></script>
+    </environment>
+    <environment exclude="Development">
+        <link rel="stylesheet" href="~/site.min.css" asp-append-version="true" />
+        <script src="~/site.min.js" asp-append-version="true"></script>
+    </environment>
+
+</head>
+<body>
+    <!--
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a asp-area="" asp-controller="App" asp-action="Index" class="navbar-brand">DevApp.WebMvc</a>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li><a asp-area="" asp-controller="App" asp-action="Index">Home</a></li>
+                    <li><a asp-area="" asp-controller="App" asp-action="About">About</a></li>
+                    <li><a asp-area="" asp-controller="App" asp-action="Contact">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <partial name="_CookieConsentPartial" />
+    -->
+
+    <div>
+        @RenderBody()
+
+        <footer>
+            <p>&copy; 2019 - DevApp.WebMvc</p>
+        </footer>
+    </div>
+
+
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

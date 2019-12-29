@@ -1,0 +1,40 @@
+﻿ 
+
+@{
+    ViewBag.Title = "NumberBox";
+} 
+ 
+ 
+<partial name="~/Views/Shared/_Index.cshtml" />
+<h2>@ViewBag.Title</h2>
+
+<div>
+
+ 
+    <div>
+        <input type="number" id="NumberBox"  step="0.1" , value='50' />
+    </div>
+    <br />
+ 
+ 
+    
+</div>
+
+ 
+
+<script>    
+    var ctrl;
+ 
+    tp.Ready(function () {
+ 
+        ctrl = new tp.NumberBox('#NumberBox');
+ 
+ 
+    })
+
+ 
+ 
+    
+
+</script>
+ 

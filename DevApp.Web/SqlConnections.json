@@ -1,0 +1,14 @@
+{
+    "SqlConnections": [
+        {
+            "Name": "Default",
+            "Provider": "SQLite",
+            "ConnectionString": "Data Source=App_Data\\Tripous3DevApp.db3"
+        },
+        {
+            "Name": "SecondDB",
+            "Provider": "MsSql",
+            "ConnectionString": "data source=localhost; initial catalog=Tripous3DevApp; Integrated Security=True;"
+        } 
+    ]
+}

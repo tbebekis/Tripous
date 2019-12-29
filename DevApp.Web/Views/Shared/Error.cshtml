@@ -1,0 +1,29 @@
+﻿
+@using Microsoft.Extensions.Hosting
+@inject Microsoft.Extensions.Hosting.IHostEnvironment env
+@model Tripous.Web.WebErrorInfo //ErrorViewModel
+@{
+    ViewData["Title"] = "Error";
+}
+<h1>Error</h1>
+<h3>An error occurred while processing your request.</h3>
+
+<div>
+    <p>Something went wrong. We are very sorry, please try again in a moment. If the error persists contact the web-master.</p>
+</div>
+
+<h3>Error information</h3>
+<hr />
+<div>
+    <strong>Http Status Code</strong>: @Model.HttpStatusCode<br />
+    <strong>Http Status</strong>: @Model.HttpStatus<br />
+    <strong>App Error Code</strong>: @Model.AppErrorCode<br />
+    <strong>Request Id</strong>: @Model.RequestId<br />
+    <strong>Request Url</strong>: @Model.RequestUrl<br />
+    <strong>Message</strong>: @Model.Message<br />
+    @if (env.IsDevelopment())
+    {
+        <p><strong>Details</strong>: </p>
+        <pre>@Model.Details</pre>
+    }
+</div>

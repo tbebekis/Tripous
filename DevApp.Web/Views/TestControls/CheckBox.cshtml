@@ -1,0 +1,30 @@
+﻿ 
+
+@{
+    ViewBag.Title = "CheckBox";
+}
+
+<partial name="~/Views/Shared/_Index.cshtml" />
+<h2>@ViewBag.Title</h2>
+
+<div>
+    <!--   -->
+    <div>
+        <label id="CheckBox">This is the check-box text</label>
+    </div>
+</div>
+
+ 
+
+<script>    
+    var cb;
+ 
+    tp.Ready(function () {
+        cb = new tp.CheckBox('#CheckBox');
+    });
+
+ 
+    
+
+</script>
+ 

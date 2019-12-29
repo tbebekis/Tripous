@@ -1,0 +1,21 @@
+﻿
+@{
+    ViewBag.Title = "ImageSlider";
+}
+
+    <partial name="~/Views/Shared/_Index.cshtml" />
+
+<h2>@ViewBag.Title</h2>
+ 
+ 
+
+<div>
+    <div id="ImageSlider" data-setup='{ Height: 500, Width: 700, Images: ["/Images/Obama.jpg", "/Images/Kefalonia.jpg", "/Images/Garden.jpg"], SelectedIndex: 2 }'></div>
+</div>
+
+<script>
+    tp.Ready(function () {
+        var is = new tp.ImageSlider('#ImageSlider');
+    }); 
+
+</script>

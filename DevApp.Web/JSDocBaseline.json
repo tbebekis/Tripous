@@ -1,0 +1,34 @@
+﻿{
+  "plugins": [],
+  "recurseDepth": 10,
+  "source": {
+    "includePattern": ".+\\.js(doc|x)?$",
+    "excludePattern": "",
+    "include": [ ".\\wwwroot\\js\\tp\\" ],
+    "exclude": []
+  },
+  "opts": {
+    "template": "templates/baseline",
+    "encoding": "utf8",
+    "destination": ".\\ScriptDocs\\baseline\\",
+    "recurse": true,
+    "private": false
+  },
+  "tags": {
+    "allowUnknownTags": true,
+    "dictionaries": [ "jsdoc", "closure" ]
+  },
+  "templates": {
+    "cleverLinks": true,
+    "monospaceLinks": false,
+    "baseline": {
+      "components": {
+        "summary": true
+      },
+      "markdown": true,
+      "tables": {
+        "nestedPropertyTables": true
+      }
+    }
+  }
+}
