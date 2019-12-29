@@ -29,8 +29,8 @@ namespace Tripous.Data.Metadata
         {
             this.UniqueNames = true;
             this.UseSafeAdd = true;
-            fDisplayText = "Datastores";
-            fKind = MetaNodeKind.Datastores;
+            fDisplayText = "Databases";
+            fKind = MetaNodeKind.Databases;
         }
 
 

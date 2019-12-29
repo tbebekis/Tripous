@@ -1107,7 +1107,7 @@ tp.SelectSql = class extends tp.NamedItem {
         this.DateRange = Source.DateRange;
         this.DateRangeColumn = Source.DateRangeColumn;
         this.CompanyAware = Source.CompanyAware;
-        this.DatastoreName = Source.DatastoreName;
+        this.ConnectionName = Source.ConnectionName;
 
         this.DisplayLabels = Source.DisplayLabels;
 
@@ -1423,10 +1423,10 @@ When true then adds a company related part in the WHERE statement, i.e. CompanyF
 */
 tp.SelectSql.prototype.CompanyAware = false;
 /**
-The name of the DataStore (database)
+The connection name 
 @type {string}
 */
-tp.SelectSql.prototype.DatastoreName = 'MAIN';
+tp.SelectSql.prototype.ConnectionName = tp.SysConfig.DefaultConnection;
 
 /**
 A list where each line is FIELD_NAME=Title
@@ -1493,12 +1493,12 @@ tp.SqlTextItem = class {
      * Constructor
      * @param {string} Name A name for this statement
      * @param {string} SqlText The statement text
-     * @param {string}[Datastore='MAIN'] Optional.Defaults to MAIN.The name of the datastore (database)
+    * @param {string}[ConnectionName='DEFAULT'] Optional.Defaults to DEFAULT.The name of the connection (database)
      */
-    constructor(Name, SqlText, Datastore) {
+    constructor(Name, SqlText, ConnectionName) {
         this.Name = Name || tp.NextName('SqlTextItem');
         this.SqlText = SqlText;
-        this.Datastore = Datastore || 'MAIN';
+        this.ConnectionName = ConnectionName || tp.SysConfig.DefaultConnection;
     }
 
     /**
@@ -1512,10 +1512,10 @@ tp.SqlTextItem = class {
     */
     SqlText = '';
     /**
-    The name of the datastore (database)
+    The name of the connection (database)
     @type {string}
     */
-    Datastore = '';
+    ConnectionName = '';
 
     /**
      * Creates a new {@link tp.DataRow} based on this instance property values and adds the row to a specified {@link tp.DataTable}
@@ -1524,7 +1524,7 @@ tp.SqlTextItem = class {
     AddTo(Table) {
         var Row = Table.NewRow();
         Row.SetByName('Name', this.Name);
-        Row.SetByName('Datastore', this.Datastore);
+        Row.SetByName('ConnectionName', this.ConnectionName);
         Row.SetByName('SqlText', this.SqlText);
         Table.AddRow(Row);
     }
@@ -1728,10 +1728,6 @@ tp.Urls.DbExec = '/Db/Exec';
  */
 tp.Db = class {
 
-    /** Constant. The name of the main Datastore
-     * @type {string}
-     */
-    static get MAIN() { return "MAIN"; } 
     /** Constant
      * @type {string}
      */
@@ -1849,15 +1845,15 @@ tp.Db = class {
     Executes a SELECT statement and "returns" a {@link tp.DataTable}. <br />
     NOTE: This method returns a Promise, that is, it is a thenable/chainable method.
     @example
-        tp.Db.Select('select * from Customer', 'MAIN')
+        tp.Db.Select('select * from Customer', 'DEFAULT')
             .then((Table) => {
                 // use the Table here
             });
     @param {string} SqlText - The SELECT statement to execute
-    @param {string} [DatastoreName='MAIN'] - Optional. Defaults to MAIN. The Datastore Name.
+    @param {string} [ConnectionName='DEFAULT'] - Optional. Defaults to DEFAULT. The connection name.
     @returns {tp.DataTable} Returns a {@link Promise} promise with a {@link tp.DataTable} data table
     */
-    static async SelectAsync(SqlText, DatastoreName) {
+    static async SelectAsync(SqlText, ConnectionName) {
 
         let Url = tp.Urls.DbSelect;
 
@@ -1866,7 +1862,7 @@ tp.Db = class {
 
         let Data = {
             SqlText: SqlText,
-            DatastoreName: DatastoreName || tp.Db.MAIN
+            ConnectionName: ConnectionName || tp.SysConfig.DefaultConnection
         };
 
         let Args = tp.Ajax.PostArgs(Url, Data); 
@@ -1893,7 +1889,7 @@ tp.Db = class {
         let Table = new tp.DataTable('SqlTextList');
 
         Table.AddColumn('Name', tp.DataType.String, 96);
-        Table.AddColumn('Datastore', tp.DataType.String, 96);
+        Table.AddColumn('ConnectionName', tp.DataType.String, 96);
         Table.AddColumn('SqlText', tp.DataType.String, 1024 * 32);
 
         for (let i = 0, ln = SqlTextItemList.length; i < ln; i++) {

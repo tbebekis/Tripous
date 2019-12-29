@@ -46,8 +46,9 @@ namespace DevApp.Web.Controllers
                 Result = true,
                 List = List,
             };
- 
-            return Json(Data); 
+
+            IActionResult Result = Json(Data);
+            return Result;
 
         }
 

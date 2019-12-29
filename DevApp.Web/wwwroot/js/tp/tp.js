@@ -7175,6 +7175,7 @@ tp.SysConfig.CompanyFieldName = 'CompanyId';
 tp.SysConfig.VariablesPrefix = ':@';
 tp.SysConfig.LocatorShowDropDownRowCountLimit = 200;
 tp.SysConfig.UseServerStringResources = false;
+tp.SysConfig.DefaultConnection = "DEFAULT";
  
 
 (function () {

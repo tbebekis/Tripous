@@ -85,7 +85,7 @@ namespace Tripous.Model
             base.CheckDescriptor();
 
             if (string.IsNullOrEmpty(ConnectionName))
-                NotFullyDefinedError("DatastoreName");
+                NotFullyDefinedError("ConnectionName");
 
             if (string.IsNullOrEmpty(MainTableName))
                 NotFullyDefinedError("MainTableName");
@@ -144,8 +144,9 @@ namespace Tripous.Model
         /// </summary>
         public SelectSql[] GetDesignedSelectSqlList()
         {
+            List<SelectSql> List = null;
             string DataType = GetSelectSqlDataType();
-            List<SelectSql> List = SelectSqlSysDataItem.GetDesignedSelectSqlList(DataType);
+            List = SelectSqlSysDataItem.GetDesignedSelectSqlList(DataType);
             return List.ToArray();
         }
         /// <summary>
@@ -175,7 +176,7 @@ namespace Tripous.Model
         /// </summary>
         public UiMode UiMode { get; set; } = Tripous.UiMode.Desktop | Tripous.UiMode.Web;
         /// <summary>
-        /// Gets or sets the name of the Datastore
+        /// Gets or sets the connection name (database)
         /// </summary>
         public string ConnectionName { get; set; } = SysConfig.DefaultConnection;
         /// <summary>
@@ -230,7 +231,7 @@ namespace Tripous.Model
 
 
         /// <summary>
-        /// Gets the Datastore based on DatastoreName
+        /// Returns the connection info (database)
         /// </summary>
         [Newtonsoft.Json.JsonIgnore]
         public SqlConnectionInfo ConnectionInfo { get { return Db.GetConnectionInfo(ConnectionName); } }

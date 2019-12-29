@@ -257,7 +257,7 @@ namespace Tripous.Data
         /* Oids and Guid */
         /// <summary>
         /// Returns the next id value of a generator named after the TableName table.
-        /// <para>It should be used only with Datastores that support generators or when a CustomOid object is used.</para>
+        /// <para>It should be used only with databases that support generators or when a CustomOid object is used.</para>
         /// </summary>
         protected virtual int NextId(string TableName)
         {
@@ -266,8 +266,8 @@ namespace Tripous.Data
             return Store.NextId(TableName);
         }
         /// <summary>
-        /// Returns the last id produced by an INSERT S statement.
-        /// <para>It should be used only with Datastores that support identity (auto-increment) columns</para>
+        /// Returns the last id produced by an INSERT statement.
+        /// <para>It should be used only with databases that support identity (auto-increment) columns</para>
         /// </summary>
         protected virtual int LastId(string TableName)
         {

@@ -32,7 +32,7 @@ namespace Tripous.Model
     /// </summary>
     public class LocatorDescriptor : Descriptor 
     {
-        string fDatastore = SysConfig.DefaultConnection;
+        string fConnectionName = SysConfig.DefaultConnection;
         string fListTableName;
 
         string fListKeyField;
@@ -74,16 +74,16 @@ namespace Tripous.Model
 
         /* properties */
         /// <summary>
-        /// Gets or sets the name of the Datastore
+        /// Gets or sets the name of the database connection 
         /// </summary>
-        [Localizable(false), Description("Gets or sets the name of the Datastore")]
-        public string Datastore
+        [Localizable(false), Description("Gets or sets the name of the database connection")]
+        public string ConnectionName
         {
-            get { return string.IsNullOrEmpty(fDatastore) ? SysConfig.DefaultConnection : fDatastore; }
+            get { return string.IsNullOrEmpty(fConnectionName) ? SysConfig.DefaultConnection : fConnectionName; }
             set 
             { 
-                fDatastore = value;
-                OnPropertyChanged("Datastore");
+                fConnectionName = value;
+                OnPropertyChanged("ConnectionName");
             }
         }
         /// <summary>

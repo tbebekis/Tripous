@@ -210,7 +210,7 @@ namespace Tripous.Model
         [Newtonsoft.Json.JsonIgnore]
         public TableDescriptorBase Table { get { return CollectionOwner as TableDescriptorBase; } }
         /// <summary>
-        /// Returns the Datastore this field belongs to.
+        /// Returns the connection info of the database this field belongs to.
         /// </summary>
         [Newtonsoft.Json.JsonIgnore]
         public SqlConnectionInfo ConnectionInfo

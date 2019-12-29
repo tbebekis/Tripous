@@ -83,7 +83,7 @@ namespace Tripous.Data.Metadata
 
         /* properties */
         /// <summary>
-        /// Gets the owner meta datastore
+        /// Gets the owner metastore
         /// </summary>
         public Metastore Store { get { return CollectionOwner as Metastore; } }
         /// <summary>

@@ -658,7 +658,17 @@ namespace Tripous.Model
         /// </summary>
         static public BrokerDescriptor FindDescriptor(string DataName)
         {
-            BrokerDescriptor Result = BrokerSysDataItem.FindDescriptor(DataName);
+            BrokerDescriptor Result = null;
+            try
+            {
+                // system tables may not present, because not all applications need them
+                // so guard the statement and swallow any exception
+                Result = BrokerSysDataItem.FindDescriptor(DataName);
+            }
+            catch  
+            {
+            }
+            
             if (Result == null)
                 Result = Registry.Brokers.Find(DataName);
             return Result;

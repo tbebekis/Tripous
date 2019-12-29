@@ -14383,7 +14383,7 @@ tp.LocatorDescriptor = class extends tp.tpObject {
 
         this.Name = Name || tp.NO_NAME;
 
-        this.Datastore = tp.Db.MAIN;
+        this.ConnectionName = tp.SysConfig.DefaultConnection;
         this.ListTableName = ListTableName || Name;
         this.ListKeyField = ListKeyField || 'Id';
         this.ZoomCommand = '';
@@ -14409,7 +14409,7 @@ tp.LocatorDescriptor = class extends tp.tpObject {
     * @private
     * @type {string}
     */
-    fDataStore;
+    fConnectionName;
     /** Field
     * @private
     * @type {string}
@@ -14443,14 +14443,14 @@ tp.LocatorDescriptor = class extends tp.tpObject {
         this.fTitle = v;
     }
     /**
-    Gets or sets the name of the Datastore
+    Gets or sets the connection name  
     @type {string}
     */
-    get Datastore() {
-        return !tp.IsBlank(this.fDataStore) ? this.fDataStore : tp.Db.MAIN;
+    get ConnectionName() {
+        return !tp.IsBlank(this.fConnectionName) ? this.fConnectionName : tp.SysConfig.DefaultConnection;
     }
-    set Datastore(v) {
-        this.fDataStore = v;
+    set ConnectionName(v) {
+        this.fConnectionName = v;
     }
     /**
     Gets or sets the name of the list table
@@ -14471,7 +14471,7 @@ tp.LocatorDescriptor = class extends tp.tpObject {
     @type {string}
     */
     get ZoomCommand() {
-        return tp.IsBlank(this.fZoomCommand) ? (tp.IsBlank(this.ListTableName) ? '' : tp.Db.MAIN + "." + this.ListTableName) : this.fZoomCommand;
+        return tp.IsBlank(this.fZoomCommand) ? (tp.IsBlank(this.ListTableName) ? '' : tp.SysConfig.DefaultConnection + "." + this.ListTableName) : this.fZoomCommand;
     }
     set ZoomCommand(v) {
         this.fZoomCommand = v;
@@ -14563,7 +14563,7 @@ tp.LocatorDescriptor = class extends tp.tpObject {
     Assign(Source) {
         this.Name = Source.Name;
 
-        this.Datastore = Source.Datastore;
+        this.ConnectionName = Source.ConnectionName;
         this.ListTableName = Source.ListTableName;
         this.ListKeyField = Source.ListKeyField;
         this.ZoomCommand = Source.ZoomCommand;
@@ -15532,7 +15532,7 @@ tp.Locator = class extends tp.tpObject {
             this.OnAnyEvent(Args);
 
             if (tp.IsEmpty(this.ListTable)) {
-                let Table = await tp.Db.SelectAsync(SS.Text, this.Descriptor.Datastore);
+                let Table = await tp.Db.SelectAsync(SS.Text, this.Descriptor.ConnectionName);
                 this.ListTable = Table;
             }
 
@@ -17145,6 +17145,170 @@ tp.ViewTypes = {
 // data dialog-boxes
 //---------------------------------------------------------------------------------------
 
+//#region tp.DataSetDialog
+/**
+A window for displaying a dataset.
+*/
+tp.DataSetDialog = class extends tp.tpWindow {
+
+    /**
+    Constructor
+    @param {tp.WindowArgs} Args - Setup options
+    */
+    constructor(Args) {
+        super(Args);
+    }
+
+
+
+    /* overrides */
+    /**
+    Override
+    @protected
+    @override
+    */
+    InitClass() {
+        super.InitClass();
+
+        this.tpClass = 'tp.DataSetDialog';
+    }
+    /**
+    Override
+    @protected
+    @override
+    */
+    CreateControls() {
+        super.CreateControls();
+
+        var S, i, ln, j, jln, Column, SourceColumn, Row, SourceRow;
+
+        this.DataSet = this.Args.DataSet;
+
+        // text
+        S = this.Args.Text;
+        if (tp.IsBlank(S))
+            S = this.DataSet.Name;
+        if (tp.IsBlank(S))
+            S = 'DataSet box';
+
+        this.Text = S;
+
+
+        this.ContentWrapper.StyleProp('display', 'flex');
+        this.ContentWrapper.StyleProp('flex-direction', 'column');
+
+        // tool-bar 
+        this.ToolBar = new tp.ControlToolBar();
+        this.ToolBar.Parent = this.ContentWrapper;
+        this.ToolBar.AddClass(tp.Classes.ToolBar);
+        //this.ToolBar.StyleProp('display', 'flex');
+        //this.ToolBar.StyleProp('align-items', 'center');
+
+        // tool-bar controls
+        this.cboTables = new tp.ComboBox();
+        this.ToolBar.AddItem(this.cboTables);
+        this.cboTables.Width = 160;
+        this.cboTables.ListOnly = true;
+        this.cboTables.AddRange(this.DataSet.Tables);
+        this.cboTables.SelectedIndex = 0;
+        this.cboTables.On('SelectedIndexChanged', this.ComboTables_SelectedIndexChanged, this);
+
+        // tool-bar buttons
+        this.btnShowIdColumns = this.ToolBar.AddButton('ShowIdColumns', 'Show/Hide Id Columns', 'Show/Hide Id Columns', '', tp.Classes.ToolButton);  // Command, Text, ToolTip, IcoClasses, CssClasses, ToRight
+        this.ToolBar.On('ButtonClick', this.AnyClick, this);
+
+        // footer buttons
+        this.CreateFooterButton('OK', 'OK', tp.DialogResult.OK, false);
+
+        // grid
+        this.Grid = new tp.Grid();
+        this.Grid.Parent = this.ContentWrapper;
+        this.Args.Grid = this.Grid;
+
+        this.Grid.StyleProp('flex-grow', '1');
+        this.Grid.Width = '100%';
+
+        this.Grid.ToolBarVisible = false;
+        this.Grid.GroupsVisible = false;
+        this.Grid.FilterVisible = false;
+        this.Grid.FooterVisible = false;
+
+        this.ChangeTable();
+    }
+
+    /* protected */
+    /**
+    Override
+    @protected
+    @override
+    */
+    ChangeTable() {
+        var Table = this.cboTables.SelectedItem; // tp.DataTable
+        if (tp.IsEmpty(Table))
+            return;
+
+        if (tp.IsEmpty(Table.BindingSource))
+            Table.BindingSource = new tp.DataSource(Table);
+
+        this.Grid.DataSource = Table.BindingSource;
+
+        if (Table.Rows.length <= 1500)
+            this.Grid.BestFitColumns();
+
+        this.Grid.Focus();
+    }
+
+    /* event handlers */
+    ComboTables_SelectedIndexChanged(Args) {
+        this.ChangeTable();
+    }
+    /**
+     * Event handler for buttons added with CreateFooterButton(). <br />
+     * It does nothing here though. Inheritors should override this method and provide the functionality for their added buttons.
+     * @param {tp.EventArgs} Args Event arguments
+     */
+    AnyClick(Args) {
+        var Cmd = tp.GetCommand(Args);
+        switch (Cmd) {
+            case 'ShowIdColumns':
+                this.Grid.ShowHideIdGridColumns();
+                break;
+            default:
+                super.AnyClick(Args);
+                break;
+        }
+    }
+};
+
+/* fields */
+/** Field
+ * @field
+ * @type {tp.ControlToolBar}
+ */
+tp.DataSetDialog.prototype.ToolBar;
+/** Field
+ * @field
+ * @type {tp.ComboBox}
+ */
+tp.DataSetDialog.prototype.cboTables;
+/** Field
+ * @field
+ * @type {tp.ControlToolButton}
+ */
+tp.DataSetDialog.prototype.btnShowIdColumns;
+/** Field
+ * @field
+ * @type {tp.DataSet}
+ */
+tp.DataSetDialog.prototype.DataSet;
+/** Field
+ * @field
+ * @type {tp.Grid}
+ */
+tp.DataSetDialog.prototype.Grid;
+//#endregion
+
+
 
 //#region tp.MultiRowPickDialog
 /**
@@ -17490,7 +17654,7 @@ tp.SingleRowPickDialog = class extends tp.tpWindow {
                 });
         } else if (!tp.IsEmpty(this.SelectSql)) {
             tp.ShowSpinner(true);
-            tp.Db.Select(this.SelectSql.Text, this.SelectSql.DatastoreName)
+            tp.Db.Select(this.SelectSql.Text, this.SelectSql.ConnectionName)
                 .then((Table) => {
                     this.SetGridDataSource(Table);
                     tp.ShowSpinner(false);
@@ -17520,7 +17684,7 @@ tp.SingleRowPickDialog = class extends tp.tpWindow {
 
             tp.ShowSpinner(true);
             try {
-                Table = await tp.Db.SelectAsync(this.SelectSql.Text, this.SelectSql.DatastoreName);
+                Table = await tp.Db.SelectAsync(this.SelectSql.Text, this.SelectSql.ConnectionName);
                 this.SetGridDataSource(Table);
             } finally {
                 tp.ForceHideSpinner();

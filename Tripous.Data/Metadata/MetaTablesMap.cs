@@ -81,7 +81,7 @@ namespace Tripous.Data.Metadata
         /// </summary>
         public string TypeKey { get; private set; }
         /// <summary>
-        /// True if it is a Db2 datastore
+        /// True if it is a Db2 database
         /// </summary>
         public bool IsDb2 { get; private set; }
     }

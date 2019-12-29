@@ -25,20 +25,30 @@ namespace Tripous.Data
         /// </summary>
         static public DataTable Find(string ConnectionName, string StatementName)
         {
+            if (!Cache.ContainsKey(ConnectionName))
+            {
+                return null;
+            }
+ 
             Dictionary<string, DataTable> ConnectionStatements = Cache[ConnectionName];
-            return ConnectionStatements != null ? ConnectionStatements[StatementName]: null;
+            return ConnectionStatements != null ? ConnectionStatements[StatementName] : null;
         }
         /// <summary>
         /// Adds a schema <see cref="DataTable"/> to the cache.
         /// </summary>
         static public void Add(string ConnectionName, string StatementName, DataTable SchemaTable)
         {
-            Dictionary<string, DataTable> ConnectionStatements = Cache[ConnectionName];
-            if (ConnectionStatements == null)
+            Dictionary<string, DataTable> ConnectionStatements = null;
+
+            if (!Cache.ContainsKey(ConnectionName))
             {
-                ConnectionStatements = new Dictionary<string, DataTable>();
+                ConnectionStatements = Cache[ConnectionName];
                 Cache[ConnectionName] = ConnectionStatements;
             }
+            else
+            {
+                ConnectionStatements = Cache[ConnectionName];
+            } 
 
             ConnectionStatements[StatementName] = SchemaTable;
         }

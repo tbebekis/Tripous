@@ -18,6 +18,10 @@
         <Folder Include="ScriptDocs\" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.0.0" />
+    </ItemGroup>
+
     <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
       <Exec Command="powershell -ExecutionPolicy Unrestricted $(ProjectDir)Less.ps1 -ProjectDir $(ProjectDir) -TargetPath $(TargetPath)" />
     </Target>

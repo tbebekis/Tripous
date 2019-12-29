@@ -80,7 +80,7 @@ namespace Tripous.Model
             base.CheckDescriptor();
 
             if (string.IsNullOrEmpty(ConnectionName))
-                NotFullyDefinedError("DatastoreName");
+                NotFullyDefinedError("ConnectionName");
 
             if (string.IsNullOrEmpty(TypeClassName))
                 NotFullyDefinedError("TypeClassName");
@@ -144,7 +144,7 @@ namespace Tripous.Model
         /// </summary>
         public UiMode UiMode { get; set; } = Tripous.UiMode.Desktop | Tripous.UiMode.Web;
         /// <summary>
-        /// Gets or sets the name of the Datastore this descriptor works with.
+        /// Gets or sets the name of the database connection this descriptor works with.
         /// </summary>
         public string ConnectionName { get; set; } = SysConfig.DefaultConnection;
         /// <summary>

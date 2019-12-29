@@ -58,7 +58,7 @@ namespace Tripous.Data
             ,DataName
             ,DataType 
             ,Title   
-            ,Datastore     
+            ,ConnectionName     
             ,Notes         
 
             ,Category1     

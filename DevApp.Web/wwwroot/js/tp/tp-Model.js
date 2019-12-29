@@ -285,7 +285,7 @@ tp.Broker = class extends tp.tpObject {
     /** Field
     @type {string}
     */
-    DatastoreName;
+    ConnectionName;
     /** Field
     @type {string}
     */
@@ -512,7 +512,7 @@ tp.Broker = class extends tp.tpObject {
         Result.IsListBroker = this.IsListBroker;
         Result.IsMasterBroker = this.IsMasterBroker;
         Result.State = this.State;
-        Result.DatastoreName = this.DatastoreName;
+        Result.ConnectionName = this.ConnectionName;
         Result.MainTableName = this.MainTableName;
         Result.LinesTableName = this.LinesTableName;
         Result.SubLinesTableName = this.SubLinesTableName;
@@ -542,7 +542,7 @@ tp.Broker = class extends tp.tpObject {
         this.IsListBroker = Source.IsListBroker;
         this.IsMasterBroker = Source.IsMasterBroker;
         this.State = Source.State;
-        this.DatastoreName = Source.DatastoreName;
+        this.ConnectionName = Source.ConnectionName;
         this.MainTableName = Source.MainTableName;
         this.LinesTableName = Source.LinesTableName;
         this.SubLinesTableName = Source.SubLinesTableName;

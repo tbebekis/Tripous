@@ -37,7 +37,7 @@ namespace Tripous.Model
             InitializeDescriptor();
             if (Descriptor != null)
                 Descriptor.EnsureMainSelect();
-            InitializeDatastore();
+            InitializeDatabaseConnection();
  
         }
         /// <summary>
@@ -60,10 +60,10 @@ namespace Tripous.Model
         {
         }
         /// <summary>
-        /// Initializes the Datastore field of this browser. A browser needs to know which is 
-        /// the Datastore it operates on.
+        /// Initializes the database connection of this browser. A browser needs to know which is 
+        /// the database it operates on.
         /// </summary>
-        protected virtual void InitializeDatastore()
+        protected virtual void InitializeDatabaseConnection()
         {
             var ConnectionInfo = Db.GetConnectionInfo(Descriptor.ConnectionName);
  

@@ -89,7 +89,7 @@ namespace Tripous.Data
         }
         /// <summary>
         /// Returns the last id produced by an INSERT Sqlt statement.
-        /// <para>It should be used only with Datastores that support identity (auto-increment) columns</para>
+        /// <para>It should be used only with databases that support identity (auto-increment) columns</para>
         /// </summary>
         public override int LastId(SqlStore Store, DbTransaction Transaction, string TableName)
         {

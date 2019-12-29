@@ -37,7 +37,7 @@ namespace Tripous.Model
             this.IsListBroker = Source.IsListBroker;
             this.IsMasterBroker = Source.IsMasterBroker;
             this.State = Source.State;
-            this.DatastoreName = Descriptor != null? Descriptor.ConnectionName : string.Empty;
+            this.ConnectionName = Descriptor != null? Descriptor.ConnectionName : string.Empty;
             this.MainTableName = Source.MainTableName;
             this.LinesTableName = Source.LinesTableName;
             this.SubLinesTableName = Source.SubLinesTableName;
@@ -86,9 +86,9 @@ namespace Tripous.Model
         /// </summary>
         public DataMode State { get; set; }
         /// <summary>
-        /// Gets or sets the name of the Datastore
+        /// Gets or sets the name of the connection (database)
         /// </summary>
-        public string DatastoreName { get; set; } 
+        public string ConnectionName { get; set; } 
         /// <summary>
         /// Returns the table name of the main table
         /// </summary>

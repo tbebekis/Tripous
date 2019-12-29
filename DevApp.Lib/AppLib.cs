@@ -139,7 +139,7 @@ namespace DevApp.Lib
 
         /* properties */
         /// <summary>
-        /// An executor for the MAIN datastore
+        /// The default data store
         /// </summary>
         static public SqlStore Store { get { return fStore ?? (fStore = SqlStores.CreateDefaultSqlStore()); } }
  

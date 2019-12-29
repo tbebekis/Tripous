@@ -583,7 +583,7 @@ namespace Tripous.Data
         /* id generation - Non Transactioned */
         /// <summary>
         /// Returns the next id value of a generator named after the TableName table.
-        /// <para>It should be used only with Datastores that support generators or when a CustomOid object is used.</para>
+        /// <para>It should be used only with databases that support generators or when a CustomOid object is used.</para>
         /// </summary>
         public virtual int NextId(DbTransaction Transaction, string TableName)
         {
@@ -591,7 +591,7 @@ namespace Tripous.Data
         }
         /// <summary>
         /// Returns the last id produced by an INSERT Sqlt statement.
-        /// <para>It should be used only with Datastores that support identity (auto-increment) columns</para>
+        /// <para>It should be used only with databases that support identity (auto-increment) columns</para>
         /// </summary>
         public virtual int LastId(DbTransaction Transaction, string TableName)
         {
@@ -608,7 +608,7 @@ namespace Tripous.Data
         /* id generation - Transactioned */
         /// <summary>
         /// Returns the next id value of a generator named after the TableName table.
-        /// <para>It should be used only with Datastores that support generators or when a CustomOid object is used.</para>
+        /// <para>It should be used only with databases that support generators or when a CustomOid object is used.</para>
         /// </summary>
         public virtual  int NextId(string TableName)
         {
@@ -634,7 +634,7 @@ namespace Tripous.Data
         }
         /// <summary>
         /// Returns the last id produced by an INSERT Sqlt statement.
-        /// <para>It should be used only with Datastores that support identity (auto-increment) columns</para>
+        /// <para>It should be used only with databases that support identity (auto-increment) columns</para>
         /// </summary>
         public virtual int LastId(string TableName)
         {
@@ -714,7 +714,7 @@ namespace Tripous.Data
 
         /// <summary>
         /// Executes either SqlText or a "select * from TableName", and stores the result schema
-        /// to the Datastore.Schema list, under the SchemaName, if given, else under the TableName.
+        /// to the <see cref="SqlCache"/> list, under the SchemaName, if given, else under the TableName.
         /// <para></para>
         /// <para>Either SqlText or TableName MUST be NOT null or empty.</para>
         /// <para>If SqlText is null or empty then SqlText becomes SELECT * FROM TableName.</para>
@@ -911,7 +911,7 @@ namespace Tripous.Data
         /// <summary>
         /// Creates a new table in the database by executing CommandText. Returns true
         /// only if creates the table, false if the table already exists.
-        /// <para>The method creates a table generator too, if the Datastore supports generators.</para>
+        /// <para>The method creates a table generator too, if the database supports generators/sequences.</para>
         /// <para>CommandText should be a CREATE TABLE statement and can contain datatype placeholders.
         /// See <see cref="SqlProvider.ReplaceDataTypePlaceholders"/> for details.</para>
         /// </summary>

@@ -96,7 +96,7 @@ namespace Tripous.Model
         [Newtonsoft.Json.JsonIgnore]
         public BrokerDescriptor BrokerDescriptor { get { return this.Owner as BrokerDescriptor; } }
         /// <summary>
-        /// Gets the Datastore based on DatastoreName
+        /// Returns the database connection info  
         /// </summary>
         [Newtonsoft.Json.JsonIgnore]
         public SqlConnectionInfo ConnectionInfo

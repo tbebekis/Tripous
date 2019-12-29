@@ -67,7 +67,7 @@ namespace Tripous.Model
             {
                 this.DataName = Source.Name;
                 this.Title = Source.Title;
-                this.Datastore = Source.ConnectionName;
+                this.ConnectionName = Source.ConnectionName;
 
                 this.Descriptor.Assign(Source);
             }

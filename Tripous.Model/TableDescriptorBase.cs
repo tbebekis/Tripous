@@ -101,7 +101,7 @@ namespace Tripous.Model
             }
         }
         /// <summary>
-        /// Returns the Datastore thiw table belongs to.
+        /// Returns the database connection info this table belongs to.
         /// </summary>
         [Newtonsoft.Json.JsonIgnore]
         public SqlConnectionInfo ConnectionInfo

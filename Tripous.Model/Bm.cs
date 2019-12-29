@@ -247,31 +247,8 @@ namespace Tripous.Model
         }
 
         /* table descriptors */
-        static private void SetupDefaultValue(SqlStore Datastore, DataColumn Column, FieldDescriptor FieldDes)
+        static private void SetupDefaultValue(SqlStore Store, DataColumn Column, FieldDescriptor FieldDes)
         {
-
-            /*
-            if (Sys.IsSameText(Sys.NULL, FieldDes.DefaultValue))
-            {
-                MetaTables metaTables = Datastore.Metastore.Tables;
-                metaTables.Load();
-
-                MetaTable metaTable = metaTables.Find(FieldDes.TableName);
-                if (metaTable != null)
-                {
-                    metaTable.Fields.Load();
-
-                    MetaField metaField = metaTable.Fields.Find(FieldDes.Name);
-                    if ((metaField != null) && !Sys.IsSameText(Sys.NULL, metaField.DefaultValue))
-                    {
-                        if (Sys.IsSameText(metaField.DefaultValue, "''") || Sys.IsSameText(metaField.DefaultValue, @""""))
-                            FieldDes.DefaultValue = string.Empty;
-                        //else  NO
-                        //    FieldDes.DefaultValue = metaField.DefaultValue;
-                    }
-                }
-            }            
-            */
 
             if ((FieldDes.DefaultValue != null) && !Sys.IsSameText(Sys.NULL, FieldDes.DefaultValue))
             {
@@ -352,7 +329,7 @@ namespace Tripous.Model
         /// <summary>
         /// Creates a DataTable based on a TableDescriptor.
         /// </summary>
-        static public void CreateDescriptorTable(SqlStore Datastore, TableDescriptor TableDescriptor, Tables TableList, bool CreateLookUpTables)
+        static public void CreateDescriptorTable(SqlStore Store, TableDescriptor TableDescriptor, Tables TableList, bool CreateLookUpTables)
         {
             MemTable Table = TableList.Add(TableDescriptor.Name);
             Table.ExtendedProperties["Descriptor"] = TableDescriptor;
@@ -378,7 +355,7 @@ namespace Tripous.Model
                     Column.MaxLength = FieldDes.Size;
                 Column.Caption = FieldDes.Title;
 
-                SetupDefaultValue(Datastore, Column, FieldDes);
+                SetupDefaultValue(Store, Column, FieldDes);
 
                 Table.Columns.Add(Column);
 

@@ -37,7 +37,7 @@ namespace DevApp.Web.Controllers
         /* actions */
         [HttpPost]
         [AllowAnonymous]
-        public ActionResult Select(string SqlText, string DatastoreName)
+        public ActionResult Select(string SqlText, string ConnectionName)
         {
             JObject JO = new JObject();
             dynamic Data = JO;
@@ -45,7 +45,7 @@ namespace DevApp.Web.Controllers
             Data.Result = false;
             try
             {
-                DataTable Table = SelectTable(SqlText, DatastoreName);
+                DataTable Table = SelectTable(SqlText, ConnectionName);
                 JsonDataTable JTable = new JsonDataTable(Table);
 
                 Data.Packet = JTable.ToJObject(); // Table.ToJsonProxy();
@@ -70,7 +70,7 @@ namespace DevApp.Web.Controllers
             try
             {
 
-                string Name, SqlText, DatastoreName;
+                string Name, SqlText, ConnectionName;
                 JsonDataSet JDataSet = new JsonDataSet();
 
                 DataTable Table;
@@ -78,10 +78,10 @@ namespace DevApp.Web.Controllers
                 foreach (DataRow Row in tblSqlList.Rows)
                 {
                     Name = Row.AsString("Name");
-                    DatastoreName = Row.AsString("Datastore");
+                    ConnectionName = Row.AsString("ConnectionName");
                     SqlText = Row.AsString("SqlText");
 
-                    Table = SelectTable(SqlText, DatastoreName);
+                    Table = SelectTable(SqlText, ConnectionName);
                     Table.TableName = Name;
                     JTable = new JsonDataTable(Table, null);
                     JDataSet.Tables.Add(JTable);

@@ -40,7 +40,7 @@ namespace Tripous.Data
         /// <summary>
         /// Field
         /// </summary>
-        protected string fDatastore;
+        protected string fConnectionName;
         /// <summary>
         /// Field
         /// </summary>
@@ -104,7 +104,7 @@ namespace Tripous.Data
             // DataType = string.Empty;     NO
             DataName = string.Empty;
             Title = string.Empty;
-            // dataStore = string.Empty;    NO
+            // ConnectionName = string.Empty;    NO
             Notes = string.Empty;
 
             Category1 = string.Empty;
@@ -176,7 +176,7 @@ namespace Tripous.Data
                 DataType = Sys.AsString(Row["DataType"], DataType);
                 DataName = Sys.AsString(Row["DataName"], DataName);
                 Title = Sys.AsString(Row["Title"], Title);
-                Datastore = Sys.AsString(Row["Datastore"], Datastore);
+                ConnectionName = Sys.AsString(Row["ConnectionName"], ConnectionName);
                 Notes = Sys.AsString(Row["Notes"], Notes);
 
                 Category1 = Sys.AsString(Row["Category1"], Category1);
@@ -206,7 +206,7 @@ namespace Tripous.Data
                 Row["DataType"] = DataType;
                 Row["DataName"] = DataName;
                 Row["Title"] = Title;
-                Row["Datastore"] = Datastore;
+                Row["ConnectionName"] = ConnectionName;
                 Row["Notes"] = Notes;
 
                 Row["Category1"] = Category1;
@@ -244,8 +244,8 @@ namespace Tripous.Data
                     Row["DataName"] = DataName;
                 if (Table.ContainsColumn("Title"))
                     Row["Title"] = Title;
-                if (Table.ContainsColumn("Datastore"))
-                    Row["Datastore"] = Datastore;
+                if (Table.ContainsColumn("ConnectionName"))
+                    Row["ConnectionName"] = ConnectionName;
                 if (Table.ContainsColumn("Notes"))
                     Row["Notes"] = Notes;
 
@@ -382,15 +382,15 @@ namespace Tripous.Data
             }
         }
         /// <summary>
-        /// Gets or sets the Datastore name
+        /// Gets or sets the database connection name
         /// </summary>
-        public virtual string Datastore
+        public virtual string ConnectionName
         {
-            get { return string.IsNullOrEmpty(fDatastore) ? SysConfig.DefaultConnection : fDatastore; }
+            get { return string.IsNullOrEmpty(fConnectionName) ? SysConfig.DefaultConnection : fConnectionName; }
             set
             {
-                fDatastore = Sys.IsSameText(value, Sys.None) ? string.Empty : value;
-                OnPropertyChanged("Datastore");
+                fConnectionName = Sys.IsSameText(value, Sys.None) ? string.Empty : value;
+                OnPropertyChanged("ConnectionName");
             }
         }
         /// <summary>

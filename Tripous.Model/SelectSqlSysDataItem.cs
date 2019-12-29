@@ -70,16 +70,24 @@ namespace Tripous.Model
         static public List<SelectSql> GetDesignedSelectSqlList(string DataType)
         {
             List<SelectSql> List = new List<SelectSql>();
-            
-            DataTable Table = SysData.Select(DataType, false); //DataTable Table = Censor.Apply(DataType, false);
 
-            SelectSqlSysDataItem SDI = new SelectSqlSysDataItem();
-            SelectSql SS;
-            foreach (DataRow Row in Table.Rows)
+            // system tables may not present, because not all applications need them
+            // so guard the statement and swallow any exception
+            try
             {
-                SDI.LoadFromRow(Row);
-                SS = SDI.Descriptor.Clone() as SelectSql;
-                List.Add(SS);
+                DataTable Table = SysData.Select(DataType, false); //DataTable Table = Censor.Apply(DataType, false);
+
+                SelectSqlSysDataItem SDI = new SelectSqlSysDataItem();
+                SelectSql SS;
+                foreach (DataRow Row in Table.Rows)
+                {
+                    SDI.LoadFromRow(Row);
+                    SS = SDI.Descriptor.Clone() as SelectSql;
+                    List.Add(SS);
+                }
+            }
+            catch  
+            { 
             }
 
             return List;
@@ -94,7 +102,7 @@ namespace Tripous.Model
             this.DataType = DataType;
             this.DataName = Source.Name;
             this.Title = Source.Title;
-            this.Datastore = Source.DatastoreName;
+            this.ConnectionName = Source.ConnectionName;
 
             Descriptor = Source.Clone() as SelectSql;
         }
@@ -105,7 +113,7 @@ namespace Tripous.Model
         {
             this.DataName = Descriptor.Name;
             this.Title = Descriptor.Title;
-            this.Datastore = Descriptor.DatastoreName;
+            this.ConnectionName = Descriptor.ConnectionName;
         }
 
         /* properties */

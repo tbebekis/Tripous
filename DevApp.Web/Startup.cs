@@ -42,7 +42,7 @@ namespace DevApp.Web
             HostingEnvironment = environment;
         }
 
- 
+
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -66,14 +66,22 @@ namespace DevApp.Web
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.AddControllersWithViews();
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.Cookie.SameSite = SameSiteMode.None;
+            });
 
+            services.AddControllersWithViews()
+                .AddNewtonsoftJson()
             /*
                 // the default case for serializing output to JSON is camelCase in Asp.Net Core, so we turn it off here.
                 // https://stackoverflow.com/questions/38728200/how-to-turn-off-or-handle-camelcasing-in-json-response-asp-net-core
                 // https://github.com/aspnet/Announcements/issues/194
                 .AddJsonOptions(opt => opt.SerializerSettings.ContractResolver = new DefaultContractResolver());
             */
+                .AddJsonOptions(opt => { opt.JsonSerializerOptions.PropertyNamingPolicy = null; });
+
+
 
             WApp.ConfigureServices(services);
         }

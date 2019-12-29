@@ -50,7 +50,7 @@ namespace Tripous.Model
             if (Descriptor != null)
                 Descriptor.EnsureMainSelect();
  
-            InitializeDatastore();
+            InitializeDatabaseConnection();
             InitializeTables();
         }
         /// <summary>
@@ -70,15 +70,15 @@ namespace Tripous.Model
         }
  
         /// <summary>
-        /// Initializes the Datastore field of this broker. A broker needs to know which is 
-        /// the Datastore it operates on.
+        /// Initializes the database connection of this broker. A broker needs to know which is 
+        /// the database it operates on.
         /// </summary>
-        protected virtual void InitializeDatastore()
+        protected virtual void InitializeDatabaseConnection()
         {
             ConnectionInfo = Db.GetConnectionInfo(fDescriptor.ConnectionName);
 
             if (ConnectionInfo == null)
-                Sys.Error("No Datastore defined for Broker. {0}", fDescriptor.Name);
+                Sys.Error("No database connection defined for Broker. {0}", fDescriptor.Name);
 
             Store = SqlStores.CreateSqlStore(ConnectionInfo);
         }
@@ -586,11 +586,11 @@ namespace Tripous.Model
         /// Creates and returns a SqlBroker based on the passed arguments.
         /// <para>The returned SqlBroker is initialized as a master broker, not a list broker.</para>
         /// </summary>
-        static public SqlBroker CreateSingleTableBroker(string DatastoreName, string MainTableName, string CodeProducerName)
+        static public SqlBroker CreateSingleTableBroker(string ConnectionName, string MainTableName, string CodeProducerName)
         {
             SqlBroker Result = new SqlBroker();
 
-            Result.Descriptor.ConnectionName = DatastoreName;
+            Result.Descriptor.ConnectionName = ConnectionName;
             Result.Descriptor.MainTableName = MainTableName;
             Result.Descriptor.CodeProducerName = CodeProducerName;
             Result.Initialize(false);
@@ -936,7 +936,7 @@ namespace Tripous.Model
             }
         }
         /// <summary>
-        /// Returns the Datastore
+        /// Returns the connection info
         /// </summary>
         public SqlConnectionInfo ConnectionInfo { get; protected set; }
         /// <summary>

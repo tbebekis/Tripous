@@ -159,7 +159,7 @@ namespace Tripous.Data.Metadata
         /// </summary>
         public MetaTable Table { get { return fOwner as MetaTable; } }
         /// <summary>
-        /// Gets the owner meta datastore
+        /// Gets the owner metastore
         /// </summary>
         public Metastore Store { get { return Table != null ? Table.Store : null; } }
     }

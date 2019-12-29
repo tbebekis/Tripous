@@ -104,7 +104,7 @@ namespace Tripous.Data.Metadata
 
         /* properties */
         /// <summary>
-        /// Gets the owner meta datastore
+        /// Gets the owner meta metastore
         /// </summary>
         public Metastore Store { get { return Owner as Metastore; } }
     }

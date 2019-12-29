@@ -67,7 +67,7 @@ from
         string fOrderBy;
 
         bool fCompanyAware;
-        string fDatastoreName;
+        string fConnectionName;
 
         string fCheckBoxColumns;
         string fMemoColumns;
@@ -130,7 +130,7 @@ from
             OrderBy = string.Empty;
 
             CompanyAware = false;
-            DatastoreName = string.Empty;
+            ConnectionName = string.Empty;
 
             CheckBoxColumns = string.Empty;
             MemoColumns = string.Empty;
@@ -178,7 +178,7 @@ from
                 OrderBy = Src.OrderBy;
 
                 CompanyAware = Src.CompanyAware;
-                DatastoreName = Src.DatastoreName;
+                ConnectionName = Src.ConnectionName;
 
                 CheckBoxColumns = Src.CheckBoxColumns;
                 MemoColumns = Src.MemoColumns;
@@ -756,15 +756,15 @@ from
             }
         }
         /// <summary>
-        /// Gets or sets the datastore name
+        /// Gets or sets the database connection name
         /// </summary>
-        public string DatastoreName
+        public string ConnectionName
         {
-            get { return string.IsNullOrWhiteSpace(fDatastoreName) ? SysConfig.DefaultConnection : fDatastoreName; }
+            get { return string.IsNullOrWhiteSpace(fConnectionName) ? SysConfig.DefaultConnection : fConnectionName; }
             set
             {
-                fDatastoreName = value;
-                OnPropertyChanged("DatastoreName");
+                fConnectionName = value;
+                OnPropertyChanged("ConnectionName");
             }
         }
 

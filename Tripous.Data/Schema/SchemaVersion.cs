@@ -94,7 +94,7 @@ namespace Tripous.Data
             set { domain = value; }
         }
         /// <summary>
-        /// The name of the Datastore this version is applied against.
+        /// The name of the database connection this version is applied against.
         /// </summary>
         public string ConnectionName
         {

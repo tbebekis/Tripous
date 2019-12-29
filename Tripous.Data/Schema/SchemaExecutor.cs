@@ -46,7 +46,7 @@ namespace Tripous.Data
             {
                 try
                 {
-                    /* datastore statements -before */
+                    /* database statements -before */
                     foreach (string SqlText in Schema.StatementsBefore)
                         DoStatement(SqlText);
 
@@ -79,7 +79,7 @@ namespace Tripous.Data
             {
                 try
                 {
-                    /* datastore statements -after */
+                    /* database statements -after */
                     foreach (string SqlText in Schema.StatementsAfter)
                         DoStatement(SqlText);
 

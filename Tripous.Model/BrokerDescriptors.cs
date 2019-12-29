@@ -57,11 +57,11 @@ namespace Tripous.Model
         /// <summary>
         /// Adds a broker to the list
         /// </summary>
-        public BrokerDescriptor Add(string DatastoreName, string Name, string MainTableName, string TitleKey, string BrokerClassName, string CodeProducerName)
+        public BrokerDescriptor Add(string ConnectionName, string Name, string MainTableName, string TitleKey, string BrokerClassName, string CodeProducerName)
         {
             BrokerDescriptor Result = base.Add(Name);
 
-            Result.ConnectionName = DatastoreName;
+            Result.ConnectionName = ConnectionName;
             Result.MainTableName = MainTableName;
             Result.TitleKey = TitleKey;
             Result.TypeClassName = BrokerClassName;

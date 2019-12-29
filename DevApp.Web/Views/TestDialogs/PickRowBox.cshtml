@@ -24,8 +24,8 @@
     }); 
  
     function ShowDialog() {  
-        var SqlText = 'select * from SYS_LANG';
-        var VisibleColumns = ['Name', 'CultureCode', 'SeoCode'];
+        var SqlText = 'select * from Trader';
+        var VisibleColumns = ['Code', 'Name'];
         var Text = 'Select a language';
 
         tp.PickRowBoxPromise(SqlText, VisibleColumns, Text)

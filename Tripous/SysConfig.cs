@@ -207,7 +207,7 @@ namespace Tripous
         static public string AppExeName { get { return SysConfig.MainAssembly.GetFileName(); } }
  
         /// <summary>
-        /// The profiles filename (not path) where datastore connection information is kept.
+        /// The profiles filename (not path) where database connection information is kept.
         /// <para>Defaults to SqlConnections.json</para>
         /// </summary>
         static public string SqlConnectionsFileName { get; set; } = "SqlConnections.json";

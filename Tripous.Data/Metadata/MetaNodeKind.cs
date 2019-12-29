@@ -19,13 +19,13 @@ namespace Tripous.Data.Metadata
         /// </summary>
         None,
         /// <summary>
-        /// Datastores
+        /// Databases
         /// </summary>
-        Datastores,
+        Databases,
         /// <summary>
-        /// Datastore
+        /// Database
         /// </summary>
-        Datastore,
+        Database,
         /// <summary>
         /// Tables
         /// </summary>

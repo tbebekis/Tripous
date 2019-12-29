@@ -11,7 +11,7 @@ using System.Text;
 namespace Tripous.Data.Metadata
 {
     /// <summary>
-    /// Represents schema information of a data type used by the datastore
+    /// Represents schema information of a data type used by the database
     /// </summary>
     public class MetaType : NamedItem, IMetaNode, IMetaFullText
     {
@@ -29,7 +29,7 @@ namespace Tripous.Data.Metadata
 
         /* properties */
         /// <summary>
-        /// Gets the owner meta datastore
+        /// Gets the owner metastore
         /// </summary>
         public Metastore Store { get { return CollectionOwner as Metastore; } }
         /// <summary>

@@ -31,52 +31,52 @@ namespace Tripous.Data
 
         /* public */
         /// <summary>
-        /// Returns the first schema version with Domain, DatastoreName and Version, if any else null
+        /// Returns the first schema version with Domain, ConnectionName and Version, if any else null
         /// </summary>
-        public SchemaVersion Find(string Domain, string DatastoreName, int Version)
+        public SchemaVersion Find(string Domain, string ConnectionName, int Version)
         {
             return Versions.FirstOrDefault(item => Domain.IsSameText(item.Domain)
-                                                    && DatastoreName.IsSameText(item.ConnectionName)
+                                                    && ConnectionName.IsSameText(item.ConnectionName)
                                                     && (Version == item.Version));
         }
         /// <summary>
-        /// True if a version with Domain, DatastoreName and Version is already registered.
+        /// True if a version with Domain, ConnectionName and Version is already registered.
         /// </summary>
-        public bool Contains(string Domain, string DatastoreName, int Version)
+        public bool Contains(string Domain, string ConnectionName, int Version)
         {
-            return Find(Domain, DatastoreName, Version) != null;
+            return Find(Domain, ConnectionName, Version) != null;
         }
 
         /// <summary>
-        /// Returns the first schema version with Domain and DatastoreName
+        /// Returns the first schema version with Domain and ConnectionName
         /// and having a version equal to or greater than the specified Version, if any, else null.
         /// </summary>
-        public SchemaVersion FindGreaterOrEqual(string Domain, string DatastoreName, int Version)
+        public SchemaVersion FindGreaterOrEqual(string Domain, string ConnectionName, int Version)
         {
             return Versions.FirstOrDefault(item => Domain.IsSameText(item.Domain)
-                                                    && DatastoreName.IsSameText(item.ConnectionName)
+                                                    && ConnectionName.IsSameText(item.ConnectionName)
                                                     && (item.Version >= Version));
         }
         /// <summary>
-        /// Checks to see if there is already a schema version with this Domain, DatastoreName
+        /// Checks to see if there is already a schema version with this Domain, ConnectionName
         /// and greater or equal Version. Throws an exception if it finds one.
         /// </summary>
-        public void Check(string Domain, string DatastoreName, int Version)
+        public void Check(string Domain, string ConnectionName, int Version)
         {
-            SchemaVersion Item = FindGreaterOrEqual(Domain, DatastoreName, Version);
+            SchemaVersion Item = FindGreaterOrEqual(Domain, ConnectionName, Version);
             if (Item != null)
-                Sys.Error("Invalid schema datastore version: Domain: {0}, Datastore {1}, Version {2}", Domain, DatastoreName, Version);
+                Sys.Error("Invalid database schema version: Domain: {0}, ConnectionName {1}, Version {2}", Domain, ConnectionName, Version);
         }
 
         /// <summary>
         /// Adds a new schema version
         /// </summary>
-        public SchemaVersion Add(string Domain, string DatastoreName, int Version)
+        public SchemaVersion Add(string Domain, string ConnectionName, int Version)
         {
-            Check(Domain, DatastoreName, Version);
+            Check(Domain, ConnectionName, Version);
             SchemaVersion Result = new SchemaVersion();
             Result.Domain = Domain;
-            Result.ConnectionName = DatastoreName;
+            Result.ConnectionName = ConnectionName;
             Result.Version = Version;
             Versions.Add(Result);
             return Result;
@@ -84,16 +84,16 @@ namespace Tripous.Data
         /// <summary>
         /// Adds a new schema version for the system
         /// </summary>
-        internal SchemaVersion AddSystem(string DatastoreName, int Version)
+        internal SchemaVersion AddSystem(string ConnectionName, int Version)
         {
-            return Add(Sys.SYSTEM, DatastoreName, Version);
+            return Add(Sys.SYSTEM, ConnectionName, Version);
         }
         /// <summary>
         /// Adds a new schema version for the application
         /// </summary>
-        public SchemaVersion Add(string DatastoreName, int Version)
+        public SchemaVersion Add(string ConnectionName, int Version)
         {
-            return Add(Sys.APPLICATION, DatastoreName, Version);
+            return Add(Sys.APPLICATION, ConnectionName, Version);
         }
 
         /* execution methods */
@@ -110,13 +110,13 @@ namespace Tripous.Data
                 .ToDictionary(g => g.Key, g => g.ToList());
 
 
-            /*  Executes a schema against Datastore, registered by Domain.
-                VersionList is a by Version sorted list of schemas for that datastore. */
+            /*  Executes a schema against a database, registered by Domain.
+                VersionList is a by Version sorted list of schemas for that database. */
             Action<string, SqlConnectionInfo, List<SchemaVersion>> ExecuteSchema = delegate (string Domain, SqlConnectionInfo Connection, List<SchemaVersion> VersionList)
             {
-                /* get the current version of the datastore from the dbIni table */
+                /* get the current version of the database  from the dbIni table */
                 DbIni Ini = Db.MainIni;
-                string Entry = string.Format("Datastore.Version.{0}.{1}", Connection.Name, Domain);
+                string Entry = string.Format("Database.Version.{0}.{1}", Connection.Name, Domain);
                 int Version = Ini.ReadInteger(Entry, -1);
 
                   
@@ -134,7 +134,7 @@ namespace Tripous.Data
             };
 
 
-            /*  creates a list of versions regarding a certain domain and a certain datastore. 
+            /*  creates a list of versions regarding a certain domain and a certain database. 
                 The list is sorted by Version. 
                 It then sends that sorted list for execution. */
             Action<string> ExecuteDomain = delegate (string Domain)

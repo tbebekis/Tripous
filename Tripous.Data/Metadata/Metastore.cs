@@ -15,7 +15,7 @@ namespace Tripous.Data.Metadata
     // Oracle Schema Collections     http://msdn.microsoft.com/en-us/library/cc716723.aspx          
  
     /// <summary>
-    /// Represents schema information for a datastore
+    /// Represents schema information for a database
     /// </summary>
     public class Metastore : NamedItem, IMetaNodeListParent, IMetaNodeList, IMetaNode
     {
@@ -273,7 +273,7 @@ namespace Tripous.Data.Metadata
             return restrictions;
         }
         /// <summary>
-        /// Returns a DataTabe with table information regarding this datastore
+        /// Returns a DataTabe with table information regarding this database
         /// </summary>
         public DataTable GetTables()
         {
@@ -289,7 +289,7 @@ namespace Tripous.Data.Metadata
             return GetCollection(Collection, Restrictions);
         }
         /// <summary>
-        /// Returns a DataTabe with view information regarding this datastore
+        /// Returns a DataTabe with view information regarding this database
         /// </summary>
         public DataTable GetViews()
         {
@@ -410,7 +410,7 @@ namespace Tripous.Data.Metadata
         /// <summary>
         /// The kind of this meta-node, i.e. Tables, Table, Columns, Column, etc
         /// </summary>
-        public MetaNodeKind Kind { get { return MetaNodeKind.Datastore; } }
+        public MetaNodeKind Kind { get { return MetaNodeKind.Database; } }
         /// <summary>
         /// A user defined value
         /// </summary>
@@ -428,7 +428,7 @@ namespace Tripous.Data.Metadata
             }
         }
         /// <summary>
-        /// Gets the meta Types collection, that is information regarding the data Types the datastore uses
+        /// Gets the meta Types collection, that is information regarding the data Types the database uses
         /// </summary>
         public MetaTypes Types { get; private set; }
         /// <summary>
