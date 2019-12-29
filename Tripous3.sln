@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tripous.Model", "Tripous.Mo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevApp.Gtk", "DevApp.Gtk\DevApp.Gtk.csproj", "{6BB0ACBC-EA37-4E13-89C5-E153EB01E8A6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tripous.Web", "Tripous.Web\Tripous.Web.csproj", "{C20027BA-B718-4267-8B27-7977F567CD04}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tripous.Web", "Tripous.Web\Tripous.Web.csproj", "{C20027BA-B718-4267-8B27-7977F567CD04}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C71BC01D-226B-4CFB-840D-0D43087680AB}"
 	ProjectSection(SolutionItems) = preProject
@@ -26,7 +26,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DevApps", "DevApps", "{9BAC
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevApp.Lib", "DevApp.Lib\DevApp.Lib.csproj", "{D2EBA59C-B847-44E9-B320-9300DDC59BAD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevApp.Web", "DevApp.Web\DevApp.Web.csproj", "{95BE4A5E-D5B5-4590-AED6-9BDF0797415E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevApp.Web", "DevApp.Web\DevApp.Web.csproj", "{95BE4A5E-D5B5-4590-AED6-9BDF0797415E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tripous.Windows.Forms", "Tripous.Windows.Forms\Tripous.Windows.Forms.csproj", "{C6B4E447-AEC4-4147-A177-6F947F39E20F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -66,6 +68,10 @@ Global
 		{95BE4A5E-D5B5-4590-AED6-9BDF0797415E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{95BE4A5E-D5B5-4590-AED6-9BDF0797415E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{95BE4A5E-D5B5-4590-AED6-9BDF0797415E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C6B4E447-AEC4-4147-A177-6F947F39E20F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C6B4E447-AEC4-4147-A177-6F947F39E20F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C6B4E447-AEC4-4147-A177-6F947F39E20F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C6B4E447-AEC4-4147-A177-6F947F39E20F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

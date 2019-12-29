@@ -11,8 +11,8 @@
 
     <ItemGroup>
         <ProjectReference Include="..\Tripous\Tripous.csproj" />
-    </ItemGroup> 
-
+    </ItemGroup>
+    
     <ItemGroup>
       <Compile Update="Properties\Resources.Designer.cs">
         <DesignTime>True</DesignTime>
@@ -35,5 +35,7 @@
     <ItemGroup>
       <PackageReference Include="System.Data.SQLite.Core" Version="1.0.112" />
     </ItemGroup>
+
+
 
 </Project>

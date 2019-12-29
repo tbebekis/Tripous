@@ -903,6 +903,85 @@ namespace Tripous
             return (Numerator == 0) || (Denominator == 0) ? 0 : (Numerator / Denominator) * 100;
         }
 
+        /* DateTime */
+        /// <summary>
+        /// Returns the date separator character of the Info culture
+        /// CAUTION: Info should be a Specific culture, not a Neutral one
+        /// </summary>
+        public static char GetDateSeparator(CultureInfo CultureInfo)
+        {
+            return CultureInfo.DateTimeFormat.DateSeparator.Trim()[0];
+        }
+        /// <summary>
+        /// Returns the date separator character of the current UI culture
+        /// </summary>
+        public static char GetDateSeparator()
+        {
+            return GetDateSeparator(GetCurrentCulture());
+        }
+        /// <summary>
+        /// Returns the time separator character of the Info culture
+        /// CAUTION: Info should be a Specific culture, not a Neutral one
+        /// </summary>
+        /// <param name="Info">A Specific Culture object</param>
+        public static char GetTimeSeparator(CultureInfo Info)
+        {
+            return Info.DateTimeFormat.TimeSeparator.Trim()[0];
+        }
+        /// <summary>
+        /// Returns the time separator character of the current UI culture
+        /// </summary>
+        public static char GetTimeSeparator()
+        {
+            return GetTimeSeparator(GetCurrentCulture());
+        }
+        /// <summary>
+        /// Returns a <see cref="DatePattern"/> value by analyzing the DateFormat.
+        /// </summary>
+        public static DatePattern GetDatePattern(string DateFormat)
+        {
+            return Tripous.DateFormat.GetDatePattern(DateFormat);
+        }
+        /// <summary>
+        /// Returns a <see cref="DatePattern"/> value by analyzing the ShortDatePattern of the current culture.
+        /// </summary>
+        public static DatePattern GetDatePattern()
+        {
+            return GetDatePattern(GetCurrentCulture().DateTimeFormat.ShortDatePattern);
+        }
+        /// <summary>
+        /// Returns a unified date format string usefull in formatting dates by using the DateTime.ToString() method
+        /// i.e DT.ToString(Mask.GetDateMaskFormat(true, Info))
+        /// CAUTION: Info should be a Specific culture, not a Neutral one
+        /// </summary>
+        /// <param name="TwoDigitYear">true for two digit year formatting</param>
+        /// <param name="Info">A Specific Culture object</param>
+        public static string GetDateMaskFormat(bool TwoDigitYear, CultureInfo Info)
+        {
+            return Tripous.DateFormat.GetDateMaskFormat(TwoDigitYear, Info);
+        }
+        /// <summary>
+        /// Returns a unified date format string usefull in formatting dates by using the DateTime.ToString() method
+        /// i.e DT.ToString(Mask.GetDateMaskFormat(true, Info))
+        /// </summary>
+        public static string GetDateMaskFormat(bool TwoDigitYear)
+        {
+            return GetDateMaskFormat(TwoDigitYear, GetCurrentCulture());
+        }
+        /// <summary>
+        /// Normalizes a date string according to the date mask format the GetDateMaskFormat() returns.
+        /// </summary>
+        static public string NormalizeDateTime(string Text, CultureInfo CultureInfo)
+        {
+            return Tripous.DateFormat.NormalizeDateTime(Text, CultureInfo);
+        }
+        /// <summary>
+        /// Normalizes a date string according to the date mask format the GetDateMaskFormat() returns.
+        /// </summary>
+        static public string NormalizeDateTime(string Text)
+        {
+            return NormalizeDateTime(Text, GetCurrentCulture());
+        }
 
         /* object extensions */
         /// <summary>

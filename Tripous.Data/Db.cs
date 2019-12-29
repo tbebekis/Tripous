@@ -93,7 +93,6 @@ namespace Tripous.Data
            return ConnectionInfo.GetSqlProvider().OpenConnection(ConnectionInfo.ConnectionString);
         }
  
-
         /// <summary>
         /// Adds an input DbParameter to a DbCommand
         /// </summary>
@@ -122,6 +121,125 @@ namespace Tripous.Data
             return P;
         }
 
+        /* select and exec sql */
+        /// <summary>
+        /// Executes the SELECT SqlText with Params and returns a DataTable.
+        /// <para>
+        /// Passes Params values to the created Command Parameters.
+        /// Params can be
+        /// 1. either a comma separated list of parameters 
+        /// 2. or the Params[0] element, that is the first element in Params, may be a DataRow, generic IDictionary, IList or Array
+        /// and in that case no other Params elements are used.
+        /// </para>
+        /// </summary> 
+        static public DataTable Select(string ConnectionString, string SqlText, params object[] Params)
+        {
+            return GetConnectionInfo(ConnectionString).GetSqlProvider().Select(ConnectionString, SqlText, Params);
+        }
+        /// <summary>
+        /// Executes the SELECT SqlText and returns a DataTable.
+        /// <para>ConnectionString must include a DataProvider Alias</para>
+        /// </summary> 
+        static public DataTable Select(string ConnectionString, string SqlText)
+        {
+            return Select(ConnectionString, SqlText, null);
+        }
+ 
+
+        /// <summary>
+        /// Executes SqlText and returns the first DataRow of the result set.
+        /// <para>WARNING: If SqlText returns no rows at all then this method returns null.</para>
+        /// <para></para>
+        /// <para>Params can be: </para>
+        /// <para>1. either a comma separated C# params list</para>
+        /// <para>2. or the Params[0] element, that is the first element in Params, may be a DataRow, generic IDictionary, IList or Array
+        /// and in that case no other Params elements are used.</para>
+        /// </summary>
+        static public DataRow SelectResults(string ConnectionString, string SqlText, params object[] Params)
+        {
+            DataTable Table = Select(ConnectionString, SqlText, Params);
+            if (Table.Rows.Count > 0)
+                return Table.Rows[0];
+            else
+                return null;
+        }
+        /// <summary>
+        /// Executes SqlText and returns the first DataRow of the result set.
+        /// <para>WARNING: If SqlText returns no rows at all then this method returns null.</para>
+        /// </summary>
+        static public DataRow SelectResults(string ConnectionString, string SqlText)
+        {
+            return SelectResults(ConnectionString, SqlText, null);
+        }
+
+        /// <summary>
+        /// Ideal for executing SELECT statements of the type "select FIELD_NAME from TABLE_NAME"
+        /// </summary>
+        static public object SelectResult(string ConnectionString, string SqlText, object Default, params object[] Params)
+        {
+            object Result = Default;
+
+            DataRow Row = SelectResults(ConnectionString, SqlText, Params);
+            if ((Row != null) && !Row.IsNull(0))
+            {
+                Result = Row[0];
+            }
+
+            return Result;
+        }
+        /// <summary>
+        /// Ideal for executing SELECT statements of the type "select FIELD_NAME from TABLE_NAME"
+        /// </summary>
+        static public object SelectResult(string ConnectionString, string SqlText, object Default)
+        {
+            return SelectResult(ConnectionString, SqlText, Default, null);
+        }
+        /// <summary>
+        /// Ideal for executing SELECT statements of the type "select FIELD_NAME from TABLE_NAME"
+        /// </summary>
+        static public object SelectResult(string ConnectionString, string SqlText)
+        {
+            return SelectResult(ConnectionString, SqlText, DBNull.Value);
+        }
+
+        /// <summary>
+        /// Ideal for executing SELECT statements of the type "select count(ID) as COUNT_ID from TABLE_NAME where ID = 1234"
+        /// </summary>
+        static public int IntegerResult(string ConnectionString, string SqlText, int Default, params object[] Params)
+        {
+            string S = SelectResult(ConnectionString, SqlText, Default, Params).ToString();
+            return Sys.StrToInt(S, Default);
+        }
+        /// <summary>
+        /// Ideal for executing SELECT statements of the type "select count(ID) as COUNT_ID from TABLE_NAME where ID = 1234"
+        /// </summary>
+        static public int IntegerResult(string ConnectionString, string SqlText, int Default)
+        {
+            return IntegerResult(ConnectionString, SqlText, Default, null);
+        }
+
+        /// <summary>
+        /// Executes the DML SqlText with Params.
+        /// <para>
+        /// Passes Params values to the created Command Parameters.
+        /// Params can be
+        /// 1. either a comma separated list of parameters 
+        /// 2. or the Params[0] element, that is the first element in Params, may be a DataRow, generic IDictionary, IList or Array
+        /// and in that case no other Params elements are used.
+        /// </para>
+        /// </summary> 
+        static public void ExecSql(string ConnectionString, string SqlText, params object[] Params)
+        {
+            GetConnectionInfo(ConnectionString).GetSqlProvider().ExecSql(ConnectionString, SqlText, Params);
+        }
+        /// <summary>
+        /// Executes the DML SqlText.
+        /// <para>ConnectionString must include a DataProvider Alias</para>
+        /// </summary> 
+        static public void ExecSql(string ConnectionString, string SqlText)
+        {
+            ExecSql(ConnectionString, SqlText, null);
+        }
 
         /* buils sql statements */
         /// <summary>
