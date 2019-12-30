@@ -83,9 +83,8 @@ namespace Tripous.Windows.Forms
         /// Called in order to initialize the form
         /// </summary>
         protected virtual void FormInitialize()
-        { 
-            if (!string.IsNullOrWhiteSpace(Options.Text))
-                this.Text = Options.Text;
+        {
+            ProcessFormOptions();
         }
         /// <summary>
         /// Called just after form initialization
@@ -94,6 +93,15 @@ namespace Tripous.Windows.Forms
         {
         }
  
+        /// <summary>
+        /// Processes the form options
+        /// </summary>
+        protected virtual void ProcessFormOptions()
+        {
+            if (!string.IsNullOrWhiteSpace(Options.Text))
+                this.Text = Options.Text;
+        }
+
         /// <summary>
         /// Updates the user interface, title, enable-disable buttons etc.
         /// </summary>
@@ -157,8 +165,30 @@ namespace Tripous.Windows.Forms
                     break;
             }
         }
+        /// <summary>
+        /// It is called by the OnKeyDown() method. 
+        /// <para>Returns true if processes the key</para>
+        /// </summary>
+        protected virtual bool ProcessKeyDown(KeyEventArgs e)
+        {
+            return false;
+        }
+        /// <summary>
+        /// It is called when the escape key is pressed. 
+        /// <para>Returning true indicates that the key press is handled.</para>
+        /// <para>NOTE: By default, when is a modal dialog, it sets <see cref="DialogResult"/> to Cancel, and closes the form.</para>
+        /// </summary>
+        protected virtual bool ProcessEscapeKey()
+        {
+            if (this.Modal)
+            {
+                this.DialogResult = DialogResult.Cancel;
+                return true;
+            }
 
- 
+            return false;
+        }
+
         /* overrides */
         /// <summary>
         /// Override
@@ -218,6 +248,38 @@ namespace Tripous.Windows.Forms
 
             base.OnTextChanged(e);
         }
+        /// <summary>
+        /// Raises KeyDown event
+        /// </summary>
+        protected override void OnKeyDown(KeyEventArgs e)
+        {
+            if (!DesignMode)
+            {
+                if (ProcessKeyDown(e))
+                {
+                    e.Handled = true;
+                    e.SuppressKeyPress = true;
+                }
+            }
+
+            base.OnKeyDown(e);
+        }
+        /// <summary>
+        /// Processes a dialog box key
+        /// </summary>
+        protected override bool ProcessDialogKey(Keys keyData)
+        {
+            if (!DesignMode)
+            {
+                if (keyData.CodeIs(Keys.Escape) && ProcessEscapeKey())
+                {
+                    return true;
+                }
+            }
+
+            return base.ProcessDialogKey(keyData);
+        }
+
 
         /* construction */
         /// <summary>
@@ -277,6 +339,7 @@ namespace Tripous.Windows.Forms
         static public bool ShowModal(FormOptions Options, Action<BaseForm> AfterCreateFunc = null)
         {
             bool Result = false;
+            Options.AsModal = true;
 
             using (BaseForm F = Create(Options, AfterCreateFunc))
             {
@@ -346,7 +409,7 @@ namespace Tripous.Windows.Forms
         /// <summary>
         /// The form options
         /// </summary>
-        public FormOptions Options { get; private set; } = new FormOptions(); 
+        public virtual FormOptions Options { get; protected set; }  
         /// <summary>
         /// The parent container form, which is a <see cref="DockContent"/> form.
         /// </summary>

@@ -116,6 +116,13 @@
     <Compile Include="Controls\TypeBoxDataGridViewColumn.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="DataForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DataForm.Designer.cs">
+      <DependentUpon>DataForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormState.cs" />
     <Compile Include="Extensions\ComboBoxExtensions.cs" />
     <Compile Include="Extensions\ControlExtensions.cs" />
     <Compile Include="Extensions\CurrencyManagerExtensions.cs" />
@@ -222,6 +229,9 @@
     <EmbeddedResource Include="ConnectionStringDialog.resx">
       <DependentUpon>ConnectionStringDialog.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="DataForm.resx">
+      <DependentUpon>DataForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MessageBoxDialog.resx">
       <DependentUpon>MessageBoxDialog.cs</DependentUpon>
     </EmbeddedResource>
@@ -260,6 +270,81 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\page_paintbrush.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\compile.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\table_add.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\table_delete.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\table_edit.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\application_home.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\bin_closed.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\cancel.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\connect.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\cross.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\disk.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\disk_multiple.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\door_out.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\folder.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\lightning.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\list.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\page_edit.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\setting_tools.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\table.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\table_lightning.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\table_refresh.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\table_select_row.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\text_list_bullets.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\table_save.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\find.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\page_find.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
