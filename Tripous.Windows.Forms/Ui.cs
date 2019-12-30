@@ -10,6 +10,8 @@ using System.Windows.Forms;
 using System.Reflection;
 using System.Data;
 
+using WeifenLuo.WinFormsUI.Docking;
+
 using Tripous.Data;
 
 namespace Tripous.Windows.Forms
@@ -19,8 +21,10 @@ namespace Tripous.Windows.Forms
     /// </summary>
     static public partial class Ui
     {
-        static int waiting;
-        static int waitCursor;
+        static int fWaiting;
+        static int fWaitCursor;
+ 
+        static object syncLock = new LockObject();
 
         /// <summary>
         /// The id of the primary thread
@@ -583,6 +587,20 @@ namespace Tripous.Windows.Forms
             return !IsIdColumn(ColumnName);
         }
 
+        /// <summary>
+        /// Finds and returns the focused control
+        /// </summary>
+        static public Control FindFocusedControl(Control control)
+        {
+            var container = control as ContainerControl;
+            while (container != null)
+            {
+                control = container.ActiveControl;
+                container = control as ContainerControl;
+            }
+            return control;
+        }
+
         /* properties */
         /// <summary>
         /// The main form of the application, if any, else null
@@ -610,26 +628,26 @@ namespace Tripous.Windows.Forms
         /// </summary>
         static public bool Waiting
         {
-            get { return waiting > 0; }
+            get { lock(syncLock) return fWaiting > 0; }
             set
             {
-                if (MainForm != null && !MainForm.InvokeRequired)
+                lock (syncLock)
                 {
                     if (value)
                     {
-                        waiting++;
-                        if (waiting == 1)
+                        fWaiting++;
+                        if (fWaiting == 1)
                         {
                             WaitCursor = true;
-                            Broadcaster.Post(ApplicationWaiting, new Dictionary<string, object>() { { "Value", true} });  
+                            Broadcaster.Post(ApplicationWaiting, new Dictionary<string, object>() { { "Value", true } });
                         }
                     }
                     else
                     {
-                        waiting--;
-                        if (waiting < 0)
-                            waiting = 0;
-                        if (waiting == 0)
+                        fWaiting--;
+                        if (fWaiting < 0)
+                            fWaiting = 0;
+                        if (fWaiting == 0)
                         {
                             WaitCursor = false;
                             Broadcaster.Post(ApplicationWaiting, new Dictionary<string, object>() { { "Value", false } });
@@ -642,31 +660,34 @@ namespace Tripous.Windows.Forms
         /// <summary>
         /// Gets or sets the wait cursor.
         /// </summary>
-        static public bool WaitCursor
+        static bool WaitCursor
         {
-            get { return waitCursor > 0; }
+            get { return fWaitCursor > 0; }
             set
             {
                 if (InMainThread)
                 {
                     if (value)
                     {
-                        waitCursor++;
-                        if (waitCursor == 1)
+                        fWaitCursor++;
+                        if (fWaitCursor == 1)
                             Cursor.Current = Cursors.WaitCursor;
                     }
                     else
                     {
-                        waitCursor--;
-                        if (waitCursor < 0)
-                            waitCursor = 0;
-                        if (waitCursor == 0)
+                        fWaitCursor--;
+                        if (fWaitCursor < 0)
+                            fWaitCursor = 0;
+                        if (fWaitCursor == 0)
                             Cursor.Current = Cursors.Default;
                     }
                 }
             }
         }
-
+        /// <summary>
+        /// The parent for all dock forms
+        /// </summary>      
+        static public DockPanel Docker { get; set; }
 
         /* events */
         /// <summary>
