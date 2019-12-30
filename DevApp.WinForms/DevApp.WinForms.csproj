@@ -56,17 +56,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App.cs" />
-    <Compile Include="MainForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="MainForm.Designer.cs">
-      <DependentUpon>MainForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="MenuForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="MenuForm.Designer.cs">
       <DependentUpon>MenuForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -76,11 +76,11 @@
     <Compile Include="TestForm.Designer.cs">
       <DependentUpon>TestForm.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="MainForm.resx">
-      <DependentUpon>MainForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="MenuForm.resx">
       <DependentUpon>MenuForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -90,6 +90,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <EmbeddedResource Include="TestForm.resx">
       <DependentUpon>TestForm.cs</DependentUpon>
@@ -117,18 +118,21 @@
       <Project>{107b6a1e-4a14-418d-b3bb-9eca829daab2}</Project>
       <Name>Tripous.Data</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Tripous.Forms\Tripous.Forms.csproj">
+      <Project>{c6b4e447-aec4-4147-a177-6f947f39e20f}</Project>
+      <Name>Tripous.Forms</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Tripous.Model\Tripous.Model.csproj">
       <Project>{97dfd734-4f76-4325-af8b-8a4971bae607}</Project>
       <Name>Tripous.Model</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Tripous.Windows.Forms\Tripous.Windows.Forms.csproj">
-      <Project>{c6b4e447-aec4-4147-a177-6f947f39e20f}</Project>
-      <Name>Tripous.Windows.Forms</Name>
     </ProjectReference>
     <ProjectReference Include="..\Tripous\Tripous.csproj">
       <Project>{f86149f6-9e5d-45dd-adb0-7fc9eb93a18d}</Project>
       <Name>Tripous</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\door_out.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

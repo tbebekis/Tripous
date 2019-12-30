@@ -1,6 +1,6 @@
-﻿namespace DevApp.WinForms
+﻿namespace Tripous.Forms
 {
-    partial class MenuForm
+    partial class ParentDockForm
     {
         /// <summary>
         /// Required designer variable.
@@ -28,21 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.SuspendLayout();
-            // 
-            // MenuForm
-            // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.components = new System.ComponentModel.Container();
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(754, 446);
-            this.Name = "MenuForm";
-            this.Text = "Tools";
-            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
-            this.ResumeLayout(false);
-
+            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Text = "ParentDockForm";
         }
 
         #endregion
     }
 }
-

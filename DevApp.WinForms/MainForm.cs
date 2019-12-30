@@ -19,84 +19,26 @@ using WeifenLuo.WinFormsUI.Docking;
 using Tripous;
 using Tripous.Logging;
 using Tripous.Data;
-using Tripous.Windows.Forms;
-
+using Tripous.Forms;
 
 namespace DevApp.WinForms
 {
-    /// <summary>
-    /// Main form
-    /// </summary>
-    public partial class MainForm : Form, IBroadcasterListener
+    public partial class MainForm : BaseForm
     {
-        #region IBroadcasterListener implementation
-        void IBroadcasterListener.HandleBroadcasterEvent(string EventName, IDictionary<string, object> Args)
-        {
-            if (!IsDisposed)
-            {
-                /* check carefully if Invoke() is required */
-                bool IsInvokeRequired;
-                try
-                {
-                    IsInvokeRequired = this.InvokeRequired;
-                }
-                catch /* it should be ObjectDisposedException */
-                {
-                    return;
-                }
-
-
-                if (IsInvokeRequired)   /* synchronize the call */
-                {
-
-                    try
-                    {
-                        IBroadcasterListener Listener = this as IBroadcasterListener;
-                        this.Invoke(new BroadcasterDelegate(Listener.HandleBroadcasterEvent), EventName, Args);
-                    }
-                    catch (Exception e)  /* it should be ObjectDisposedException ONLY */
-                    {
-                        if (!(e is ObjectDisposedException))
-                            Logger.Error(e);
-                    }
-                }
-                else  /* it is synchronized */
-                {
-                    try
-                    {
-                        this.HandleBroadcasterEvent(EventName, Args);
-                        Application.DoEvents();
-                    }
-                    catch (Exception e)
-                    {
-                        Logger.Error(e);
-                    }
-                }
-            }
-        }
-        #endregion
-
+        /* event handlers */
         void AnyClick(object sender, EventArgs ea)
         {
-            if (mnuSave == sender)
+            if (mnuShowDockedForm == sender)
             {
                 BaseForm.ShowDocked(typeof(TestForm), "AntyxSoft");
             }
-            else if (mnuSaveAll == sender)
+            else if (mnuShowModalForm == sender)
             {
                 BaseForm.ShowModal(typeof(TestForm), "AntyxSoft");
             }
-        }
-
-        /// <summary>
-        /// Handles a broadcaster event.
-        /// </summary>
-        void HandleBroadcasterEvent(string EventName, IDictionary<string, object> Args)
-        {
-            switch (EventName)
+            else if (mnuExit == sender || btnExit == sender)
             {
-                case "NOT_EXISTED_EVENT_NAME":
-                    break;
+                this.Close();
             }
         }
         void Docker_ActiveDocumentChanged(object sender, EventArgs e)
@@ -104,12 +46,17 @@ namespace DevApp.WinForms
             //ActiveEditor = Docker.ActiveDocument as EditorForm; 
         }
 
-        void Test()
+        /* private */
+        void RegisterToolForms()
         {
- 
+            ToolForm.RegisterForm("MenuForm", typeof(MenuForm), ToolFormDefaultPosition.Left);
         }
-        void FormInitialize()
+
+        /* overrides */
+        protected override void FormInitialize()
         {
+            base.FormInitialize();
+
             Ui.MainForm = this;
             MainMenu.BackColor = App.BackColor;
             StatusBar.BackColor = App.BackColor;
@@ -118,8 +65,10 @@ namespace DevApp.WinForms
 
             //this.Icon = Eurolife.ActCalc.Properties.Resources.AppIco;
 
-            mnuSave.Click += AnyClick;
-            mnuSaveAll.Click += AnyClick;
+            mnuShowDockedForm.Click += AnyClick;
+            mnuShowModalForm.Click += AnyClick;
+            mnuExit.Click += AnyClick;
+            btnExit.Click += AnyClick;
 
             Ui.Docker = this.Docker;
 
@@ -131,47 +80,6 @@ namespace DevApp.WinForms
             RegisterToolForms();
             ToolForm.LoadToolForms();
         }
-        void RegisterToolForms()
-        {
-            ToolForm.RegisterForm("MenuForm", typeof(MenuForm), ToolFormDefaultPosition.Left);
-        }
-
-        /* overrides */
-        /// <summary>
-        /// Override
-        /// </summary>
-        protected override void OnShown(EventArgs e)
-        {
-            Broadcaster.Add(this);
-            base.OnShown(e);
-
-            if (!DesignMode)
-                FormInitialize();
-        }
-        /// <summary>
-        /// Override
-        /// </summary>
-        protected override void OnFormClosing(FormClosingEventArgs e)
-        {
-            if (Ui.Waiting)
-            {
-                e.Cancel = true;
-            }
-            else
-            {
-                ToolForm.SaveToolForms();
-            }
-
-            base.OnFormClosing(e);
-        }
-        /// <summary>
-        /// Override
-        /// </summary>
-        protected override void OnFormClosed(FormClosedEventArgs e)
-        {
-            Broadcaster.Remove(this);
-            base.OnFormClosed(e);
-        }
 
         /* construction */
         /// <summary>
@@ -180,6 +88,21 @@ namespace DevApp.WinForms
         public MainForm()
         {
             InitializeComponent();
+        }
+
+        /* public */
+        /// <summary>
+        /// Returns true if this form can close
+        /// </summary>
+        public override bool CanClose()
+        {
+            if (Ui.Waiting)
+            {
+                return false;
+            }
+
+            ToolForm.SaveToolForms();
+            return true;
         }
     }
 }

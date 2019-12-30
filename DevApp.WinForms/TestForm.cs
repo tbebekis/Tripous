@@ -13,7 +13,7 @@ using WeifenLuo.WinFormsUI.Docking;
 using Tripous;
 using Tripous.Logging;
 using Tripous.Data;
-using Tripous.Windows.Forms;
+using Tripous.Forms;
 
 namespace DevApp.WinForms
 {
