@@ -58,7 +58,7 @@ namespace Tripous
                     {
                         if (T.IsClass && T.ImplementsInterface(typeof(ICommandHandler)))
                         {
-                            Add(Activator.CreateInstance(T) as ICommandHandler);
+                            Register(Activator.CreateInstance(T) as ICommandHandler);
                         }
                     }
                     catch (Exception Ex)

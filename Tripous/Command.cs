@@ -10,11 +10,14 @@ namespace Tripous
     /// </summary>
     public class Command : Node
     {
+        static int SeparatorCount = 0;
+
         string fText;
         bool fEnabled = true;
         bool fVisible = true;
+        ICommandHandler fHandler;
 
-        /* protected */
+        /* protected */ 
         /// <summary>
         /// Throws an exception if a command with Name, already exists in list.
         /// </summary>
@@ -29,21 +32,16 @@ namespace Tripous
         /// </summary>
         protected virtual void OnEnabledChanged()
         {
-            if (this.Handler != null)
-                Handler.EnabledChanged(this);
-            else
-                Commander.EnabledChanged(this);
+            Handler.EnabledChanged(this);
         }
         /// <summary>
         /// Called when a property value is changed
         /// </summary>
         protected virtual void OnVisibleChanged()
         {
-            if (this.Handler != null)
-                Handler.VisibleChanged(this);
-            else
-                Commander.VisibleChanged(this);
+            Handler.VisibleChanged(this);
         }
+
 
         /* construction */
         /// <summary>
@@ -56,6 +54,8 @@ namespace Tripous
             this.Handler = Handler;
         }
 
+
+        /* public */
         /// <summary>
         /// Executes this command.
         /// </summary>
@@ -66,8 +66,89 @@ namespace Tripous
             else
                 Commander.Execute(this);
         }
- 
 
+        /* add methods */
+        /// <summary>
+        /// Creates a separator 
+        /// </summary>
+        public Command AddSeparator()
+        {
+            SeparatorCount++;
+            Command Cmd = new Command(CommandType.Separator, $"SEPARATOR_{SeparatorCount}");
+            Cmd.Text = "-";
+            return Add(Cmd);
+        }
+        /// <summary>
+        /// Creates a container, a command that contains other commands 
+        /// </summary>
+        public Command AddContainer(string Name, string TextKey = "", string Text = "")
+        {
+            if (!IsRoot)
+                Sys.Error("Can not add a container command to a non root command");
+
+            Command Cmd = new Command(CommandType.Container, Name);
+            Cmd.TextKey = TextKey;
+            Cmd.Text = Text;            
+            return Add(Cmd);
+        }
+
+        /// <summary>
+        /// Adds a command to the list.
+        /// </summary>
+        public Command Add(Command Cmd)
+        {
+            base.Add(Cmd);
+            return Cmd;
+        }
+        /// <summary>
+        /// Adds a command to the list.
+        /// </summary>
+        public Command Add(string Name, string TextKey = "", string Text = "")
+        {
+            Command Cmd = new Command(CommandType.Command, Name);
+            Cmd.TextKey = TextKey;
+            Cmd.Text = Text;
+            return Add(Cmd);
+        }
+        /// <summary>
+        /// Inserts a command at Index
+        /// </summary>
+        public void Insert(int Index, Command Cmd)
+        {
+            base.Insert(Index, Cmd);
+        }
+        /// <summary>
+        /// Inserts Cmd before the BeforeName command
+        /// </summary>
+        public void InsertBefore(string BeforeName, Command Cmd)
+        {
+            int Index = IndexOf(BeforeName);
+            if (Index != -1)
+            {
+                Insert(Index, Cmd);
+            }
+            else
+            {
+                Add(Cmd);
+            }
+        }
+        /// <summary>
+        /// Inserts Cmd after the AfterName command
+        /// </summary>
+        public void InsertAfter(string AfterName, Command Cmd)
+        {
+            int Index = IndexOf(AfterName);
+            if (Index != -1)
+            {
+                Index++;
+                Insert(Index, Cmd);
+            }
+            else
+            {
+                Add(Cmd);
+            }
+        }
+ 
         /* find */
         /// <summary>
         /// Returns a child command of this command by Name, if any, else null.
@@ -170,8 +251,49 @@ namespace Tripous
             return Result;
         }
 
+        /// <summary>
+        /// Sets the ImageName property of a Command with Name to ImageName.
+        /// </summary>
+        public void SetImagePath(string Name, string ImagePath)
+        {
+            Command Command = TreeFind(Name);
+            if (Command != null)
+            {
+                Command.ImagePath = ImagePath;
+                if (string.IsNullOrWhiteSpace(Command.ImageKey))
+                    Command.ImageKey = ResourceKeyResolvers.ResourcePathToKey(Command.ImagePath);
+            }
+                
+        }
+
         /* properties */
-        public ICommandHandler Handler { get; private set; }
+        /// <summary>
+        /// The command handler, an object that handles command execution.
+        /// </summary>
+        public ICommandHandler Handler
+        {
+            get
+            {
+                if (this.fHandler != null)
+                    return this.fHandler;
+
+                if (!this.IsRoot)
+                {
+                    Command RootCommand = this.Root as Command;
+                    if (RootCommand != null && RootCommand.Handler != null)
+                        return RootCommand.Handler;
+                }
+
+                Sys.Error($"No command handler for a command: {Name}");
+
+                return null;
+
+            }
+            set
+            {
+                this.fHandler = value;
+            }
+        }
         /// <summary>
         /// Gets or sets the "type" of the command.
         /// </summary>  
@@ -207,6 +329,10 @@ namespace Tripous
         /// Gets or sets a string key for the image of the command.
         /// </summary>
         public string ImageKey { get; set; }
+        /// <summary>
+        /// Gets or sets the image path  
+        /// </summary>
+        public string ImagePath { get; set; }
         /// <summary>
         /// The image associated with this command
         /// </summary>
@@ -254,6 +380,12 @@ namespace Tripous
             }
         }
         /// <summary>
+        /// Indicates the platform where a Ui element may displayed, such as 
+        /// in desktop or web applications, or any kind of application.
+        /// <para>Defaults to UiMode.None</para>
+        /// </summary>
+        public UiMode UiMode { get; set; } = UiModes.All;
+        /// <summary>
         /// Indicates whether the execution of the command requires user attention or not.
         /// </summary>
         public bool CanAutoOperate { get; set; } = true;
@@ -265,6 +397,10 @@ namespace Tripous
         /// User defined value.
         /// </summary>
         public object Tag { get; set; }
+        /// <summary>
+        /// Custom params passed to the command
+        /// </summary>
+        public Dictionary<string, object> Params { get; } = new Dictionary<string, object>();
 
         /// <summary>
         ///  Returns true if this Command is of type CommandType.Container, that is only a parent for other commands

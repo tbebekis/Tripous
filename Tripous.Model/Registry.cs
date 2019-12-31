@@ -14,7 +14,6 @@ namespace Tripous.Model
     /// </summary>
     static public class Registry
     {
-
         /// <summary>
         /// A list of registered descriptors
         /// </summary>
@@ -23,15 +22,17 @@ namespace Tripous.Model
         /// A list of registered descriptors
         /// </summary>
         static public BrokerDescriptors Brokers { get; private set; } = new BrokerDescriptors();
-
         /// <summary>
         /// Returns the CodeProducers
         /// </summary>
         static public CodeDescriptors CodeProducers { get; private set; } = new CodeDescriptors();
-
         /// <summary>
         /// Returns the Locators
         /// </summary>
         static public LocatorDescriptors Locators { get; private set; } = new LocatorDescriptors();
+        /// <summary>
+        /// The main root command
+        /// </summary>
+        static public Command MainRootCommand { get; private set; } = new Command(CommandType.Container, "MAIN");
     }
 }

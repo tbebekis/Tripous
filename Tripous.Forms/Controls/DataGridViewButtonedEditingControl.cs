@@ -48,7 +48,7 @@ namespace Tripous.Forms
         protected virtual Button CreateButton()
         {
             Button  Result = new Button();
-            Result.BackgroundImage = Tripous.Forms.Properties.Resources.i16_bullet_arrow_down; //  Res.GetImage(Icons16.Bullet_Arrow_Down);
+            Result.BackgroundImage = Tripous.Forms.Properties.Resources.i16_bullet_arrow_down;  
             Result.BackgroundImageLayout = ImageLayout.Zoom;
             Result.FlatStyle = FlatStyle.Flat;
 

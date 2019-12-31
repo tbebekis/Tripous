@@ -32,7 +32,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevApp.WinForms", "DevApp.W
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tripous.Forms", "Tripous.Forms\Tripous.Forms.csproj", "{C6B4E447-AEC4-4147-A177-6F947F39E20F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tripous.StandardApp", "Tripous.StandardApp\Tripous.StandardApp.csproj", "{E0CC08DC-7ACA-4C23-A5B0-464844681368}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tripous.StandardApp", "Tripous.StandardApp\Tripous.StandardApp.csproj", "{E0CC08DC-7ACA-4C23-A5B0-464844681368}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tripous.ResLib", "Tripous.ResLib\Tripous.ResLib.csproj", "{3583D11F-17C2-449C-A3C3-4ECBA463A059}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -84,6 +86,10 @@ Global
 		{E0CC08DC-7ACA-4C23-A5B0-464844681368}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E0CC08DC-7ACA-4C23-A5B0-464844681368}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E0CC08DC-7ACA-4C23-A5B0-464844681368}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3583D11F-17C2-449C-A3C3-4ECBA463A059}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3583D11F-17C2-449C-A3C3-4ECBA463A059}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3583D11F-17C2-449C-A3C3-4ECBA463A059}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3583D11F-17C2-449C-A3C3-4ECBA463A059}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

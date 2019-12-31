@@ -283,6 +283,13 @@ namespace Tripous
 
         /* miscs */
         /// <summary>
+        /// When true, then user accounts are enabled for this application.
+        /// Otherwise the UserNameDefault and PasswordDefault is used
+        /// for all users.
+        /// <para>Defaults to true.</para>
+        /// </summary>
+        static public bool UsersEnabled { get; set; }
+        /// <summary>
         /// When is set indicates that the Oids are Guid strings.  
         /// <para>Defaults to true.</para>
         /// </summary>

@@ -8,8 +8,7 @@ using System;
 namespace Tripous
 {
     /// <summary>
-    /// Represents an object that registers commands to the two main processors
-    /// and is capable of executing commands too.
+    /// Represents an object that handles command execution.
     /// </summary>
     public interface ICommandHandler
     {

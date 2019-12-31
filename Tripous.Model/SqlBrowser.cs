@@ -99,8 +99,7 @@ namespace Tripous.Model
         public SqlBrowser()
         {
         }
-
-
+ 
         /* static */
         /// <summary>
         /// Finds a descriptor based on DataName
@@ -133,7 +132,6 @@ namespace Tripous.Model
 
             return null;
         }
-        
 
         /* public */
         /// <summary>
