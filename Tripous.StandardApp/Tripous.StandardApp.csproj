@@ -1,3 +1,4 @@
+﻿
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
@@ -14,10 +15,11 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Tripous.Data.Dapper\Tripous.Data.Dapper.csproj" />
-      <ProjectReference Include="..\Tripous.Data\Tripous.Data.csproj" />
-      <ProjectReference Include="..\Tripous.Model\Tripous.Model.csproj" />
-      <ProjectReference Include="..\Tripous\Tripous.csproj" />
+        <ProjectReference Include="..\Tripous\Tripous.csproj" />
+        <ProjectReference Include="..\Tripous.Data\Tripous.Data.csproj" />
+        <ProjectReference Include="..\Tripous.Data.Dapper\Tripous.Data.Dapper.csproj" />
+        <ProjectReference Include="..\Tripous.Model\Tripous.Model.csproj" />
+        <ProjectReference Include="..\Tripous.ResLib\Tripous.ResLib.csproj" />
     </ItemGroup>
 
 </Project>

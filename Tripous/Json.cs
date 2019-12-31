@@ -287,6 +287,26 @@ namespace Tripous
         }
 
         /// <summary>
+        /// Returns the value of a <see cref="JProperty"/>.
+        /// </summary>
+        static public T AsValue<T>(JProperty Prop, T Default)
+        {
+            T Result = Default;
+            if ((Prop != null))
+            {
+                try
+                {
+                    Result = Prop.Value.Value<T>();
+                }
+                catch
+                {
+                }
+            }
+
+            return Result;
+        }
+
+        /// <summary>
         /// Default settings
         /// </summary>
         static public JsonSerializerSettings DefaultSettings { get; set; }  = CreateDefaultSettings();

@@ -184,9 +184,7 @@ namespace Tripous.Model
         /// Constant
         /// </summary>
         public const string CMD_SYS_SMTP_PROVIDERS = "CMD_SYS_SMTP_PROVIDERS";
-
-
-
+ 
 
         /// <summary>
         /// Registration method
@@ -294,6 +292,60 @@ namespace Tripous.Model
                     Item.UiMode = (UiMode)Bf.Subtract(Item.UiMode, UiMode.Web);
                 }
             }
+
+
+
+
+
+
+            /* FILE */
+            P.SetIconPath(CMD_LOGIN, Icons32.User);
+            P.SetIconPath(CMD_APP_SYS_INFO, Icons32.Book);
+            P.SetIconPath(CMD_EXIT, Icons32.Door_Out);
+
+            /* VIEW */
+            P.SetIconPath(CMD_DASHBOARD_ITEMS_ADMIN, Icons32.Billboard_Picture);
+            P.SetIconPath(CMD_DASHBOARDS_ADMIN, Icons32.Billboard_Empty);
+            P.SetIconPath(CMD_DASHBOARDS, Icons32.Dashboard);
+
+            P.SetIconPath(CMD_TOOL_BAR, Icons32.Wrench_Orange);
+            P.SetIconPath(CMD_SIDE_BAR, Icons32.Application_Side_Boxes);
+            P.SetIconPath(CMD_SQL_MONITOR, Icons32.Monitor_Lightning);
+            P.SetIconPath(CMD_SYNTAX_EDIT, Icons32.Application_View_List);
+            P.SetIconPath(CMD_SCRIPT_EDIT, Icons32.Script_Edit);
+            P.SetIconPath(CMD_HTML_EDIT, Icons32.Html);
+            P.SetIconPath(CMD_SYS_DOCS, Icons32.Document_Comment_Below);
+            P.SetIconPath(CMD_GLOBAL_REPORTS_MENU, Icons32.Report);
+            //P.SetIconPath(CMD_PROCEDURES, Icons32.Lightning);
+            P.SetIconPath(CMD_GLOBAL_PROJECTORS_MENU, Icons32.Lightbulb);
+            P.SetIconPath(CMD_GLOBAL_PIVOT_PROJECTORS_MENU, Icons32.Table_Heatmap_2);
+            //P.SetIconPath(CMD_TRANSPORTERS, Icons32.Lorry);
+            P.SetIconPath(CMD_COMMAND_SETS_EDIT, Icons32.Image_);
+            P.SetIconPath(CMD_USER_SETTINGS, Icons32.Vcard_Edit);
+            P.SetIconPath(CMD_APP_SETTINGS, Icons32.Application_Edit);
+            P.SetIconPath(CMD_LOCATOR_LIST, Icons32.Combo_Box_Light_Blue);
+
+            P.SetIconPath(CMD_GLOBAL_REPORTS_ADMIN, Icons32.Report);
+            P.SetIconPath(CMD_GLOBAL_PROJECTORS_ADMIN, Icons32.Lightbulb);
+            P.SetIconPath(CMD_GLOBAL_PIVOT_PROJECTORS_ADMIN, Icons32.Table_Heatmap_2);
+
+            /* SYSTEM */
+            P.SetIconPath(CMD_SYS_COMPANY, Icons32.Document_Signature);
+            P.SetIconPath(CMD_SYS_LANG, Icons32.Language);
+            P.SetIconPath(CMD_SYS_STRRES, Icons32.Column_Two);
+            P.SetIconPath(CMD_SYS_LOG, Icons32.Error_Log);
+            P.SetIconPath(CMD_SYS_SMTP_PROVIDERS, Icons32.Email_Setting); 
+
+            /* WINDOWS */
+            P.SetIconPath(CMD_WIN_CASCADE, Icons32.Application_Cascade);
+            P.SetIconPath(CMD_WIN_TILE_HORZ, Icons32.Application_Tile_Horizontal);
+            P.SetIconPath(CMD_WIN_TILE_VERT, Icons32.Application_Tile_Vertical);
+            P.SetIconPath(CMD_WIN_ARRANGE_ICONS, Icons32.Application_Double);
+            P.SetIconPath(CMD_WIN_CLOSE_ALL, Icons32.Application_Xp);
+
+            /* HELP */
+            P.SetIconPath(CMD_ABOUT, Icons32.Vcard);
+
         }
     }
 }

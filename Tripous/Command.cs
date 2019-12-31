@@ -3,11 +3,15 @@ using System.Collections.Generic;
 using System.Text;
 using System.Drawing;
 
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+
 namespace Tripous
 {
     /// <summary>
     /// Represents a command that can be associated to a Ui element such as a menu item or a button.
     /// </summary>
+    [JsonConverter(typeof(CommandJsonConverter))]
     public class Command : Node
     {
         static int SeparatorCount = 0;
@@ -44,6 +48,12 @@ namespace Tripous
 
 
         /* construction */
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        private Command()
+        { 
+        }
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -252,19 +262,106 @@ namespace Tripous
         }
 
         /// <summary>
-        /// Sets the ImageName property of a Command with Name to ImageName.
+        /// Sets the icon path of a command
         /// </summary>
-        public void SetImagePath(string Name, string ImagePath)
+        public void SetIconPath(string CommandName, string IconPath)
         {
-            Command Command = TreeFind(Name);
+            Command Command = TreeFind(CommandName);
             if (Command != null)
             {
-                Command.ImagePath = ImagePath;
-                if (string.IsNullOrWhiteSpace(Command.ImageKey))
-                    Command.ImageKey = ResourceKeyResolvers.ResourcePathToKey(Command.ImagePath);
+                Command.IconPath = IconPath;
+                if (string.IsNullOrWhiteSpace(Command.IconKey))
+                    Command.IconKey = ResourceKeyResolvers.ResourcePathToKey(Command.IconPath);
             }
                 
         }
+
+
+        /* json */
+        /// <summary>
+        /// Serializes CmdRoot and its children to Json
+        /// <para>NOTE: It is used by the internal CommandJsonConverter class</para>
+        /// </summary>
+        static public string ToJson(Command CmdRoot)
+        {
+            Action<JObject, Command> Process = null;
+
+            Process = delegate (JObject JO, Command Cmd)
+            {
+                dynamic JCmd = JO;
+
+                JCmd.Name = Cmd.Name;
+                JCmd.Type = Cmd.Type;
+                JCmd.TextKey = Cmd.TextKey;
+                JCmd.Text = Cmd.Text;
+                JCmd.ScriptSource = Cmd.ScriptSource;
+                JCmd.IconKey = Cmd.IconKey;
+                JCmd.IconPath = Cmd.IconPath;
+                JCmd.UiMode = Cmd.UiMode;
+                JCmd.Hidden = Cmd.Hidden;
+
+                JArray Items = new JArray();
+
+                JCmd.Items = Items as dynamic;
+
+                JObject JOChild;
+                foreach (Command ChildCmd in Cmd)
+                {
+                    JOChild = new JObject();
+                    Items.Add(JOChild);
+                    Process(JOChild, ChildCmd);
+                }
+
+            };
+
+
+            JObject JORoot = new JObject();
+            Process(JORoot, CmdRoot);
+
+            return JORoot.ToString();
+        }
+        /// <summary>
+        /// Deserializes a JObject to Command
+        /// <para>NOTE: It is used by the internal CommandJsonConverter class</para>
+        /// </summary>
+        static public Command FromJson(JObject JRoot)
+        {
+            Command Result = new Command();
+            JArray DefaultItems = null;
+            Action<JObject, Command> Process = null;
+
+            Process = delegate (JObject JO, Command Cmd)
+            {
+                Cmd.Name = Json.AsValue(JO.Property("Name"), "");
+                Cmd.Type = Json.AsValue(JO.Property("Type"), CommandType.Command);
+                Cmd.TextKey = Json.AsValue(JO.Property("TextKey"), "");
+                Cmd.Text = Json.AsValue(JO.Property("Text"), "");
+                Cmd.ScriptSource = Json.AsValue(JO.Property("ScriptSource"), "");
+                Cmd.IconKey = Json.AsValue(JO.Property("IconKey"), "");
+                Cmd.IconPath = Json.AsValue(JO.Property("IconPath"), "");
+                Cmd.UiMode = Json.AsValue(JO.Property("UiMode"), UiModes.All);
+                Cmd.Hidden = Json.AsValue(JO.Property("Hidden"), false); 
+
+                JArray Items = Json.AsValue(JO.Property("Items"), DefaultItems);
+                if ((Items != null))
+                {
+                    Command ChildCmd;
+                    foreach (JObject ChildItem in Items)
+                    {
+                        ChildCmd = new Command();
+                        Process(ChildItem, ChildCmd);
+                        Cmd.Add(ChildCmd);
+                    }
+                }
+
+            };
+
+
+            Process(JRoot, Result);
+
+            return Result;
+        }
+
 
         /* properties */
         /// <summary>
@@ -328,15 +425,15 @@ namespace Tripous
         /// <summary>
         /// Gets or sets a string key for the image of the command.
         /// </summary>
-        public string ImageKey { get; set; }
+        public string IconKey { get; set; }
         /// <summary>
         /// Gets or sets the image path  
         /// </summary>
-        public string ImagePath { get; set; }
+        public string IconPath { get; set; }
         /// <summary>
         /// The image associated with this command
         /// </summary>
-        public Image Image { get; set; }
+        public Image Icon { get { return string.IsNullOrWhiteSpace(IconPath) ? null : Res.GetImage(IconPath); } }
         /// <summary>
         /// Gets or sets Enabled and Visible in a single call.
         /// </summary>
@@ -411,4 +508,68 @@ namespace Tripous
         /// </summary>
         public bool IsSeparator { get { return (Type == CommandType.Separator); } }
     }
+
+
+
+
+
+
+
+
+    /// <summary>
+    /// A custom json converter for the Command class
+    /// </summary>
+    internal class CommandJsonConverter : JsonConverter
+    {
+        /// <summary>
+        /// Override
+        /// </summary>
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        {
+            Command Cmd = (Command)value;
+            string JsonText = Command.ToJson(Cmd);
+            JToken t = JToken.Parse(JsonText);
+            t.WriteTo(writer);
+        }
+        /// <summary>
+        /// Override
+        /// </summary>
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        {
+            JObject JO = JObject.Load(reader);
+            Command Cmd = Command.FromJson(JO);
+            return Cmd;
+        }
+        /// <summary>
+        /// Override
+        /// </summary>
+        public override bool CanConvert(Type objectType)
+        {
+            return objectType == typeof(Command);
+        }
+
+        /* properties */
+        /// <summary>
+        /// Override
+        /// </summary>
+        public override bool CanRead { get { return true; } }
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

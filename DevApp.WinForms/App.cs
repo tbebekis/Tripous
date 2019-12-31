@@ -13,10 +13,31 @@ using System.Drawing.Design;
 using System.Drawing;
 using System.Windows.Forms.Design;
 
+using Tripous;
+
 namespace DevApp.WinForms
 {
     static internal class App
     {
+
+        static public void AppInitialize()
+        {
+            AppStarter.InitializeSysConfig();
+
+            //DevApp.Lib.Forms.FormLib.Initialize();
+
+            Tripous.Icons32.Initialize();
+            ObjectStore.Initialize();
+
+            Starter = new AppStarter();
+            Starter.ApplicationInitialize();
+        }
+        static public void AppFinalize()
+        {
+
+        }
+
+        static public AppStarter Starter { get; set; }
         /// <summary>
         /// BackColor
         /// </summary>

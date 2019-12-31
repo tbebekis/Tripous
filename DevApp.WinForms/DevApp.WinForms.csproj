@@ -56,6 +56,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App.cs" />
+    <Compile Include="AppStarter.cs" />
     <Compile Include="MenuForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -125,6 +126,14 @@
     <ProjectReference Include="..\Tripous.Model\Tripous.Model.csproj">
       <Project>{97dfd734-4f76-4325-af8b-8a4971bae607}</Project>
       <Name>Tripous.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Tripous.ResLib\Tripous.ResLib.csproj">
+      <Project>{3583d11f-17c2-449c-a3c3-4ecba463a059}</Project>
+      <Name>Tripous.ResLib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Tripous.StandardApp\Tripous.StandardApp.csproj">
+      <Project>{e0cc08dc-7aca-4c23-a5b0-464844681368}</Project>
+      <Name>Tripous.StandardApp</Name>
     </ProjectReference>
     <ProjectReference Include="..\Tripous\Tripous.csproj">
       <Project>{f86149f6-9e5d-45dd-adb0-7fc9eb93a18d}</Project>
