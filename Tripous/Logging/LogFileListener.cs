@@ -108,8 +108,8 @@ namespace Tripous.Logging
         {
             StringBuilder SB = new StringBuilder();
             SB.Append(Pad(Info.TimeStamp.ToString("yyyy-MM-dd HH:mm:ss.ff"), Lengths["TimeStamp"]));
-            SB.Append(Pad(Info.Computer, Lengths["Host"]));
-            SB.Append(Pad(Info.NetUserName, Lengths["User"]));
+            SB.Append(Pad(Info.Host, Lengths["Host"]));
+            SB.Append(Pad(Info.User, Lengths["User"]));
             SB.Append(Pad(Info.Level.ToString(), Lengths["Level"]));
             SB.Append(Pad(Info.EventId.ToString(), Lengths["EventId"]));
             SB.Append(Pad(Info.Source, Lengths["Source"]));

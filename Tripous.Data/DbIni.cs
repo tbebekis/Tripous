@@ -24,43 +24,56 @@ namespace Tripous.Data
         /* fields */
         private SqlStore Store = null;
 
-        private string tableName = SysTables.Ini;
-        private string entryField = "EntryKey";
-        private string valueField = "EntryValue";
-        private string blobField = "EntryData";
+        /// <summary>
+        /// Constant
+        /// </summary>
+        public readonly string STableName = SysTables.Ini;
+        /// <summary>
+        /// Constant
+        /// </summary>
+        public const string SEntryField = "EntryKey";
+        /// <summary>
+        /// Constant
+        /// </summary>
+        public const string SValueField = "EntryValue";
+        /// <summary>
+        /// Constant
+        /// </summary>
+        public const string SBlobField = "EntryData";
+        /// <summary>
+        /// Constant
+        /// </summary>
+        public readonly string CreateTableSql = $@"
+create table {SysTables.Ini} (                   
+ {SEntryField}    @VARCHAR(512)     
+,{SValueField}    @VARCHAR(2048)    
+,{SBlobField}     @BLOB             
+) 
+";
+
 
         /// <summary>
         /// Ensures that the ini table exists in database.
         /// </summary>
         private void EnsureTableExists()
         {
-            if (!Store.TableExists(tableName))
+            if (!Store.TableExists(STableName))
             {
-                string SqlText =
-                                "create table {0} (         " +
-                                " {1}    @VARCHAR(512)       " +
-                                ",{2}    @VARCHAR(2048)      " +
-                                ",{3}    @BLOB              " +
-                                ")                          " +
-                                "";
-
-                SqlText = string.Format(SqlText, tableName, entryField, valueField, blobField);
-
-                Store.CreateTable(SqlText);
+                Store.CreateTable(CreateTableSql);
             }
         }
 
-        /* construction */
+        /* construction */ 
         /// <summary>
         /// Constructor
         /// </summary>
         public DbIni(SqlConnectionInfo ConnectionInfo, string TableName, string EntryField, string ValueField, string BlobField)
         {
             this.Store = new SqlStore(ConnectionInfo);
-            tableName = TableName;
-            entryField = EntryField;
-            valueField = ValueField;
-            blobField = BlobField;
+            STableName = TableName;
+            SEntryField = EntryField;
+            SValueField = ValueField;
+            SBlobField = BlobField;
 
             EnsureTableExists();
         }
@@ -78,7 +91,7 @@ namespace Tripous.Data
         /// </summary>
         public bool Exists(string Entry)
         {
-            string SqlText = string.Format("select {0} from {1} where {0} = '{2}' ", entryField, tableName, Entry);
+            string SqlText = string.Format("select {0} from {1} where {0} = '{2}' ", SEntryField, STableName, Entry);
             DataRow Row = Store.SelectResults(SqlText);
             return (Row != null);
         }
@@ -87,7 +100,7 @@ namespace Tripous.Data
         /// </summary>
         public void Delete(string Entry)
         {
-            string SqlText = string.Format("delete from {0} where {1} = '{2}' ", tableName, entryField, Entry);
+            string SqlText = string.Format("delete from {0} where {1} = '{2}' ", STableName, SEntryField, Entry);
             Store.ExecSql(SqlText);
         }
 
@@ -99,9 +112,9 @@ namespace Tripous.Data
             string SqlText;
 
             if (Exists(Entry))
-                SqlText = string.Format("update {0} set {1} = '{2}'  where {3} = '{4}'  ", tableName, valueField, Value, entryField, Entry);
+                SqlText = string.Format("update {0} set {1} = '{2}'  where {3} = '{4}'  ", STableName, SValueField, Value, SEntryField, Entry);
             else
-                SqlText = string.Format("insert into {0} ({1}, {2}) values ('{3}', '{4}')", tableName, entryField, valueField, Entry, Value);
+                SqlText = string.Format("insert into {0} ({1}, {2}) values ('{3}', '{4}')", STableName, SEntryField, SValueField, Entry, Value);
 
             Store.ExecSql(SqlText);
         }
@@ -110,10 +123,10 @@ namespace Tripous.Data
         /// </summary>
         public string ReadString(string Entry, string Default)
         {
-            string SqlText = string.Format("select {0} from {1} where {2} = '{3}' ", valueField, tableName, entryField, Entry);
+            string SqlText = string.Format("select {0} from {1} where {2} = '{3}' ", SValueField, STableName, SEntryField, Entry);
             DataRow Row = Store.SelectResults(SqlText);
-            if ((Row != null) && (!Row.IsNull(valueField)))
-                return Row[valueField].ToString();
+            if ((Row != null) && (!Row.IsNull(SValueField)))
+                return Row[SValueField].ToString();
 
             return Default;
         }
@@ -184,7 +197,7 @@ namespace Tripous.Data
         public void WriteBlob(string Entry, Stream Stream, string Value)
         {
             DataTable Table = new DataTable();
-            Table.Columns.Add(blobField, typeof(byte[]));
+            Table.Columns.Add(SBlobField, typeof(byte[]));
 
             byte[] Bytes = new byte[Stream.Length];
             Stream.Position = 0;
@@ -198,12 +211,12 @@ namespace Tripous.Data
             if (Exists(Entry))
             {
                 SqlText = string.Format("update {0} set {1} = '{2}', {3} = :{3} where {4} = '{5}' ",
-                    tableName, valueField, Value, blobField, entryField, Entry);
+                    STableName, SValueField, Value, SBlobField, SEntryField, Entry);
             }
             else
             {
                 SqlText = string.Format("insert into {0} ({1}, {2}, {3}) values ('{4}', '{5}', :{3})",
-                    tableName, entryField, valueField, blobField, Entry, Value);
+                    STableName, SEntryField, SValueField, SBlobField, Entry, Value);
             }
 
 
@@ -223,15 +236,15 @@ namespace Tripous.Data
         {
             bool Result = false;
 
-            string SqlText = string.Format("select * from {0} where {1} = '{2}' ", tableName, entryField, Entry);
+            string SqlText = string.Format("select * from {0} where {1} = '{2}' ", STableName, SEntryField, Entry);
             DataRow Row = Store.SelectResults(SqlText);
             if (Row != null)
             {
                 Result = true;
 
-                if (!Row.IsNull(blobField))
+                if (!Row.IsNull(SBlobField))
                 {
-                    byte[] Bytes = (byte[])Row[blobField];
+                    byte[] Bytes = (byte[])Row[SBlobField];
                     if (Bytes.Length > 0)
                     {
                         Stream.Write(Bytes, 0, Bytes.Length);
@@ -239,8 +252,8 @@ namespace Tripous.Data
                     }
                 }
 
-                if (!Row.IsNull(entryField))
-                    Value = Row[entryField].ToString();
+                if (!Row.IsNull(SEntryField))
+                    Value = Row[SEntryField].ToString();
 
             }
 

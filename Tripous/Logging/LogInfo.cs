@@ -23,8 +23,8 @@ namespace Tripous.Logging
         /// </summary>
         public LogInfo(string Source, string ScopeId, string EventId, LogLevel Level, Exception Exception, string Text, params object[] Params)
         {
-            this.Source = Source?? "";
-            this.ScopeId = ScopeId?? "";
+            this.Source = !string.IsNullOrWhiteSpace(Source) ? Source : (Exception != null? Exception.GetType().FullName: string.Empty);
+            this.ScopeId = !string.IsNullOrWhiteSpace(ScopeId) ? ScopeId : string.Empty;
             this.EventId = !string.IsNullOrWhiteSpace(EventId) ? EventId : "0";
             this.Level = Level;
             this.Exception = Exception;
@@ -46,8 +46,8 @@ namespace Tripous.Logging
 
             SB.AppendLine(" ================================================================");
             SB.AppendLine("Date           : " + this.TimeStamp.ToString("yyyy-MM-dd HH:mm:ss.fff"));
-            SB.AppendLine("NetUserName    : " + this.NetUserName);
-            SB.AppendLine("Computer       : " + this.Computer);
+            SB.AppendLine("NetUserName    : " + this.User);
+            SB.AppendLine("Computer       : " + this.Host);
             SB.AppendLine(" ----------------------------------------------------------------");
             SB.AppendLine("Level          : " + Level.ToString());
             SB.AppendLine("Source         : " + Source);
@@ -93,13 +93,13 @@ namespace Tripous.Logging
         /// </summary>
         public string Time { get { return this.TimeStamp.ToString("HH:mm:ss.fff"); } }
         /// <summary>
-        /// The username of the current user of the local computer
+        /// The username of the current user of this application or the local computer
         /// </summary>
-        public string NetUserName { get { return Sys.NetUserName; } }
+        public string User { get; set; }
         /// <summary>
         /// The name of the local computer
         /// </summary>
-        public string Computer { get { return Sys.HostName; } }
+        public string Host { get { return Sys.HostName; } }
 
         /// <summary>
         /// The log level

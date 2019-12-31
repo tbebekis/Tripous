@@ -527,54 +527,7 @@ namespace Tripous.Model
             }
         }
 
-        /// <summary>
-        /// Ensures that a user exists.
-        /// <para>NOTE: Can be called before broker registration</para>
-        /// <para>NOTE: Psw can be null or empty.</para>
-        /// </summary>
-        static public void EnsureUser(string UserName, string Psw, string UserGroupName, bool IsSupervisor = true)
-        {
-            SqlBroker broker = null;
-            object CompanyId = SysConfig.CompanyId;
-            string CompanyFieldName = SysConfig.CompanyFieldName;
-
-            // ensure user-group
-            string SqlText = @"select Id from {0} where Name = '{1}'";
-            SqlText = string.Format(SqlText, SysTables.UserGroup, UserGroupName);
-            SqlStore DefaultStore = SqlStores.CreateDefaultSqlStore();
-            object UserGroupId = DefaultStore.SelectResult(SqlText, null);
-            if (Sys.IsNull(UserGroupId))
-            {
-                // add a proper user group
-                broker = SqlBroker.CreateSingleTableBroker(SysTables.UserGroup);
-                broker.Insert();
-                broker.tblItem.Rows[0][CompanyFieldName] = CompanyId;
-                broker.tblItem.Rows[0]["Name"] = UserGroupName;
-                broker.Commit(true);
-
-                UserGroupId = broker.Row["Id"];
-            }
-
-            SqlText = @"select Id from {0} where UserName = '{1}' and {2} = {3}";
-            SqlText = string.Format(SqlText, SysTables.User, UserName, CompanyFieldName, Sys.IdStr(CompanyId));            
-            object UserId = DefaultStore.SelectResult(SqlText, null);
-            if (Sys.IsNull(UserId))
-            {
-                // add a proper user
-                broker = SqlBroker.CreateSingleTableBroker(SysTables.User);
-                broker.Insert();
-
-                broker.tblItem.Rows[0][CompanyFieldName] = CompanyId;
-                broker.tblItem.Rows[0]["Name"] = UserName;
-                broker.tblItem.Rows[0]["UserName"] = UserName;
-                if (!string.IsNullOrWhiteSpace(Psw))
-                    broker.tblItem.Rows[0]["Psw"] = Encryptor.Encrypt(Psw);
-                broker.tblItem.Rows[0]["GroupId"] = UserGroupId;
-                broker.tblItem.Rows[0]["IsSupervisor"] = IsSupervisor ? 1 : 0;
-                broker.tblItem.Rows[0]["IsActive"] = 1;
-                broker.Commit(false);
-            }
-        }
+ 
 
         /// <summary>
         /// Returns the Broker of the specified ClientObject 

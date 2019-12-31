@@ -16,6 +16,14 @@ namespace Tripous
     /// </summary>
     static public class SysConfig
     {
+        /// <summary>
+        /// Constant
+        /// </summary>
+        public const string EnId = "D4997C35-6E89-499A-87BF-D5750D0D3F06";
+        /// <summary>
+        /// Constant
+        /// </summary>
+        public const string GrId = "92A158E7-25CA-4367-BA57-FB79C40D775C";
 
         /* private */
         static string fApplicationName;
@@ -34,7 +42,7 @@ namespace Tripous
         static SysConfig()
         { 
         }
-        
+
 
         /* properties */
         /// <summary>
@@ -382,7 +390,14 @@ namespace Tripous
         /// Gets the size of a field for  the default SimpleType data type for Id fields
         /// </summary>
         static public int OidSize { get { return OidDataType == SimpleType.String ? 40 : 0; } }
-
+        /// <summary>
+        /// A string to be used for primary keys when formating CREATE TABLE statements
+        /// </summary>
+        static public string PrimaryKeyStr { get { return SysConfig.GuidOids ? "@NVARCHAR(40)    @NOT_NULL primary key" : "@PRIMARY_KEY"; } }
+        /// <summary>
+        ///  A string to be used for foreign keys when formating CREATE TABLE statements
+        /// </summary>
+        static public string ForeignKeyStr { get { return SysConfig.GuidOids ? "@NVARCHAR(40)" : "integer"; } }
     }
 
 }

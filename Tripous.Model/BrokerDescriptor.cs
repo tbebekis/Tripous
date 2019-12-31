@@ -102,8 +102,6 @@ namespace Tripous.Model
         /// </summary>
         public TableDescriptor FindTableDescriptor(string Name)
         {
-            if (SysTables.IsPrefixed(Name))
-                Name = SysTables.GetTable(Name);
 
             if (string.IsNullOrEmpty(Name) || Sys.IsSameText(Name, "Item"))
                 Name = MainTableName;

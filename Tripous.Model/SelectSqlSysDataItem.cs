@@ -102,7 +102,7 @@ namespace Tripous.Model
             this.DataType = DataType;
             this.DataName = Source.Name;
             this.Title = Source.Title;
-            this.ConnectionName = Source.ConnectionName;
+            this.StoreName = Source.ConnectionName;
 
             Descriptor = Source.Clone() as SelectSql;
         }
@@ -113,7 +113,7 @@ namespace Tripous.Model
         {
             this.DataName = Descriptor.Name;
             this.Title = Descriptor.Title;
-            this.ConnectionName = Descriptor.ConnectionName;
+            this.StoreName = Descriptor.ConnectionName;
         }
 
         /* properties */

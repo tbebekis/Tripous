@@ -1264,27 +1264,27 @@ tp.DataView = class extends tp.View {
     /**
     Finds and returns a {@link tp.DataSource} data-source by name, if any, else null.
     @protected
-    @param {string} DataSourceName The data-source by name
+    @param {string} SourceName The data-source by name
     @returns {tp.DataSource} Returns a {@link tp.DataSource} data-source or null
     */
-    GetDataSource(DataSourceName) {
+    GetDataSource(SourceName) {
         if (!tp.IsEmpty(this.Broker)) {
-            if (tp.IsSameText('Item', DataSourceName) || tp.IsBlank(DataSourceName)) {
-                DataSourceName = this.Broker.MainTableName;
-            } else if (tp.IsSameText('Lines', DataSourceName)) {
-                DataSourceName = this.Broker.LinesTableName;
-            } else if (tp.IsSameText('SubLines', DataSourceName)) {
-                DataSourceName = this.Broker.SubLinesTableName;
+            if (tp.IsSameText('Item', SourceName) || tp.IsBlank(SourceName)) {
+                SourceName = this.Broker.MainTableName;
+            } else if (tp.IsSameText('Lines', SourceName)) {
+                SourceName = this.Broker.LinesTableName;
+            } else if (tp.IsSameText('SubLines', SourceName)) {
+                SourceName = this.Broker.SubLinesTableName;
             }
         }
 
         var Table, DataSource;
         var Result = tp.FirstOrDefault(this.DataSources, (item) => {
-            return tp.IsSameText(DataSourceName, item.Name);
+            return tp.IsSameText(SourceName, item.Name);
         });
 
         if (tp.IsEmpty(Result) && !tp.IsEmpty(this.Broker)) {
-            Table = this.Broker.DataSet.FindTable(DataSourceName);
+            Table = this.Broker.DataSet.FindTable(SourceName);
             if (!tp.IsEmpty(Table)) {
                 DataSource = new tp.DataSource(Table);
                 this.DataSources.push(DataSource);
@@ -1297,12 +1297,12 @@ tp.DataView = class extends tp.View {
     /**
     Returns the index of a data-source, if any, else -1.
     @protected
-    @param {string} DataSourceName The data-source name
+    @param {string} SourceName The data-source name
     @returns {number} Returns the index of a data-source, if any, else -1.
     */
-    IndexOfDataSource(DataSourceName) {
+    IndexOfDataSource(SourceName) {
         for (var i = 0, ln = this.DataSources.length; i < ln; i++) {
-            if (tp.IsSameText(DataSourceName, this.DataSources[i].Name)) {
+            if (tp.IsSameText(SourceName, this.DataSources[i].Name)) {
                 return i;
             }
         }
@@ -1324,7 +1324,7 @@ tp.DataView = class extends tp.View {
                 case tp.ControlBindMode.List:
                     return !tp.IsBlank(Control.DataField);
                 case tp.ControlBindMode.Grid:
-                    return !tp.IsBlank(Control.DataSourceName) && !tp.HasClass(Control.Handle, tp.Classes.BrowserGrid);
+                    return !tp.IsBlank(Control.SourceName) && !tp.HasClass(Control.Handle, tp.Classes.BrowserGrid);
             }
         }
 
@@ -1352,7 +1352,7 @@ tp.DataView = class extends tp.View {
     @param {tp.Control} Control A {@link tp.Control}
     */
     BindControl(Control) {
-        Control.DataSource = this.GetDataSource(Control.DataSourceName);
+        Control.DataSource = this.GetDataSource(Control.SourceName);
  
         if ((Control.DataBindMode === tp.ControlBindMode.List) && tp.IsEmpty(Control['ListSource']) && !tp.IsEmpty(Control.DataColumn)) {
             Column = Control.DataColumn;
