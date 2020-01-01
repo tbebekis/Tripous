@@ -93,7 +93,7 @@ namespace Tripous.Forms
         /// <summary>
         /// Initializes the model sub-system
         /// </summary>
-        protected virtual void InitializeModel()
+        protected virtual void RegisterModel()
         {
         }
         /// <summary>
@@ -210,7 +210,7 @@ namespace Tripous.Forms
 
 
                     /* model ======================================================================== */
-                    InitializeModel();
+                    RegisterModel();
 
 
                     /* ui ========================================================================== */

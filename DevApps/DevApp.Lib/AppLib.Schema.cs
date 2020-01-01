@@ -110,7 +110,6 @@ create table Trader (
   ,Name                   @NVARCHAR(96)
 
   ,constraint Uc_Trader_00 unique (Code)     
-
 ) 
 ";
 

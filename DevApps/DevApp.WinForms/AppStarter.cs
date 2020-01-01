@@ -75,8 +75,12 @@ namespace DevApp.WinForms
         /// <summary>
         /// Initializes the model sub-system
         /// </summary>
-        protected override void InitializeModel()
-        {             
+        protected override void RegisterModel()
+        {
+            SystemModel.Register();
+
+            AppLib.RegisterLocators();
+            AppLib.RegisterBrokers();
         }
  
         /* ui */
