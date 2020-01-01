@@ -14,13 +14,20 @@ namespace Tripous.Forms
     {
         protected FormState fFormState = FormState.None;
         protected bool Saving;
-        protected Panel pnlFind = new Panel();
-        protected DataGridView Grid = new DataGridView();
+ 
+        protected DataGridView gridList;
+        protected Panel pnlItem;
+        protected Panel pnlFind;
+
 
         /* event handlers */
         void AnyClick(object sender, EventArgs ea)
         {
-            if (btnList == sender)
+            if (btnFind == sender)
+            {
+                Find();
+            }
+            else if(btnList == sender)
             {
                 DataList();
             }
@@ -40,10 +47,15 @@ namespace Tripous.Forms
             {
                 DataSave();
             }
-            else if (btnFind == sender)
+            else if (btnCancelEdit == sender)
             {
-                Find();
+                DataCancelEdit();
             }
+            else if (btnClose == sender)
+            {
+                Close();
+            }
+
         }
         void Grid_MouseDoubleClick(object sender, MouseEventArgs e)
         {
@@ -82,9 +94,11 @@ namespace Tripous.Forms
             this.FormState = FormState.Insert;
             ItemInserted();            
         }
-        protected virtual void DataEdit()
+        protected virtual void DataEdit(object oId = null)
         {
-            object oId = ListGetCurrentId();
+            if (oId == null)
+                oId = ListGetCurrentId();
+
             if (!Sys.IsNull(oId))
             {
                 ItemLoad(oId);
@@ -131,6 +145,7 @@ namespace Tripous.Forms
 
         protected virtual void Find()
         {
+            this.FormState = FormState.Find;
         }
 
         protected virtual void ListSelect()
@@ -141,7 +156,7 @@ namespace Tripous.Forms
         {
             object Result = null;
 
-            DataRow Row = Grid.CurrentDataRow();
+            DataRow Row = gridList.CurrentDataRow();
             if (Row != null)
             {
                 DataColumn Column = Row.Table.FindColumn(Options.KeyField);
@@ -189,6 +204,28 @@ namespace Tripous.Forms
         {
         }
  
+        protected virtual void CreateListGrid()
+        {
+            gridList = new DataGridView();
+            gridList.Visible = false;
+            gridList.Dock = DockStyle.Fill;
+            gridList.Parent = this;
+        }
+        protected virtual void CreateItemPanel()
+        {
+            pnlItem = new Panel();
+            pnlItem.Visible = false;
+            pnlItem.Dock = DockStyle.Fill;
+            pnlItem.Parent = this;
+        }
+        protected virtual void CreateFindPanel()
+        {
+            pnlFind = new Panel();
+            pnlFind.Visible = false;
+            pnlFind.Dock = DockStyle.Fill;
+            pnlFind.Parent = this;
+        }
+
         protected virtual ToolStripButton AddButton(string ButtonName, string Text, Image Image, EventHandler Click)
         {
             return Ui.CreateToolStripButton(ButtonName, ToolStripItemDisplayStyle.Image, Text, Image, Click, ToolBar.Items) as ToolStripButton;
@@ -200,17 +237,28 @@ namespace Tripous.Forms
                 case FormState.None:
                     break;
                 case FormState.List:
-                    Grid.Visible = true;
-                    Grid.Dock = DockStyle.Fill;
-                    Grid.BringToFront();
+                    gridList.Visible = true;
+                    pnlItem.Visible = false;
+                    pnlFind.Visible = false;
+                    
+                    gridList.BringToFront();
                     break;
                 case FormState.Insert:
                 case FormState.Edit:
-                    Grid.Visible = false;
+                    gridList.Visible = false;
+                    pnlItem.Visible = true;
+                    pnlFind.Visible = false;
+
+                    pnlItem.BringToFront();
                     break;
                 case FormState.Delete:
                     break;
                 case FormState.Find:
+                    gridList.Visible = false;
+                    pnlItem.Visible = false;
+                    pnlFind.Visible = true;
+
+                    pnlFind.BringToFront();
                     break;
             }
 
@@ -220,15 +268,56 @@ namespace Tripous.Forms
         /* overrides */
         protected override void FormInitializeBefore()
         {
+ 
+            btnFind.Click += AnyClick;
+
+            btnList.Click += AnyClick;
+            btnInsert.Click += AnyClick;
+            btnEdit.Click += AnyClick;
+            btnDelete.Click += AnyClick;
+            btnSave.Click += AnyClick;
+
+            btnCancelEdit.Click += AnyClick;
+            btnClose.Click += AnyClick; 
+
             base.FormInitializeBefore();
 
-            pnlFind.Visible = false;
-            pnlFind.Dock = DockStyle.Fill;
-            pnlFind.Parent = this;
+            CreateListGrid();
+            CreateItemPanel();
+            CreateFindPanel();
+        }
+        protected override void Start()
+        {
+            if (Options != null)
+            {
+                switch (Options.StartState)
+                {
+                    case FormState.List:
+                        DataList();
+                        break;
+                    case FormState.Edit:
+                        DataEdit(Options.Id);
+                        break;
+                    case FormState.Insert:
+                        DataInsert();
+                        break;
+                }
+            }
+        }
+        /// <summary>
+        /// It is called when the escape key is pressed. 
+        /// <para>Returning true indicates that the key press is handled.</para>
+        /// <para>NOTE: By default, when is a modal dialog, it sets <see cref="DialogResult"/> to Cancel, and closes the form.</para>
+        /// </summary>
+        protected override bool ProcessEscapeKey()
+        {
+            if (!Modal && this.FormState == FormState.List)
+            {
+                this.Close();
+                return true;
+            }
 
-            Grid.Visible = false;
-            Grid.Dock = DockStyle.Fill;
-            Grid.Parent = this;
+            return base.ProcessEscapeKey();
         }
 
 

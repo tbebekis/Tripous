@@ -18,14 +18,15 @@ namespace Tripous.Forms
         public FormOptions()
         {
         }
-        public FormOptions(string FormClassFullName, string Text = "", string UniqueId = "")
+        public FormOptions(string FormClassFullName, string TextKey = "", string UniqueId = "")
         {
-            this.UniqueId = !string.IsNullOrWhiteSpace(UniqueId) ? UniqueId : FormClassFullName;
             this.FormClassName = FormClassFullName;
-            this.Text = Text;
+            this.UniqueId = !string.IsNullOrWhiteSpace(UniqueId) ? UniqueId : FormClassFullName;            
+            this.TextKey = TextKey;
+
         }
-        public FormOptions(Type FormClass, string Text = "", string UniqueId = "")
-            : this(FormClass.FullName, Text, UniqueId)
+        public FormOptions(Type FormClass, string TextKey = "", string UniqueId = "")
+            : this(FormClass.FullName, TextKey, UniqueId)
         { 
         }
 
@@ -42,7 +43,7 @@ namespace Tripous.Forms
         {
             return Registry.ToArray();
         }
-        static public FormOptions Register(string UniqueId, Type FormClass, string Text, string BrokerName, FormState StartState, FormState InvalidStates)
+        static public FormOptions Register(Type FormClass, string UniqueId, string BrokerName = "", string TextKey = "",  FormState StartState = FormState.List, FormState InvalidStates = FormState.None)
         {
             if (string.IsNullOrWhiteSpace(UniqueId))
                 Sys.Error("Can not register a form with an empty or null UniqueId");
@@ -50,10 +51,18 @@ namespace Tripous.Forms
             FormOptions Result = Find(UniqueId);
             if (Result == null)
             {
-                Result = new FormOptions(FormClass, Text)
+                if (string.IsNullOrWhiteSpace(BrokerName))
+                    BrokerName = UniqueId;
+
+                if (string.IsNullOrWhiteSpace(TextKey))
+                    TextKey = BrokerName;
+
+                Result = new FormOptions()
                 {
+                    FormClassName = FormClass.FullName,
                     UniqueId = UniqueId,
                     BrokerName = BrokerName,
+                    TextKey = TextKey,
                     StartState = StartState,
                     InvalidStates = InvalidStates
                 };
@@ -69,7 +78,7 @@ namespace Tripous.Forms
         /// The full class name of the form, i.e. fully qualified with its namespace.
         /// </summary>
         public string FormClassName { get; set; }
-        public string Text { get; set; }
+        public string TextKey { get; set; }
         public string UniqueId { get; private set; }
         public string KeyField { get; set; } = "Id";
         public string BrokerName { get; set; }

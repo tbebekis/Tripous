@@ -115,13 +115,12 @@ namespace DevApp.WinForms
                 case SystemCommands.CMD_ABOUT: return true;
 
                 /* Application */
-                case AppLib.Trader:
-                    Ui.InfoBox("Trader");
-                    return true;
+                default:
+                    return ExecuteFormCommand(Cmd);
 
             }
 
-            return false;
+            //return false;
         }
         /// <summary>
         /// Handles the property change of the specified command.
@@ -136,6 +135,18 @@ namespace DevApp.WinForms
         {
         }
 
+        bool ExecuteFormCommand(Command Cmd)
+        {
+            FormOptions O = FormOptions.Find(Cmd.Name);
+
+            if (O != null)
+            {
+                BaseForm.ShowDocked(O);
+                return true;
+            }
+
+            return false;
+        }
 
         /* event handlers */
         void AnyClick(object sender, EventArgs ea)

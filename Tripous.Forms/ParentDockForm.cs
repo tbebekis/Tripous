@@ -26,7 +26,7 @@ namespace Tripous.Forms
         {
             if (ChildForm != null)
             {
-                if (!ChildForm.InClosing)
+                if (!ChildForm.IsClosing)
                 {
                     if (ChildForm.CanClose())
                     {

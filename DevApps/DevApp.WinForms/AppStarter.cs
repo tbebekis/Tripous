@@ -88,6 +88,7 @@ namespace DevApp.WinForms
             AppLib.RegisterViews();
 
             App.RegisterCommands();
+            App.RegisterForms();
         }
  
         /* ui */

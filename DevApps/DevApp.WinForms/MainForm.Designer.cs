@@ -105,6 +105,7 @@
             this.Controls.Add(this.MainMenu);
             this.IsMdiContainer = true;
             this.Name = "MainForm";
+            this.ShowInTaskbar = true;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "DevApp.WinForms";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;

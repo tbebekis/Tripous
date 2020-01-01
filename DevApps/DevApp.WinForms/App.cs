@@ -16,6 +16,7 @@ using System.Windows.Forms.Design;
 using Tripous;
 using Tripous.Data;
 using Tripous.Model;
+using Tripous.Forms;
 
 using DevApp.Lib;
 
@@ -50,6 +51,13 @@ namespace DevApp.WinForms
             P.InsertAfter(SystemCommands.CMD_FILE, Cn);
 
             Cn.Add(AppLib.Trader, AppLib.Trader).IconPath = Icons32.User;
+        }
+
+        static public void RegisterForms()
+        {
+            FormOptions Options;
+
+            Options = FormOptions.Register(typeof(DataFormSqlBroker), AppLib.Trader);
         }
 
         /* properties */

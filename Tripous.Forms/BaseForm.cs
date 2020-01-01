@@ -93,8 +93,7 @@ namespace Tripous.Forms
         /// Called in order to initialize the form
         /// </summary>
         protected virtual void FormInitialize()
-        {
-            ProcessFormOptions();
+        {            
         }
         /// <summary>
         /// Called just after form initialization
@@ -108,8 +107,14 @@ namespace Tripous.Forms
         /// </summary>
         protected virtual void ProcessFormOptions()
         {
-            if (Options != null && !string.IsNullOrWhiteSpace(Options.Text))
-                this.Text = Options.Text;
+            if (Options != null && !string.IsNullOrWhiteSpace(Options.TextKey))
+                this.Text = Res.GS(Options.TextKey, Options.TextKey);
+        }
+        /// <summary>
+        /// Executes any first command on the form
+        /// </summary>
+        protected virtual void Start()
+        {
         }
 
         /// <summary>
@@ -213,10 +218,12 @@ namespace Tripous.Forms
 
                     SetFormIcon();
 
+                    ProcessFormOptions();
                     FormInitializeBefore();
                     FormInitialize();
                     Initialized = true;
                     FormInitializeAfter();
+                    Start();
                 }
             }
                 
@@ -239,7 +246,7 @@ namespace Tripous.Forms
             {
                 if (!DockForm.InClosing)
                 {
-                    InClosing = true;
+                    IsClosing = true;
                     DockForm.Close();
                 }
             }
@@ -432,7 +439,7 @@ namespace Tripous.Forms
         /// True when this is the main form.
         /// </summary>
         public bool IsMainForm { get { return Ui.MainForm == this; } }
-        internal bool InClosing { get; private set; }
+        internal bool IsClosing { get; private set; }
 
     }
 }
