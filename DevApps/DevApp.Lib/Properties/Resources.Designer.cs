@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace DevApp.WinForms.Properties {
+namespace DevApp.Lib.Properties {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace DevApp.WinForms.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("DevApp.WinForms.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("DevApp.Lib.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -57,26 +57,6 @@ namespace DevApp.WinForms.Properties {
             }
             set {
                 resourceCulture = value;
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
-        /// </summary>
-        internal static System.Drawing.Icon AppIco {
-            get {
-                object obj = ResourceManager.GetObject("AppIco", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap door_out {
-            get {
-                object obj = ResourceManager.GetObject("door_out", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
             }
         }
         

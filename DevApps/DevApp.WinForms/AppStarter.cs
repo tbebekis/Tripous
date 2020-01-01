@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using System.Reflection;
 using System.Windows.Forms;
 
 using Tripous;
@@ -37,6 +38,7 @@ namespace DevApp.WinForms
             Db.Initialize();
             Bm.Initialize();
 
+            ObjectStore.RegisterObjectsOf(typeof(SystemCommands).Assembly);
             AppLib.Initialize();
         }
 
@@ -78,9 +80,14 @@ namespace DevApp.WinForms
         protected override void RegisterModel()
         {
             SystemModel.Register();
+            SystemCommands.Register();
 
             AppLib.RegisterLocators();
             AppLib.RegisterBrokers();
+
+            AppLib.RegisterViews();
+
+            App.RegisterCommands();
         }
  
         /* ui */

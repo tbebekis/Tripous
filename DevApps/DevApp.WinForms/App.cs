@@ -27,13 +27,29 @@ namespace DevApp.WinForms
     static internal class App
     {
 
+
+        /// <summary>
+        /// Starts the application
+        /// </summary>
         static public void Start()
         {
             Starter = new AppStarter();
             Starter.Start();
         }
-        static public void Stop()
+
+        /// <summary>
+        /// Registers commands
+        /// </summary>
+        static public void RegisterCommands()
         {
+            Command P = Registry.MainRootCommand;
+            Command Cn;
+
+            /* Admin */
+            Cn = Command.CreateContainer(SystemCommands.CMD_ADMIN, SystemCommands.CMD_ADMIN);
+            P.InsertAfter(SystemCommands.CMD_FILE, Cn);
+
+            Cn.Add(AppLib.Trader, AppLib.Trader).IconPath = Icons32.User;
         }
 
         /* properties */

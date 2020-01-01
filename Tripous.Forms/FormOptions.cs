@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 using System.Windows.Forms;
+
+using Newtonsoft.Json;
 
 namespace Tripous.Forms
 {
@@ -18,14 +19,14 @@ namespace Tripous.Forms
         {
         }
         public FormOptions(string FormClassFullName, string Text = "", string UniqueId = "")
-            : this(Type.GetType(FormClassFullName, true, true), Text, UniqueId)
         {
+            this.UniqueId = !string.IsNullOrWhiteSpace(UniqueId) ? UniqueId : FormClassFullName;
+            this.FormClassName = FormClassFullName;
+            this.Text = Text;
         }
         public FormOptions(Type FormClass, string Text = "", string UniqueId = "")
-        {
-            this.UniqueId = !string.IsNullOrWhiteSpace(UniqueId)? UniqueId: FormClass.FullName;
-            this.FormClass = FormClass;
-            this.Text = Text;
+            : this(FormClass.FullName, Text, UniqueId)
+        { 
         }
 
         /* static */
@@ -63,17 +64,27 @@ namespace Tripous.Forms
             return Result;
         }
 
-        /* properties */
-        public Type FormClass { get; set; }
+        /* properties */        
+        /// <summary>
+        /// The full class name of the form, i.e. fully qualified with its namespace.
+        /// </summary>
+        public string FormClassName { get; set; }
         public string Text { get; set; }
         public string UniqueId { get; private set; }
         public string KeyField { get; set; } = "Id";
-        public object Result { get; set; }
-        public bool AsModal { get; set; }
-        public object Id { get; set; }
         public string BrokerName { get; set; }
         public FormState StartState { get; set; } = FormState.List;
         public FormState InvalidStates { get; set; }
+
+        [JsonIgnore]
+        public Type FormClass { get { return Type.GetType(FormClassName, true); } }
+        [JsonIgnore]
+        public object Result { get; set; }
+        [JsonIgnore]
+        public bool AsModal { get; set; }
+        [JsonIgnore]
+        public object Id { get; set; }
+        [JsonIgnore]
         public Dictionary<string, object> Params { get; } = new Dictionary<string, object>();
     }
 }

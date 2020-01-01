@@ -76,7 +76,7 @@ namespace Tripous
         { 
             foreach (ICommandHandler Hanlder in Handlers)
             {
-                if (Hanlder.Execute(Command))
+                if (Hanlder.CommandExecute(Command))
                     return;
             }
         }
@@ -87,7 +87,7 @@ namespace Tripous
         {
             foreach (ICommandHandler Hanlder in Handlers)
             {
-                Hanlder.EnabledChanged(Command);
+                Hanlder.CommandEnabledChanged(Command);
             }
         }
         /// <summary>
@@ -97,7 +97,7 @@ namespace Tripous
         {
             foreach (ICommandHandler Hanlder in Handlers)
             {
-                Hanlder.VisibleChanged(Command);
+                Hanlder.CommandVisibleChanged(Command);
             }
         }
 

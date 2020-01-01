@@ -15,15 +15,15 @@ namespace Tripous
         /// <summary>
         /// Returns true if the specified Command is executed by this handler
         /// </summary>
-        bool Execute(Command Command);
+        bool CommandExecute(Command Cmd);
         /// <summary>
         /// Handles the property change of the specified command.
         /// </summary>
-        void EnabledChanged(Command Command);
+        void CommandEnabledChanged(Command Cmd);
         /// <summary>
         /// Handles the property change of the specified command.
         /// </summary>
-        void VisibleChanged(Command Command);
+        void CommandVisibleChanged(Command Cmd);
     }
 
 }

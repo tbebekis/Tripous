@@ -20,8 +20,9 @@ namespace Tripous
         bool fEnabled = true;
         bool fVisible = true;
         ICommandHandler fHandler;
+        string fIconPath;
 
-        /* protected */ 
+        /* protected */
         /// <summary>
         /// Throws an exception if a command with Name, already exists in list.
         /// </summary>
@@ -36,14 +37,14 @@ namespace Tripous
         /// </summary>
         protected virtual void OnEnabledChanged()
         {
-            Handler.EnabledChanged(this);
+            Handler.CommandEnabledChanged(this);
         }
         /// <summary>
         /// Called when a property value is changed
         /// </summary>
         protected virtual void OnVisibleChanged()
         {
-            Handler.VisibleChanged(this);
+            Handler.CommandVisibleChanged(this);
         }
 
 
@@ -52,7 +53,7 @@ namespace Tripous
         /// Constructor.
         /// </summary>
         private Command()
-        { 
+        {
         }
         /// <summary>
         /// Constructor.
@@ -64,6 +65,28 @@ namespace Tripous
             this.Handler = Handler;
         }
 
+        /* static */
+        /// <summary>
+        /// Creates a separator 
+        /// </summary>
+        static public Command CreateSeparator()
+        {
+            SeparatorCount++;
+            Command Cmd = new Command(CommandType.Separator, $"SEPARATOR_{SeparatorCount}");
+            Cmd.Text = "-";
+            return Cmd;
+        }
+        /// <summary>
+        /// Creates a container, a command that contains other commands 
+        /// </summary>
+        static public Command CreateContainer(string Name, string TextKey = "", string Text = "")
+        {
+            Command Cmd = new Command(CommandType.Container, Name);
+            Cmd.TextKey = TextKey;
+            Cmd.Text = Text;
+            return Cmd;
+        }
+
 
         /* public */
         /// <summary>
@@ -72,7 +95,7 @@ namespace Tripous
         public void Execute()
         {
             if (this.Handler != null)
-                Handler.Execute(this);
+                Handler.CommandExecute(this);
             else
                 Commander.Execute(this);
         }
@@ -83,23 +106,14 @@ namespace Tripous
         /// </summary>
         public Command AddSeparator()
         {
-            SeparatorCount++;
-            Command Cmd = new Command(CommandType.Separator, $"SEPARATOR_{SeparatorCount}");
-            Cmd.Text = "-";
-            return Add(Cmd);
+            return Add(CreateSeparator());
         }
         /// <summary>
         /// Creates a container, a command that contains other commands 
         /// </summary>
         public Command AddContainer(string Name, string TextKey = "", string Text = "")
         {
-            if (!IsRoot)
-                Sys.Error("Can not add a container command to a non root command");
-
-            Command Cmd = new Command(CommandType.Container, Name);
-            Cmd.TextKey = TextKey;
-            Cmd.Text = Text;            
-            return Add(Cmd);
+            return Add(CreateContainer(Name, TextKey, Text));
         }
 
         /// <summary>
@@ -107,6 +121,9 @@ namespace Tripous
         /// </summary>
         public Command Add(Command Cmd)
         {
+            if (!IsRoot && Cmd.Type == CommandType.Container)
+                Sys.Error("Can not add a container command to a non root command");
+
             base.Add(Cmd);
             return Cmd;
         }
@@ -158,7 +175,7 @@ namespace Tripous
                 Add(Cmd);
             }
         }
- 
+
         /* find */
         /// <summary>
         /// Returns a child command of this command by Name, if any, else null.
@@ -273,7 +290,7 @@ namespace Tripous
                 if (string.IsNullOrWhiteSpace(Command.IconKey))
                     Command.IconKey = ResourceKeyResolvers.ResourcePathToKey(Command.IconPath);
             }
-                
+
         }
 
 
@@ -340,7 +357,7 @@ namespace Tripous
                 Cmd.IconKey = Json.AsValue(JO.Property("IconKey"), "");
                 Cmd.IconPath = Json.AsValue(JO.Property("IconPath"), "");
                 Cmd.UiMode = Json.AsValue(JO.Property("UiMode"), UiModes.All);
-                Cmd.Hidden = Json.AsValue(JO.Property("Hidden"), false); 
+                Cmd.Hidden = Json.AsValue(JO.Property("Hidden"), false);
 
                 JArray Items = Json.AsValue(JO.Property("Items"), DefaultItems);
                 if ((Items != null))
@@ -429,11 +446,15 @@ namespace Tripous
         /// <summary>
         /// Gets or sets the image path  
         /// </summary>
-        public string IconPath { get; set; }
+        public string IconPath
+        {
+            get { return !string.IsNullOrWhiteSpace(fIconPath) ? fIconPath : (!string.IsNullOrWhiteSpace(IconKey) ? ResourceKeyResolvers.KeyToResourcePath(IconKey) : null); }
+            set { fIconPath = value; }
+        }
         /// <summary>
         /// The image associated with this command
         /// </summary>
-        public Image Icon { get { return string.IsNullOrWhiteSpace(IconPath) ? null : Res.GetImage(IconPath); } }
+        public Image Icon { get { return string.IsNullOrWhiteSpace(IconPath) ? null : Res.GetImage(IconPath); } } 
         /// <summary>
         /// Gets or sets Enabled and Visible in a single call.
         /// </summary>

@@ -18,6 +18,10 @@ namespace DevApp.Lib
     /// </summary>
     static public partial class AppLib
     {
+        /// <summary>
+        /// Constant
+        /// </summary>
+        public const string Trader = "Trader";
 
         static SqlStore fStore;
 
@@ -41,6 +45,7 @@ namespace DevApp.Lib
         /// </summary>
         static public void Initialize()
         {
+            ObjectStore.RegisterObjectsOf(typeof(AppLib).Assembly);
         }
 
         /* select */

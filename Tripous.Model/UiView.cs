@@ -33,6 +33,8 @@ namespace Tripous.Model
     /// </summary>
     public class UiView
     {
+        string fSourceName;
+
         /// <summary>
         /// A unique name among all view containers.
         /// </summary>
@@ -40,7 +42,11 @@ namespace Tripous.Model
         /// <summary>
         /// The data source name
         /// </summary>
-        public string SourceName { get; set; }
+        public string SourceName
+        {
+            get { return !string.IsNullOrWhiteSpace(fSourceName) ? fSourceName : Name; }
+            set { fSourceName = value; }
+        }
         /// <summary>
         /// A list of tabs. Could be empty.
         /// </summary>
@@ -127,6 +133,24 @@ namespace Tripous.Model
     public class UiColumn
     {
         /// <summary>
+        /// Adds and returns a control row to the column.
+        /// </summary>
+        public UiControlRow AddRow(string TextKey, string Id, string TypeName, string DataField, bool Required = false, bool ReadOnly = false)
+        {
+            UiControlRow Result = new UiControlRow();
+            Rows.Add(Result);
+
+            Result.TextKey = TextKey;
+            Result.Id = Id;
+            Result.TypeName = TypeName;            
+            Result.DataField = DataField;
+            Result.Required = Required;
+            Result.ReadOnly = ReadOnly;
+
+            return Result;
+        }
+
+        /// <summary>
         /// The data source name. When empty then it binds to its parent's source.
         /// </summary>
         public string SourceName { get; set; }
@@ -139,42 +163,28 @@ namespace Tripous.Model
         /// <summary>
         /// A list of rows.  
         /// </summary>
-        public List<UiRow> Rows { get; } = new List<UiRow>();
+        public List<UiControlRow> Rows { get; } = new List<UiControlRow>();
     }
 
     /// <summary>
     /// Represents a row in a <see cref="UiColumn"/>.
-    /// <para>The row is the control container.</para>
-    /// </summary>
-    public class UiRow
-    {
-        /// <summary>
-        /// The data source name. When empty then it binds to its parent's source.
-        /// </summary>
-        public string SourceName { get; set; }
-
-        /// <summary>
-        /// A list of controls.  
-        /// </summary>
-        public List<UiControl> Controls { get; } = new List<UiControl>();
-    }
-
-    /// <summary>
-    /// Represents a control along with its caption text.
+    /// <para>The row is the control container along with its caption text.</para>
     /// <para>The control may be data-bindable or not.</para>
     /// </summary>
-    public class UiControl
+    public class UiControlRow
     {
+
+
         /// <summary>
         /// The caption text of the control
         /// </summary>
-        public string Text { get; set; }
+        public string TextKey { get; set; }
 
         /// <summary>
         /// The HTML Id and HTML Name of the control.
         /// <para>The name of a desktop control.</para>
         /// </summary>
-        public string Id { get; set; }        
+        public string Id { get; set; }
         /// <summary>
         /// Indicates the control type, such as TextBox
         /// </summary>
@@ -187,6 +197,7 @@ namespace Tripous.Model
         /// When true the control must have a value
         /// </summary>
         public bool Required { get; set; }
+
         /// <summary>
         /// The data source name. When empty then it binds to its parent's source.
         /// </summary>
@@ -196,4 +207,6 @@ namespace Tripous.Model
         /// </summary>
         public string DataField { get; set; }
     }
+
+ 
 }

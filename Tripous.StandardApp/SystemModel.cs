@@ -42,20 +42,7 @@ from
             Table = Broker.Tables.Add(Broker.MainTableName, Broker.Title);
             Table.Fields.Add("Id", SysConfig.OidDataType, SysConfig.OidSize, "", FieldFlags.Required);
             Table.Fields.Add("Name", SimpleType.String, 96, "Name", FieldFlags.Visible | FieldFlags.Searchable | FieldFlags.Required);
-            Table.Fields.Add("OfficialName", SimpleType.String, 96, "OfficialName", FieldFlags.Visible | FieldFlags.Searchable);
-            Table.Fields.Add("Tin", SimpleType.String, 96, "Tin", FieldFlags.Visible);
-            Table.Fields.Add("LawEntityId", SysConfig.OidDataType, 0, "", FieldFlags.None);
-            Table.Fields.Add("Occupation", SimpleType.String, 96, "Occupation", FieldFlags.Visible);
-            Table.Fields.Add("TaxOfficeId", SysConfig.OidDataType, 0, "", FieldFlags.None);
-            Table.Fields.Add("Address", SimpleType.String, 96, "Address", FieldFlags.Visible);
-            Table.Fields.Add("PostCode", SimpleType.String, 96, "PostCode", FieldFlags.Visible);
-            Table.Fields.Add("Phone", SimpleType.String, 96, "Phone", FieldFlags.Visible);
-            Table.Fields.Add("Phone2", SimpleType.String, 96, "Phone2", FieldFlags.Visible);
-            Table.Fields.Add("Fax", SimpleType.String, 96, "Fax", FieldFlags.Visible);
-            Table.Fields.Add("Email", SimpleType.String, 96, "Email", FieldFlags.Visible);
-            Table.Fields.Add("WebSite", SimpleType.String, 96, "WebSite", FieldFlags.Visible);
-            Table.Fields.Add("Picture1", SimpleType.Graphic, 0, "Picture1", FieldFlags.Visible);
-            Table.Fields.Add("Picture2", SimpleType.Graphic, 0, "Picture2", FieldFlags.Visible);
+ 
 
             /* ======================================================================================================= */
             /* SYS_LANG */

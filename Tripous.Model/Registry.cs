@@ -17,22 +17,22 @@ namespace Tripous.Model
         /// <summary>
         /// A list of registered descriptors
         /// </summary>
-        static public SqlBrowserDescriptors Browsers { get; private set; } = new SqlBrowserDescriptors();
+        static public SqlBrowserDescriptors Browsers { get; set; } = new SqlBrowserDescriptors();
         /// <summary>
         /// A list of registered descriptors
         /// </summary>
-        static public BrokerDescriptors Brokers { get; private set; } = new BrokerDescriptors();
+        static public BrokerDescriptors Brokers { get; set; } = new BrokerDescriptors();
         /// <summary>
         /// Returns the CodeProducers
         /// </summary>
-        static public CodeDescriptors CodeProducers { get; private set; } = new CodeDescriptors();
+        static public CodeDescriptors CodeProducers { get; set; } = new CodeDescriptors();
         /// <summary>
         /// Returns the Locators
         /// </summary>
-        static public LocatorDescriptors Locators { get; private set; } = new LocatorDescriptors();
+        static public LocatorDescriptors Locators { get; set; } = new LocatorDescriptors();
         /// <summary>
         /// The main root command
         /// </summary>
-        static public Command MainRootCommand { get; private set; } = new Command(CommandType.Container, "MAIN");
+        static public Command MainRootCommand { get; set; } = new Command(CommandType.Container, "MAIN");
     }
 }

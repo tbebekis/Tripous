@@ -38,9 +38,6 @@ namespace Tripous
         /// Controls the visibility of the tool bar
         /// </summary>
         bool ToolbarVisible { get; set; }
-        /// <summary>
-        /// Controls the visibility of the side bar
-        /// </summary>
-        bool SidebarVisible { get; set; }
+ 
     }
 }

@@ -51,11 +51,7 @@ namespace Tripous.Model
         /// <summary>
         /// Constant
         /// </summary>
-        public const string CMD_TOOL_BAR = "CMD_TOOL_BAR";
-        /// <summary>
-        /// Constant
-        /// </summary>
-        public const string CMD_SIDE_BAR = "CMD_SIDE_BAR";
+        public const string CMD_TOOL_BAR = "CMD_TOOL_BAR"; 
         /// <summary>
         /// Constant
         /// </summary>
@@ -123,34 +119,6 @@ namespace Tripous.Model
         /// <summary>
         /// Constant
         /// </summary>
-        public const string CMD_ACCESS = "CMD_ACCESS";
-        /// <summary>
-        /// Constant
-        /// </summary>
-        public const string CMD_WINDOWS = "CMD_WINDOWS";
-        /// <summary>
-        /// Constant
-        /// </summary>
-        public const string CMD_WIN_CASCADE = "CMD_WIN_CASCADE";
-        /// <summary>
-        /// Constant
-        /// </summary>
-        public const string CMD_WIN_TILE_HORZ = "CMD_WIN_TILE_HORZ";
-        /// <summary>
-        /// Constant
-        /// </summary>
-        public const string CMD_WIN_TILE_VERT = "CMD_WIN_TILE_VERT";
-        /// <summary>
-        /// Constant
-        /// </summary>
-        public const string CMD_WIN_ARRANGE_ICONS = "CMD_WIN_ARRANGE_ICONS";
-        /// <summary>
-        /// Constant
-        /// </summary>
-        public const string CMD_WIN_CLOSE_ALL = "CMD_WIN_CLOSE_ALL";
-        /// <summary>
-        /// Constant
-        /// </summary>
         public const string CMD_HELP = "CMD_HELP";
         /// <summary>
         /// Constant
@@ -189,7 +157,7 @@ namespace Tripous.Model
         /// <summary>
         /// Registration method
         /// </summary>
-        static public void RegisterCommands()
+        static public void Register()
         {
             Command P = Registry.MainRootCommand;
             Command Cn;
@@ -233,7 +201,7 @@ namespace Tripous.Model
             /* APP_CONFIGURATION */
             Cn = P.AddContainer(CMD_APP_CONFIGURATION, CMD_APP_CONFIGURATION);
             Cn.Add(CMD_TOOL_BAR, CMD_TOOL_BAR);
-            Cn.Add(CMD_SIDE_BAR, CMD_SIDE_BAR);
+ 
             /*
             Cn.AddSeparator();
             Cn.Add(CMD_USER_SETTINGS, CMD_USER_SETTINGS);
@@ -264,21 +232,13 @@ namespace Tripous.Model
             Cn.AddSeparator();
             Cn.Add(CMD_SYS_SMTP_PROVIDERS, CMD_SYS_SMTP_PROVIDERS);
  
-            /* WINDOWS */
-            Cn = P.AddContainer(CMD_WINDOWS, CMD_WINDOWS);
-            Cn.Add(CMD_WIN_CASCADE, CMD_WIN_CASCADE);
-            Cn.Add(CMD_WIN_TILE_HORZ, CMD_WIN_TILE_HORZ);
-            Cn.Add(CMD_WIN_TILE_VERT, CMD_WIN_TILE_VERT);
-            Cn.Add(CMD_WIN_ARRANGE_ICONS, CMD_WIN_ARRANGE_ICONS);
-            Cn.Add(CMD_WIN_CLOSE_ALL, CMD_WIN_CLOSE_ALL);
-            Cn.AddSeparator();
 
             /* HELP */
             Cn = P.AddContainer(CMD_HELP, CMD_HELP);
             Cn.Add(CMD_ABOUT, CMD_ABOUT);
 
             string[] DesktopExclude = { CMD_LOGOUT };
-            string[] WebExclude = { CMD_EXIT, CMD_WINDOWS, CMD_WIN_CASCADE, CMD_WIN_TILE_HORZ, CMD_WIN_TILE_VERT, CMD_WIN_ARRANGE_ICONS, CMD_WIN_CLOSE_ALL };
+            string[] WebExclude = { CMD_EXIT };
 
             List<Command> List = P.GetFlatList();
             foreach (var Item in List)
@@ -309,7 +269,6 @@ namespace Tripous.Model
             P.SetIconPath(CMD_DASHBOARDS, Icons32.Dashboard);
 
             P.SetIconPath(CMD_TOOL_BAR, Icons32.Wrench_Orange);
-            P.SetIconPath(CMD_SIDE_BAR, Icons32.Application_Side_Boxes);
             P.SetIconPath(CMD_SQL_MONITOR, Icons32.Monitor_Lightning);
             P.SetIconPath(CMD_SYNTAX_EDIT, Icons32.Application_View_List);
             P.SetIconPath(CMD_SCRIPT_EDIT, Icons32.Script_Edit);
@@ -336,12 +295,7 @@ namespace Tripous.Model
             P.SetIconPath(CMD_SYS_LOG, Icons32.Error_Log);
             P.SetIconPath(CMD_SYS_SMTP_PROVIDERS, Icons32.Email_Setting); 
 
-            /* WINDOWS */
-            P.SetIconPath(CMD_WIN_CASCADE, Icons32.Application_Cascade);
-            P.SetIconPath(CMD_WIN_TILE_HORZ, Icons32.Application_Tile_Horizontal);
-            P.SetIconPath(CMD_WIN_TILE_VERT, Icons32.Application_Tile_Vertical);
-            P.SetIconPath(CMD_WIN_ARRANGE_ICONS, Icons32.Application_Double);
-            P.SetIconPath(CMD_WIN_CLOSE_ALL, Icons32.Application_Xp);
+ 
 
             /* HELP */
             P.SetIconPath(CMD_ABOUT, Icons32.Vcard);
