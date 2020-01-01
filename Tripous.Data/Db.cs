@@ -30,7 +30,7 @@ namespace Tripous.Data
         /// </summary>
         static public readonly string StandardDefaultValues = "CompanyId;EmptyString;AppDate;SysDate;SysTime;DbServerTime;AppUserName;AppUserId;NetUserName;Guid";
 
-        static List<SqlConnectionInfo> fConnectionStrings;
+        static List<SqlConnectionInfo> fConnections;
         static DbIni fMainIni;
 
         /// <summary>
@@ -798,32 +798,36 @@ namespace Tripous.Data
         {
             get
             {
-                if (fConnectionStrings == null || fConnectionStrings.Count == 0)
+                if (fConnections == null || fConnections.Count == 0)
                     Sys.Error("Can not get Connections. No database connections provided");
 
-                return fConnectionStrings;
+                return fConnections;
             }
             set
             {
-                if (fConnectionStrings != null)
+                if (fConnections != null)
                     Sys.Error("Connections strings are already set.");
 
                 if (value == null || value.Count == 0)
                     Sys.Error("Can not set Connections to a null or empty list. No database connections provided");
 
-                fConnectionStrings = value;
+                fConnections = value;
 
-                SqlConnectionInfo CS = fConnectionStrings.FirstOrDefault(item => item.Name.IsSameText(SysConfig.DefaultConnection));
+                SqlConnectionInfo CS = fConnections.FirstOrDefault(item => item.Name.IsSameText(SysConfig.DefaultConnection));
                 if (CS == null)
                 {
-                    CS = fConnectionStrings.FirstOrDefault(item => item.Name.IsSameText(Sys.DEFAULT));
+                    CS = fConnections.FirstOrDefault(item => item.Name.IsSameText(Sys.DEFAULT));
                 }
  
-                string DefaultConnectionName = CS != null ? CS.Name : fConnectionStrings[0].Name;
+                string DefaultConnectionName = CS != null ? CS.Name : fConnections[0].Name;
                 if (SysConfig.DefaultConnection.IsSameText(DefaultConnectionName))
                     SysConfig.DefaultConnection = DefaultConnectionName;
 
 
+                foreach (SqlConnectionInfo Item in fConnections)
+                {
+                    Item.ConnectionString = ConnectionStringBuilder.NormalizeConnectionString(Item.ConnectionString);
+                }
 
             }
         }

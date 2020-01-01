@@ -43,8 +43,6 @@ namespace DevApp.Lib
         {
         }
 
-
-
         /* select */
         /// <summary>
         /// Executes SqlText and returns a DataTable, actually a Tripous.Data.MemTable.

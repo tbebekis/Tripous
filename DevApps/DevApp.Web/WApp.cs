@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Data;
 using System.Data.Common;
+using System.IO;
 
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Builder;
@@ -61,7 +62,6 @@ namespace DevApp.Web
             Platform.IsWeb = true;
 
             SysConfig.ApplicationMode = ApplicationMode.Web;
-            SysConfig.CompanyId = null;
 
             SysConfig.SolutionName = "Tripous";
             SysConfig.ApplicationName = SysConfig.AppExeName;
@@ -73,6 +73,8 @@ namespace DevApp.Web
             SysConfig.DateFormat = DateTimeFormatType.Date;
             SysConfig.DateTimeFormat = DateTimeFormatType.DateTime24;
             SysConfig.TimeFormat = DateTimeFormatType.Time24;
+
+            SysConfig.AppDataFolder = Path.GetFullPath(@"..\..\..\Data");
 
             SysConfig.MainAssembly = typeof(WApp).Assembly;
             SysConfig.GuidOids = true;
@@ -92,39 +94,50 @@ namespace DevApp.Web
 
             try
             {
-                // 1. preparation, e.g. create folders etc.
-                InitializeSysConfig();
+                // 1. initialize libraries
+                WApp.InitializeSysConfig();
+
+                //DevApp.Lib.Forms.FormLib.Initialize();
                 Tripous.Logging.Logger.AddFileListener();
+                //Tripous.Icons32.Initialize();
                 ObjectStore.Initialize();
                 Db.Initialize();
                 Bm.Initialize();
 
-                AppLib.LoadExternalModules();
+                AppLib.Initialize();
 
-                // 2. initialize databases            
+
+                // 2. prepare application start
+                //CreateFolders();
+                //EnsureMachineId();
+                //ExternalModulesLoad();              /* load and initialize any plugins first */
+
+ 
+
+                // 3. initialize databases            
                 //DbProviderFactories.RegisterFactory("System.Data.SqlClient", System.Data.SqlClient.SqlClientFactory.Instance);
                 AppLib.ConnectDatabases();
                 AppLib.CreateDatabases();
 
-                // 3. register and execute database schemas 
+                // 4. register and execute database schemas 
                 AppLib.RegisterSchemas();
                 //ExternalModules.RegisterSchemas();
                 AppLib.ExecuteSchemas();
                 // AppLib.SetupCompanyId();
 
-                // 4. register config and config providers
+                // 5. register config and config providers
                 //AppLib.RegisterConfigProviders();
                 //ExternalModules.RegisterConfigProviders();
                 //LoadConfig();
 
-                // 5. register model
+                // 6. register model
                 //SysCodeProducers.Register();
                 //AppLib.RegisterCodeProducers();
                 AppLib.RegisterBrokers();
                 AppLib.RegisterLocators();
                 //ExternalModules.RegisterModuleItems();
 
-                // 6. initial data
+                // 7. initial data
                 AppLib.InsertInitialData();
 
  

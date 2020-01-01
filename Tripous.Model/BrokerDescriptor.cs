@@ -20,15 +20,10 @@ namespace Tripous.Model
         /// Constant
         /// </summary>
         public const string SSysDataType = "Broker"; 
-
- 
  
         string fEntityName;
 
  
- 
- 
-
         /// <summary>
         /// Field
         /// </summary>

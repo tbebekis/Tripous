@@ -1,0 +1,9 @@
+{
+    "SqlConnections": [
+        {
+            "Name": "Default",
+            "Provider": "SQLite",
+            "ConnectionString": "Data Source=[Data]\\Tripous3DevApp.db3"
+        }
+    ]
+}

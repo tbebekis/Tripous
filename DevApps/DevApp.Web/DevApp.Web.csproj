@@ -7,11 +7,11 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\..\Tripous.Data\Tripous.Data.csproj" />
+        <ProjectReference Include="..\..\Tripous.Model\Tripous.Model.csproj" />
+        <ProjectReference Include="..\..\Tripous.Web\Tripous.Web.csproj" />
+        <ProjectReference Include="..\..\Tripous\Tripous.csproj" />
         <ProjectReference Include="..\DevApp.Lib\DevApp.Lib.csproj" />
-        <ProjectReference Include="..\Tripous.Data\Tripous.Data.csproj" />
-        <ProjectReference Include="..\Tripous.Model\Tripous.Model.csproj" />
-        <ProjectReference Include="..\Tripous.Web\Tripous.Web.csproj" />
-        <ProjectReference Include="..\Tripous\Tripous.csproj" />
     </ItemGroup>
 
     <ItemGroup>

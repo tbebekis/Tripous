@@ -51,7 +51,7 @@ namespace Tripous.Data
             {
                 string CreateTableSql = $@"
 create table {TableName} (                   
- {EntryField}    @VARCHAR(512)     
+ {EntryField}    @VARCHAR(512)  @NOT_NULL primary key
 ,{ValueField}    @VARCHAR(2048)    
 ,{BlobField}     @BLOB             
 ) 

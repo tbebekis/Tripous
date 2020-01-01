@@ -53,14 +53,7 @@ namespace Tripous.Data
         /// Field
         /// </summary>
         protected string fCategory2;
-        /// <summary>
-        /// Field
-        /// </summary>
-        protected string fCategory3;
-        /// <summary>
-        /// Field
-        /// </summary>
-        protected string fCategory4;
+ 
 
         /// <summary>
         /// Field
@@ -109,8 +102,7 @@ namespace Tripous.Data
 
             Category1 = string.Empty;
             Category2 = string.Empty;
-            Category3 = string.Empty;
-            Category4 = string.Empty;
+ 
 
             for (int i = 0; i < fStreams.Length; i++)
                 fStreams[i].SetLength(0);
@@ -181,15 +173,13 @@ namespace Tripous.Data
 
                 Category1 = Sys.AsString(Row["Category1"], Category1);
                 Category2 = Sys.AsString(Row["Category2"], Category2);
-                Category3 = Sys.AsString(Row["Category3"], Category3);
-                Category4 = Sys.AsString(Row["Category4"], Category4);
+ 
 
                 /* the rest blobs */
                 Row.BlobToStream("Data2", fStreams[1]);
                 Row.BlobToStream("Data3", fStreams[2]);
                 Row.BlobToStream("Data4", fStreams[3]);
-                Row.BlobToStream("Data5", fStreams[4]);
-                Row.BlobToStream("Data6", fStreams[5]);
+ 
             }
         }
         /// <summary>
@@ -211,8 +201,7 @@ namespace Tripous.Data
 
                 Row["Category1"] = Category1;
                 Row["Category2"] = Category2;
-                Row["Category3"] = Category3;
-                Row["Category4"] = Category4;
+ 
 
                 /* all properties */
                 Json.ToJsonStream(this, fStreams[0]);
@@ -223,8 +212,7 @@ namespace Tripous.Data
                 Row.StreamToBlob("Data2", fStreams[1]);
                 Row.StreamToBlob("Data3", fStreams[2]);
                 Row.StreamToBlob("Data4", fStreams[3]);
-                Row.StreamToBlob("Data5", fStreams[4]);
-                Row.StreamToBlob("Data6", fStreams[5]);
+ 
             }
         }
 
@@ -253,10 +241,6 @@ namespace Tripous.Data
                     Row["Category1"] = Category1;
                 if (Table.ContainsColumn("Category2"))
                     Row["Category2"] = Category2;
-                if (Table.ContainsColumn("Category3"))
-                    Row["Category3"] = Category3;
-                if (Table.ContainsColumn("Category4"))
-                    Row["Category4"] = Category4;
 
             }
         }
@@ -430,30 +414,7 @@ namespace Tripous.Data
                 OnPropertyChanged("Category2");
             }
         }
-        /// <summary>
-        /// Gets or sets a category
-        /// </summary>
-        public string Category3
-        {
-            get { return string.IsNullOrEmpty(fCategory3) ? string.Empty : fCategory3; }
-            set
-            {
-                fCategory3 = value;
-                OnPropertyChanged("Category3");
-            }
-        }
-        /// <summary>
-        /// Gets or sets a category
-        /// </summary>
-        public string Category4
-        {
-            get { return string.IsNullOrEmpty(fCategory4) ? string.Empty : fCategory4; }
-            set
-            {
-                fCategory4 = value;
-                OnPropertyChanged("Category4");
-            }
-        }
+
         
  
         /// <summary>

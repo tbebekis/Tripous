@@ -18,7 +18,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Tripous\Tripous.csproj" />
+        <ProjectReference Include="..\..\Tripous\Tripous.csproj" />
     </ItemGroup>
 
 </Project>

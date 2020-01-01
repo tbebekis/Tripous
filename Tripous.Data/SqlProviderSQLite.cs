@@ -23,6 +23,7 @@ namespace Tripous.Data
     /// </summary>
     public class SqlProviderSQLite : SqlProvider
     {
+
         /* construction */
         /// <summary>
         /// Constructor.
@@ -30,7 +31,10 @@ namespace Tripous.Data
         /// <param name="Factory">The provider factory</param>      
         public SqlProviderSQLite(DbProviderFactory Factory = null)
             : base(SQLite, Factory)
-        {            
+        {
+
+            if (Factory == null)
+                Factory = SQLiteFactory.Instance;
         }
 
         /* public */
@@ -42,21 +46,27 @@ namespace Tripous.Data
             bool Result = false;
             string FilePath = ConnectionStringBuilder.ReplacePathPlaceholders(DatabaseName);
 
-            if (!(File.Exists(FilePath)))
+            if (!File.Exists(FilePath))
             {
                 string Folder = Path.GetDirectoryName(FilePath);
 
                 if (!string.IsNullOrWhiteSpace(Folder) && !Directory.Exists(Folder))
                     Directory.CreateDirectory(Folder);
 
-                Type T = TypeFinder.GetTypeByName("System.Data.SQLite.SQLiteConnection", AssemblyFileName);
-                if (T != null)
-                {
-                    BindingFlags Flags = BindingFlags.Static | BindingFlags.Public | BindingFlags.InvokeMethod;
-                    T.InvokeMember("CreateFile", Flags, null, T, new object[] { FilePath });
+                SQLiteConnection.CreateFile(FilePath);
 
-                    Result = true;
-                }
+                /*
+                                 string TypeName = "System.Data.SQLite.SQLiteConnection";
+
+                                Type T = TypeFinder.GetTypeByName(TypeName, AssemblyFileName);
+                                if (T == null)
+                                    Sys.Error($"Can not create database. Type not found: {TypeName}");
+
+                                BindingFlags Flags = BindingFlags.Static | BindingFlags.Public | BindingFlags.InvokeMethod;
+                                T.InvokeMember("CreateFile", Flags, null, T, new object[] { FilePath });
+                                 */
+
+                Result = true;
             }
 
             return Result;

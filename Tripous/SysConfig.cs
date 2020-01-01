@@ -16,14 +16,6 @@ namespace Tripous
     /// </summary>
     static public class SysConfig
     {
-        /// <summary>
-        /// Constant
-        /// </summary>
-        public const string EnId = "D4997C35-6E89-499A-87BF-D5750D0D3F06";
-        /// <summary>
-        /// Constant
-        /// </summary>
-        public const string GrId = "92A158E7-25CA-4367-BA57-FB79C40D775C";
 
         /* private */
         static string fApplicationName;
@@ -32,6 +24,8 @@ namespace Tripous
         static string fMainSettingsFolder;
         static string fSolutionName;
         static string fAppRootDataFolder;
+        static string fAppDataFolder;
+        static string fAppBackUpFolder;
         static string fTempFolder;
  
 
@@ -165,17 +159,48 @@ namespace Tripous
             set { fAppRootDataFolder = value; }
         }
         /// <summary>
-        /// Gets the data folder of this application.
+        /// The data folder of this application.
         /// <para></para>
-        /// <para>For desktop Windows it may return: C:\ProgramData\CompanyName\AppExeName\Data\ </para>
+        /// <para>By default, for desktop Windows it may return: C:\ProgramData\CompanyName\AppExeName\Data\ </para>
         /// </summary>
-        static public string AppDataFolder { get { return Platform.IsWeb ? AppRootDataFolder : Path.Combine(AppRootDataFolder, "Data"); } }
+        static public string AppDataFolder
+        {
+            get
+            {
+                if (string.IsNullOrWhiteSpace(fAppDataFolder))
+                {
+                    fAppDataFolder = Platform.IsWeb? AppRootDataFolder : Path.Combine(AppRootDataFolder, "Data");
+                }
+
+                return fAppDataFolder;
+            }
+            set
+            {
+                fAppDataFolder = value;
+            }         
+        }
+ 
         /// <summary>
-        /// Gets the backup folder of this application.
+        /// The backup folder of this application.
         /// <para></para>
-        /// <para>For desktop Windows it may return: C:\ProgramData\CompanyName\BackUp\ </para>
+        /// <para>By default, gor desktop Windows it may return: C:\ProgramData\CompanyName\BackUp\ </para>
         /// </summary>
-        static public string AppBackUpFolder { get { return Path.Combine(AppRootDataFolder, "BackUp"); } }
+        static public string AppBackUpFolder 
+        {
+            get
+            {
+                if (string.IsNullOrWhiteSpace(fAppDataFolder))
+                {
+                    fAppBackUpFolder = Path.Combine(AppRootDataFolder, "BackUp");
+                }
+
+                return fAppBackUpFolder;
+            }
+            set
+            {
+                fAppBackUpFolder = value;
+            }
+        }
         /// <summary>
         /// Gets the directory where the main assembly resides.
         /// <para>The returned string includes a trailing path separator.</para>
@@ -328,7 +353,7 @@ namespace Tripous
         /// <summary>
         /// The Id of the current company, if any, else null.
         /// </summary>
-        static public object CompanyId { get; set; }
+        static public object CompanyId { get; set; } 
         /// <summary>
         /// ReadOnly. Returns the value of the CompanyId as a string for constructing Sql statements.
         /// </summary>

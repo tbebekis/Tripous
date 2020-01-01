@@ -40,10 +40,17 @@ namespace Tripous.Forms
         { 
         }
 
+        /* preparation */
+        /// <summary>
+        /// Initializes any libraries that are dependencies of this appliation
+        /// </summary>
+        protected virtual void InitializeLibraries()
+        {
+        }
         /// <summary>
         /// Prepares the initialization
         /// </summary>
-        protected virtual void InitializePrepare()
+        protected virtual void PrepareStart()
         {
             //CreateFolders();
             //EnsureMachineId();
@@ -53,7 +60,7 @@ namespace Tripous.Forms
         /// Performs the login operation in the application initialization phase, if needed,
         /// and returns true on success
         /// </summary>
-        protected virtual bool PerformInitializationLogin()
+        protected virtual bool PerformStartupLogin()
         {
             return false;
         }
@@ -80,7 +87,7 @@ namespace Tripous.Forms
         /// <summary>
         /// Initializes the data sub-system
         /// </summary>
-        protected virtual void InitializeData()
+        protected virtual void InitializeDatabases()
         {
         }
         /// <summary>
@@ -106,25 +113,25 @@ namespace Tripous.Forms
         /// <summary>
         /// Notification
         /// </summary>
-        protected virtual void ApplicationInitialized()
+        protected virtual void ApplicationStarted()
         {
         }
         /// <summary>
         /// Notification
         /// </summary>
-        protected virtual void ExternalModulesApplicationInitialized()
+        protected virtual void ExternalModulesApplicationStarted()
         {
         }
         /// <summary>
         /// Notification
         /// </summary>
-        protected virtual void ExternalModulesApplicationFinalizing()
+        protected virtual void ExternalModulesApplicationStopping()
         {
         }
         /// <summary>
         /// Notification
         /// </summary>
-        protected virtual void ApplicationFinalizing()
+        protected virtual void ApplicationStopping()
         {
         }
         /// <summary>
@@ -163,19 +170,20 @@ namespace Tripous.Forms
         /// <summary>
         /// Initializes the application
         /// </summary>
-        public virtual void ApplicationInitialize()
+        public virtual void Start()
         {
-            if (!Initialized)
+            if (!IsStarted)
             {
-                Initializing = true;
+                IsStarting = true;
                 try
-                {
+                {                    
 
                     /* preparation ================================================================ */
                     Wait.Loading();
                     try
                     {
-                        InitializePrepare();
+                        InitializeLibraries();
+                        PrepareStart();
                     }
                     finally
                     {
@@ -183,14 +191,14 @@ namespace Tripous.Forms
                     }
 
 
-                    /* data ======================================================================== */
-                    InitializeData();
+                    /* databases ======================================================================== */
+                    InitializeDatabases();
 
 
                     /* login ======================================================================= */
                     if (SysConfig.UsersEnabled)
                     {
-                        if (!PerformInitializationLogin())
+                        if (!PerformStartupLogin())
                         {
                             return;
                         }
@@ -209,7 +217,7 @@ namespace Tripous.Forms
                     ShowMainForm();
                     InitializeUi();
 
-                    Initialized = true;
+                    IsStarted = true;
                 }
                 catch (Exception Ex)
                 {
@@ -229,31 +237,31 @@ namespace Tripous.Forms
                 }
                 finally
                 {
-                    Initializing = false;
+                    IsStarting = false;
                 }
  
-                ApplicationInitialized();
-                ExternalModulesApplicationInitialized();
+                ApplicationStarted();
+                ExternalModulesApplicationStarted();
             }
         }
         /// <summary>
         /// Finalizes the application
         /// </summary>
-        public virtual void ApplicationFinalize()
+        public virtual void Stop()
         {
-            if (Initialized && !Finalized)
+            if (IsStarted && !IsStopped)
             {
-                Finalizing = true;
+                IsStopping = true;
 
                 Wait.Show(Res.GS("TerminatingApplication", "Terminating"));
                 try
                 {
-                    ExternalModulesApplicationFinalizing();
-                    ApplicationFinalizing();
+                    ExternalModulesApplicationStopping();
+                    ApplicationStopping();
                     SaveUserSettings();
                     TerminateThreadStarter();
 
-                    Finalized = true;
+                    IsStopped = true;
 
                     ExternalModulesUnLoad();
                 }
@@ -272,7 +280,7 @@ namespace Tripous.Forms
                 }
                 finally
                 {
-                    Finalizing = false;
+                    IsStopping = false;
                     Wait.Close();
                 }
 
@@ -281,7 +289,7 @@ namespace Tripous.Forms
         /// <summary>
         /// Should be called by the main form in order to signal that the main ui is ready
         /// </summary>
-        public virtual void ApplicationMainUiIsReady()
+        public virtual void MainUiIsReady()
         {
         }
 
@@ -290,19 +298,19 @@ namespace Tripous.Forms
         /// <summary>
         /// True when initialized
         /// </summary>
-        public bool Initialized { get; private set; }
+        public bool IsStarted { get; private set; }
         /// <summary>
         /// True when initializing
         /// </summary>
-        public bool Initializing { get; private set; }
+        public bool IsStarting { get; private set; }
         /// <summary>
         /// True when finalized
         /// </summary>
-        public bool Finalized { get; private set; }
+        public bool IsStopped { get; private set; }
         /// <summary>
         /// True when finalizing
         /// </summary>
-        public bool Finalizing { get; private set; }
+        public bool IsStopping { get; private set; }
 
         /// <summary>
         /// Singleton instance

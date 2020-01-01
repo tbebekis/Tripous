@@ -63,15 +63,11 @@ create table {0}  (
 
   ,Category1           @NVARCHAR(64)   @NULL
   ,Category2           @NVARCHAR(64)   @NULL
-  ,Category3           @NVARCHAR(64)   @NULL
-  ,Category4           @NVARCHAR(64)   @NULL
 
   ,Data1               @BLOB           @NULL
   ,Data2               @BLOB           @NULL
   ,Data3               @BLOB           @NULL
   ,Data4               @BLOB           @NULL
-  ,Data5               @BLOB           @NULL
-  ,Data6               @BLOB           @NULL
 
   ,constraint UC_{0}_00 unique (@COMPANY_ID, DataType, DataName)
 )

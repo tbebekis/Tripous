@@ -8,19 +8,19 @@ namespace Tripous.Data
     static public class SystemSchema
     {
 
-        static private string CompanyDataType = SysConfig.GuidOids ? "@NVARCHAR(40)    @NOT_NULL" : "integer default -1 @NOT_NULL";
+        static string CompanyDataType = SysConfig.GuidOids ? "@NVARCHAR(40)    @NOT_NULL" : "integer default -1 @NOT_NULL";
 
         /// <summary>
-        /// Registers the system schema
+        /// Registration
         /// </summary>
-        static public void RegisterSchema(Action AfterFunc = null)
+        static public void Register(Action AfterFunc = null)
         {
-            RegisterSchema_01();
+            Register_01();
 
             AfterFunc?.Invoke();
         }
 
-        static void RegisterSchema_01()
+        static void Register_01()
         {
             string SqlText;
             SchemaVersion schema = Schemas.AppSchema.Add(Sys.SYSTEM, SysConfig.DefaultConnection, 1);
@@ -28,7 +28,7 @@ namespace Tripous.Data
             /* Company */
             SqlText = @"
 create table {0}  (
-   Id                   {1}
+   Id                   {1}    
   ,Name                 @NVARCHAR(96)    @NOT_NULL
 
   ,constraint UC_{0}_00 unique (Name)
@@ -61,9 +61,9 @@ create table {0} (
             SqlText = string.Format(SqlText, SysTables.Lang, SysConfig.PrimaryKeyStr);
             schema.AddTable(SqlText);
 
-            SqlText = string.Format(@"insert into {0} (Id, Name, CultureCode, SeoCode) values ('{1}', 'English', 'en-US', 'en') ", SysTables.Lang, SysConfig.EnId);
+            SqlText = string.Format(@"insert into {0} (Id, Name, CultureCode, SeoCode) values ('{1}', 'English', 'en-US', 'en') ", SysTables.Lang, Sys.EnId);
             schema.AddStatementAfter(SqlText);
-            SqlText = string.Format(@"insert into {0} (Id, Name, CultureCode, SeoCode) values ('{1}', 'Greek', 'el-GR', 'gr') ", SysTables.Lang, SysConfig.GrId);
+            SqlText = string.Format(@"insert into {0} (Id, Name, CultureCode, SeoCode) values ('{1}', 'Greek', 'el-GR', 'gr') ", SysTables.Lang, Sys.GrId);
             schema.AddStatementAfter(SqlText);
 
 
@@ -104,15 +104,11 @@ create table {0}  (
 
   ,Category1           @NVARCHAR(64)   @NULL
   ,Category2           @NVARCHAR(64)   @NULL
-  ,Category3           @NVARCHAR(64)   @NULL
-  ,Category4           @NVARCHAR(64)   @NULL
 
   ,Data1               @BLOB           @NULL
   ,Data2               @BLOB           @NULL
   ,Data3               @BLOB           @NULL
   ,Data4               @BLOB           @NULL
-  ,Data5               @BLOB           @NULL
-  ,Data6               @BLOB           @NULL
 
   ,constraint UC_{0}_00 unique (@COMPANY_ID, DataType, DataName)
 )

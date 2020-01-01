@@ -14,29 +14,29 @@ using System.Drawing;
 using System.Windows.Forms.Design;
 
 using Tripous;
+using Tripous.Data;
+using Tripous.Model;
+
+using DevApp.Lib;
 
 namespace DevApp.WinForms
 {
+    /// <summary>
+    /// Represents this application
+    /// </summary>
     static internal class App
     {
 
-        static public void AppInitialize()
+        static public void Start()
         {
-            AppStarter.InitializeSysConfig();
-
-            //DevApp.Lib.Forms.FormLib.Initialize();
-
-            Tripous.Icons32.Initialize();
-            ObjectStore.Initialize();
-
             Starter = new AppStarter();
-            Starter.ApplicationInitialize();
+            Starter.Start();
         }
-        static public void AppFinalize()
+        static public void Stop()
         {
-
         }
 
+        /* properties */
         static public AppStarter Starter { get; set; }
         /// <summary>
         /// BackColor

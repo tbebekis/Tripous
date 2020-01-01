@@ -19,14 +19,7 @@ namespace DevApp.Lib
     /// </summary>
     static public partial class AppLib
     {
-        /// <summary>
-        /// Loads and initializes external modules (plugins)
-        /// </summary>
-        static public void LoadExternalModules()
-        {
-            //ExternalModules.LoadModules("EM_", SysConfig.ExternalModulesFolder);
-            //ExternalModules.InitializeModules();
-        }
+ 
         
 
         /// <summary>
@@ -65,7 +58,7 @@ namespace DevApp.Lib
         /// </summary>
         static public void SetupCompanyId()
         {
-            // SysConfig.CompanyId = ?
+
         }
 
         /// <summary>

@@ -244,6 +244,10 @@ namespace Tripous
         /// <summary>
         /// Constant
         /// </summary>
+        public const string AppIco = "AppIco";
+        /// <summary>
+        /// Constant
+        /// </summary>
         public const string StandardCompanyGuid = "74772779-BF08-4B22-8F87-196FB87EC7C2";
         /// <summary>
         /// Constant

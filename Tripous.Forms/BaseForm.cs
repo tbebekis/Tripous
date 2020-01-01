@@ -74,6 +74,16 @@ namespace Tripous.Forms
 
         /* overridables */
         /// <summary>
+        /// Sets the ico of this form
+        /// </summary>
+        protected virtual void SetFormIcon()
+        {
+            Icon ico = Res.GetObject(Sys.AppIco) as Icon;
+            if (ico != null)
+                this.Icon = ico;
+        }
+
+        /// <summary>
         /// Called just before form initialization
         /// </summary>
         protected virtual void FormInitializeBefore()
@@ -200,7 +210,9 @@ namespace Tripous.Forms
                 if (!Initialized)
                 {
                     Broadcaster.Add(this);
- 
+
+                    SetFormIcon();
+
                     FormInitializeBefore();
                     FormInitialize();
                     Initialized = true;

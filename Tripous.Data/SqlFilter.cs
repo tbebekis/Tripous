@@ -20,11 +20,7 @@ namespace Tripous.Data
         /// Field
         /// </summary>
         static public readonly List<string> ValidAggregateFunctions = new List<string>(new string[] { "", "count", "avg", "sum", "max", "min" });
-
-
  
-
-
         SqlFilterMode fMode = SqlFilterMode.Simple;
         SimpleType fDataType = SimpleType.String;
         bool fUseRange = false;

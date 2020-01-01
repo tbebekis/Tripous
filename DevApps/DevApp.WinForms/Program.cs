@@ -77,7 +77,7 @@ namespace DevApp.WinForms
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            App.AppInitialize();
+            App.Start();
 
 
             //Application.Run(new MainForm());
