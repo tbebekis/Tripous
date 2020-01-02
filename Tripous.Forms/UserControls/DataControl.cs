@@ -299,7 +299,7 @@ namespace Tripous.Forms
         /// The data source of the Control.
         /// </summary>
         [DefaultValue(null), Browsable(false), Description("The data source of the Control."), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public object DataSource { get; set; }
+        public virtual object DataSource { get; set; }
 
         /// <summary>
         /// The value of the control

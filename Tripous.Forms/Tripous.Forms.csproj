@@ -209,6 +209,85 @@
     <Compile Include="Ui.Consts.cs" />
     <Compile Include="Ui.cs" />
     <Compile Include="UiConfig.cs" />
+    <Compile Include="UserControls\CheckBoxDataControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\CheckBoxDataControl.Designer.cs">
+      <DependentUpon>CheckBoxDataControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\CheckListBoxDataControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\CheckListBoxDataControl.Designer.cs">
+      <DependentUpon>CheckListBoxDataControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\ComboBoxDataControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\ComboBoxDataControl.Designer.cs">
+      <DependentUpon>ComboBoxDataControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\DataBind.cs" />
+    <Compile Include="UserControls\DataControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\DataControl.Designer.cs">
+      <DependentUpon>DataControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\DateBoxDataControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\DateBoxDataControl.Designer.cs">
+      <DependentUpon>DateBoxDataControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\GridViewDataControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\GridViewDataControl.Designer.cs">
+      <DependentUpon>GridViewDataControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\ListBoxDataControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\ListBoxDataControl.Designer.cs">
+      <DependentUpon>ListBoxDataControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\ListViewDataControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\ListViewDataControl.Designer.cs">
+      <DependentUpon>ListViewDataControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\MemoBoxDataControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\MemoBoxDataControl.Designer.cs">
+      <DependentUpon>MemoBoxDataControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\NumericBoxDataControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\NumericBoxDataControl.Designer.cs">
+      <DependentUpon>NumericBoxDataControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\PictureBoxDataControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\PictureBoxDataControl.Designer.cs">
+      <DependentUpon>PictureBoxDataControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\TextBoxDataControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\TextBoxDataControl.Designer.cs">
+      <DependentUpon>TextBoxDataControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\TreeViewDataControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\TreeViewDataControl.Designer.cs">
+      <DependentUpon>TreeViewDataControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Wait.cs" />
     <Compile Include="WaitDialog.cs">
       <SubType>Form</SubType>
@@ -274,6 +353,45 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ToolForm.resx">
       <DependentUpon>ToolForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\CheckBoxDataControl.resx">
+      <DependentUpon>CheckBoxDataControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\CheckListBoxDataControl.resx">
+      <DependentUpon>CheckListBoxDataControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\ComboBoxDataControl.resx">
+      <DependentUpon>ComboBoxDataControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\DataControl.resx">
+      <DependentUpon>DataControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\DateBoxDataControl.resx">
+      <DependentUpon>DateBoxDataControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\GridViewDataControl.resx">
+      <DependentUpon>GridViewDataControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\ListBoxDataControl.resx">
+      <DependentUpon>ListBoxDataControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\ListViewDataControl.resx">
+      <DependentUpon>ListViewDataControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\MemoBoxDataControl.resx">
+      <DependentUpon>MemoBoxDataControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\NumericBoxDataControl.resx">
+      <DependentUpon>NumericBoxDataControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\PictureBoxDataControl.resx">
+      <DependentUpon>PictureBoxDataControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\TextBoxDataControl.resx">
+      <DependentUpon>TextBoxDataControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\TreeViewDataControl.resx">
+      <DependentUpon>TreeViewDataControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="WaitDialog.resx">
       <DependentUpon>WaitDialog.cs</DependentUpon>

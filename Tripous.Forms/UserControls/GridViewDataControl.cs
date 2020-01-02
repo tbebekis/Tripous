@@ -27,5 +27,16 @@ namespace Tripous.Forms
 
             this.Control = Grid;
         }
+
+        /* properties */
+        /// <summary>
+        /// The data source of the Control.
+        /// </summary>
+        [DefaultValue(null), Browsable(false), Description("The data source of the Control."), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public override object DataSource
+        {
+            get { return Grid.DataSource; }
+            set { Grid.DataSource = value; }
+        }
     }
 }

@@ -54,85 +54,6 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Tripous.Forms\CheckBoxDataControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Tripous.Forms\CheckBoxDataControl.Designer.cs">
-      <DependentUpon>CheckBoxDataControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Tripous.Forms\CheckListBoxDataControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Tripous.Forms\CheckListBoxDataControl.Designer.cs">
-      <DependentUpon>CheckListBoxDataControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Tripous.Forms\ComboBoxDataControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Tripous.Forms\ComboBoxDataControl.Designer.cs">
-      <DependentUpon>ComboBoxDataControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Tripous.Forms\DataBind.cs" />
-    <Compile Include="Tripous.Forms\DataControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Tripous.Forms\DataControl.Designer.cs">
-      <DependentUpon>DataControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Tripous.Forms\DateBoxDataControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Tripous.Forms\DateBoxDataControl.Designer.cs">
-      <DependentUpon>DateBoxDataControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Tripous.Forms\GridViewDataControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Tripous.Forms\GridViewDataControl.Designer.cs">
-      <DependentUpon>GridViewDataControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Tripous.Forms\ListBoxDataControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Tripous.Forms\ListBoxDataControl.Designer.cs">
-      <DependentUpon>ListBoxDataControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Tripous.Forms\ListViewDataControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Tripous.Forms\ListViewDataControl.Designer.cs">
-      <DependentUpon>ListViewDataControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Tripous.Forms\MemoBoxDataControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Tripous.Forms\MemoBoxDataControl.Designer.cs">
-      <DependentUpon>MemoBoxDataControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Tripous.Forms\NumericBoxDataControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Tripous.Forms\NumericBoxDataControl.Designer.cs">
-      <DependentUpon>NumericBoxDataControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Tripous.Forms\PictureBoxDataControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Tripous.Forms\PictureBoxDataControl.Designer.cs">
-      <DependentUpon>PictureBoxDataControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Tripous.Forms\TextBoxDataControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Tripous.Forms\TextBoxDataControl.Designer.cs">
-      <DependentUpon>TextBoxDataControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Tripous.Forms\TreeViewDataControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Tripous.Forms\TreeViewDataControl.Designer.cs">
-      <DependentUpon>TreeViewDataControl.cs</DependentUpon>
-    </Compile>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
@@ -145,45 +66,6 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="Tripous.Forms\CheckBoxDataControl.resx">
-      <DependentUpon>CheckBoxDataControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Tripous.Forms\CheckListBoxDataControl.resx">
-      <DependentUpon>CheckListBoxDataControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Tripous.Forms\ComboBoxDataControl.resx">
-      <DependentUpon>ComboBoxDataControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Tripous.Forms\DataControl.resx">
-      <DependentUpon>DataControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Tripous.Forms\DateBoxDataControl.resx">
-      <DependentUpon>DateBoxDataControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Tripous.Forms\GridViewDataControl.resx">
-      <DependentUpon>GridViewDataControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Tripous.Forms\ListBoxDataControl.resx">
-      <DependentUpon>ListBoxDataControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Tripous.Forms\ListViewDataControl.resx">
-      <DependentUpon>ListViewDataControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Tripous.Forms\MemoBoxDataControl.resx">
-      <DependentUpon>MemoBoxDataControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Tripous.Forms\NumericBoxDataControl.resx">
-      <DependentUpon>NumericBoxDataControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Tripous.Forms\PictureBoxDataControl.resx">
-      <DependentUpon>PictureBoxDataControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Tripous.Forms\TextBoxDataControl.resx">
-      <DependentUpon>TextBoxDataControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Tripous.Forms\TreeViewDataControl.resx">
-      <DependentUpon>TreeViewDataControl.cs</DependentUpon>
-    </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
