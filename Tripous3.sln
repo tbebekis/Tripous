@@ -36,6 +36,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevApp.Web", "DevApps\DevAp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevApp.WinForms", "DevApps\DevApp.WinForms\DevApp.WinForms.csproj", "{12D64F17-6CF8-4C11-80D4-7E999E673EB6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.WinApp", "Test.WinApp\Test.WinApp.csproj", "{F6A391C6-6505-4E81-805D-86BCB6ED17F8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -90,6 +92,10 @@ Global
 		{12D64F17-6CF8-4C11-80D4-7E999E673EB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{12D64F17-6CF8-4C11-80D4-7E999E673EB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{12D64F17-6CF8-4C11-80D4-7E999E673EB6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F6A391C6-6505-4E81-805D-86BCB6ED17F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F6A391C6-6505-4E81-805D-86BCB6ED17F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F6A391C6-6505-4E81-805D-86BCB6ED17F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F6A391C6-6505-4E81-805D-86BCB6ED17F8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -99,6 +105,7 @@ Global
 		{A2CFEA75-C6C7-486A-8B31-0823FBF1F7E8} = {9BAC24A5-C5C2-4C73-AC13-B0A92BDFE8D5}
 		{0C51FE72-370A-4EA3-A2B7-DDA8E0247FC6} = {9BAC24A5-C5C2-4C73-AC13-B0A92BDFE8D5}
 		{12D64F17-6CF8-4C11-80D4-7E999E673EB6} = {9BAC24A5-C5C2-4C73-AC13-B0A92BDFE8D5}
+		{F6A391C6-6505-4E81-805D-86BCB6ED17F8} = {9BAC24A5-C5C2-4C73-AC13-B0A92BDFE8D5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {08DFB328-69FB-497C-B5A3-8DA577C76E9A}
