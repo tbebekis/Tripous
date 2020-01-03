@@ -12,16 +12,16 @@ namespace Tripous.Forms
 {
 
     /// <summary>
-    /// CheckedListBox <see cref="DataControl"/>
+    /// CheckedListBox <see cref="ControlRow"/>
     /// </summary>
-    public partial class CheckListBoxDataControl : DataControl, ILookUpControlRow
+    public partial class CheckListBoxControlRow : ControlRow, ILookUpControlRow
     {
 
         /* constructor */
         /// <summary>
         /// Constructor
         /// </summary>
-        public CheckListBoxDataControl()
+        public CheckListBoxControlRow()
         {
             InitializeComponent();
 

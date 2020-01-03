@@ -1,6 +1,6 @@
 ﻿namespace Tripous.Forms
 {
-    partial class CheckListBoxDataControl
+    partial class TreeViewControlRow
     {
         /// <summary> 
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.ListControl = new System.Windows.Forms.CheckedListBox();
+            this.tv = new System.Windows.Forms.TreeView();
             this.pnlText.SuspendLayout();
             this.pnlControl.SuspendLayout();
             this.SuspendLayout();
@@ -43,26 +43,24 @@
             // 
             // pnlControl
             // 
-            this.pnlControl.Controls.Add(this.ListControl);
+            this.pnlControl.Controls.Add(this.tv);
             this.pnlControl.Location = new System.Drawing.Point(140, 0);
             this.pnlControl.Size = new System.Drawing.Size(260, 130);
             // 
-            // lboBox
+            // tv
             // 
-            this.ListControl.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ListControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ListControl.FormattingEnabled = true;
-            this.ListControl.Location = new System.Drawing.Point(4, 4);
-            this.ListControl.Name = "lboBox";
-            this.ListControl.Size = new System.Drawing.Size(252, 122);
-            this.ListControl.TabIndex = 0;
+            this.tv.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tv.Location = new System.Drawing.Point(4, 4);
+            this.tv.Name = "tv";
+            this.tv.Size = new System.Drawing.Size(252, 122);
+            this.tv.TabIndex = 0;
             // 
-            // CheckListBoxDataControl
+            // TreeViewDataControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.Name = "CheckListBoxDataControl";
+            this.Name = "TreeViewDataControl";
             this.Size = new System.Drawing.Size(400, 130);
             this.pnlText.ResumeLayout(false);
             this.pnlControl.ResumeLayout(false);
@@ -72,6 +70,6 @@
 
         #endregion
 
-        private System.Windows.Forms.CheckedListBox ListControl;
+        private System.Windows.Forms.TreeView tv;
     }
 }

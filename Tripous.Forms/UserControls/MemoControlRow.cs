@@ -12,9 +12,9 @@ namespace Tripous.Forms
 {
 
     /// <summary>
-    /// Multiline textbox <see cref="DataControl"/>
+    /// Multiline textbox <see cref="ControlRow"/>
     /// </summary>
-    public partial class MemoBoxDataControl : DataControl
+    public partial class MemoControlRow : ControlRow
     {
         /// <summary>
         /// Returns the value of the <see cref="Value"/> property
@@ -40,7 +40,7 @@ namespace Tripous.Forms
         /// <summary>
         /// Constructor
         /// </summary>
-        public MemoBoxDataControl()
+        public MemoControlRow()
         {
             InitializeComponent();
 

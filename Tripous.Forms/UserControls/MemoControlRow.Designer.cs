@@ -1,6 +1,6 @@
 ﻿namespace Tripous.Forms
 {
-    partial class ComboBoxDataControl
+    partial class MemoControlRow
     {
         /// <summary> 
         /// Required designer variable.
@@ -28,10 +28,14 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.ListControl = new System.Windows.Forms.ComboBox();
+            this.edtText = new System.Windows.Forms.RichTextBox();
             this.pnlText.SuspendLayout();
             this.pnlControl.SuspendLayout();
             this.SuspendLayout();
+            // 
+            // pnlText
+            // 
+            this.pnlText.Size = new System.Drawing.Size(140, 140);
             // 
             // lblText
             // 
@@ -39,25 +43,27 @@
             // 
             // pnlControl
             // 
-            this.pnlControl.Controls.Add(this.ListControl);
+            this.pnlControl.Controls.Add(this.edtText);
             this.pnlControl.Location = new System.Drawing.Point(140, 0);
-            this.pnlControl.Size = new System.Drawing.Size(260, 28);
+            this.pnlControl.Size = new System.Drawing.Size(260, 140);
             // 
-            // cboBox
+            // edtText
             // 
-            this.ListControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ListControl.FormattingEnabled = true;
-            this.ListControl.Location = new System.Drawing.Point(4, 4);
-            this.ListControl.Name = "cboBox";
-            this.ListControl.Size = new System.Drawing.Size(252, 21);
-            this.ListControl.TabIndex = 0;
+            this.edtText.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.edtText.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.edtText.Location = new System.Drawing.Point(4, 4);
+            this.edtText.Name = "edtText";
+            this.edtText.Size = new System.Drawing.Size(252, 132);
+            this.edtText.TabIndex = 0;
+            this.edtText.Text = "";
             // 
-            // ComboBoxDataControl
+            // MemoBoxDataControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.Name = "ComboBoxDataControl";
+            this.Name = "MemoBoxDataControl";
+            this.Size = new System.Drawing.Size(400, 140);
             this.pnlText.ResumeLayout(false);
             this.pnlControl.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -66,6 +72,6 @@
 
         #endregion
 
-        private System.Windows.Forms.ComboBox ListControl;
+        private System.Windows.Forms.RichTextBox edtText;
     }
 }

@@ -10,18 +10,17 @@ using System.Windows.Forms;
 
 namespace Tripous.Forms
 {
-
     /// <summary>
-    /// ListBox <see cref="DataControl"/>
+    /// Combo box <see cref="ControlRow"/>
     /// </summary>
-    public partial class ListBoxDataControl : DataControl, ILookUpControlRow
+    public partial class ComboBoxControlRow : ControlRow, ILookUpControlRow
     {
         /// <summary>
         /// Returns the value of the <see cref="Value"/> property
         /// </summary>
         protected override object GetValue()
         {
-            return ListControl.SelectedItem;
+            return ListControl.Text;
         }
         /// <summary>
         /// Sets the value of the <see cref="Value"/> property
@@ -35,20 +34,21 @@ namespace Tripous.Forms
                     ListControl.SelectedIndex = Convert.ToInt32(V);
                     return;
                 }
-
-                ListControl.SelectedItem = V;
             }
-            catch
-            {
+            catch 
+            { 
             }
-
+      
+            if (ListControl.DropDownStyle == ComboBoxStyle.Simple)
+                ListControl.Text = Sys.IsNull(V) ? null : V.ToString();
         }
+
 
         /* constructor */
         /// <summary>
         /// Constructor
         /// </summary>
-        public ListBoxDataControl()
+        public ComboBoxControlRow()
         {
             InitializeComponent();
 
@@ -75,8 +75,8 @@ namespace Tripous.Forms
         /// <para>NOTE: For ComboBox and ListBox only.</para>
         /// </summary>
         [DefaultValue(""), Localizable(false), Description("The name of the field to display.")]
-        public string DisplayMember
-        {
+        public string DisplayMember 
+        { 
             get { return this.ListControl.DisplayMember; }
             set { this.ListControl.DisplayMember = value; }
         }
@@ -106,6 +106,5 @@ namespace Tripous.Forms
             get { return this.ListControl.DataSource; }
             set { this.ListControl.DataSource = value; }
         }
-
     }
 }

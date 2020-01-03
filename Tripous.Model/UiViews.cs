@@ -49,7 +49,7 @@ namespace Tripous.Model
 
 
 
-        static List<UiView> Views = new List<UiView>();
+        static List<UiViewInfo> Views = new List<UiViewInfo>();
 
         static void CheckName(string Name)
         {
@@ -60,12 +60,12 @@ namespace Tripous.Model
         /// <summary>
         /// Registers a view and returns the view.
         /// </summary>
-        static public UiView Register(string Name)
+        static public UiViewInfo Register(string Name)
         {
-            UiView Result = Find(Name);
+            UiViewInfo Result = Find(Name);
             if (Result == null)
             {
-                Result = new UiView();
+                Result = new UiViewInfo();
                 Result.Name = Name;
                 Register(Result);
             }
@@ -76,7 +76,7 @@ namespace Tripous.Model
         /// <summary>
         /// Registers a view
         /// </summary>
-        static public void Register(UiView View)
+        static public void Register(UiViewInfo View)
         {
             CheckName(View.Name);
             if (!Contains(View.Name))
@@ -93,7 +93,7 @@ namespace Tripous.Model
         /// <summary>
         /// Finds and returns a view, if any, else null.
         /// </summary>
-        static public UiView Find(string Name)
+        static public UiViewInfo Find(string Name)
         {
             CheckName(Name);
             return Views.FirstOrDefault(item => item.Name.IsSameText(Name));

@@ -1,6 +1,6 @@
 ﻿namespace Tripous.Forms
 {
-    partial class CheckBoxDataControl
+    partial class CheckBoxControlRow
     {
         /// <summary> 
         /// Required designer variable.

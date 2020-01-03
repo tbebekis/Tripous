@@ -13,7 +13,7 @@ namespace Tripous.Forms
     /// <summary>
     /// CheckBox <see cref="UserControl"/>
     /// </summary>
-    public partial class CheckBoxDataControl : UserControl, IDataControlRow
+    public partial class CheckBoxControlRow : UserControl, IControlRow
     {
         bool fReadOnly;
         bool fRequired;
@@ -119,7 +119,7 @@ namespace Tripous.Forms
         /// <summary>
         /// Constructor
         /// </summary>
-        public CheckBoxDataControl()
+        public CheckBoxControlRow()
         {
             InitializeComponent();
 
@@ -144,10 +144,7 @@ namespace Tripous.Forms
 
 
         /* properties */
-        /// <summary>
-        /// Returns the height of the row
-        /// </summary>
-        public virtual int RowHeight { get { return this.Height; } }
+ 
 
         /// <summary>
         /// The control text (caption)

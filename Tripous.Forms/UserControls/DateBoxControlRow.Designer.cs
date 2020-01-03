@@ -1,6 +1,6 @@
 ﻿namespace Tripous.Forms
 {
-    partial class DateBoxDataControl
+    partial class DateBoxControlRow
     {
         /// <summary> 
         /// Required designer variable.

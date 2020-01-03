@@ -1,6 +1,6 @@
 ﻿namespace Tripous.Forms
 {
-    partial class NumericBoxDataControl
+    partial class GridControlRow
     {
         /// <summary> 
         /// Required designer variable.
@@ -28,11 +28,15 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.edtNumericUpDown = new System.Windows.Forms.NumericUpDown();
+            this.Grid = new System.Windows.Forms.DataGridView();
             this.pnlText.SuspendLayout();
             this.pnlControl.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.edtNumericUpDown)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Grid)).BeginInit();
             this.SuspendLayout();
+            // 
+            // pnlText
+            // 
+            this.pnlText.Size = new System.Drawing.Size(140, 130);
             // 
             // lblText
             // 
@@ -40,34 +44,36 @@
             // 
             // pnlControl
             // 
-            this.pnlControl.Controls.Add(this.edtNumericUpDown);
+            this.pnlControl.Controls.Add(this.Grid);
             this.pnlControl.Location = new System.Drawing.Point(140, 0);
-            this.pnlControl.Size = new System.Drawing.Size(260, 28);
+            this.pnlControl.Size = new System.Drawing.Size(260, 130);
             // 
-            // edtNumericUpDown
+            // Grid
             // 
-            this.edtNumericUpDown.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.edtNumericUpDown.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.edtNumericUpDown.Location = new System.Drawing.Point(4, 4);
-            this.edtNumericUpDown.Name = "edtNumericUpDown";
-            this.edtNumericUpDown.Size = new System.Drawing.Size(252, 20);
-            this.edtNumericUpDown.TabIndex = 0;
+            this.Grid.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.Grid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.Grid.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.Grid.Location = new System.Drawing.Point(4, 4);
+            this.Grid.Name = "Grid";
+            this.Grid.Size = new System.Drawing.Size(252, 122);
+            this.Grid.TabIndex = 0;
             // 
-            // NumericBoxDataControl
+            // GridViewDataControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.Name = "NumericBoxDataControl";
+            this.Name = "GridViewDataControl";
+            this.Size = new System.Drawing.Size(400, 130);
             this.pnlText.ResumeLayout(false);
             this.pnlControl.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.edtNumericUpDown)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Grid)).EndInit();
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.NumericUpDown edtNumericUpDown;
+        private System.Windows.Forms.DataGridView Grid;
     }
 }

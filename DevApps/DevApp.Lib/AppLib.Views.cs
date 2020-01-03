@@ -22,11 +22,11 @@ namespace DevApp.Lib
         /// </summary>
         static public void RegisterViews()
         {
-            UiView V;
-            UiColumn Column;
+            UiViewInfo V;
+            UiColumnInfo Column;
 
             V = UiViews.Register("Trader");
-            Column = new UiColumn();
+            Column = new UiColumnInfo();
             V.Columns.Add(Column);
 
             Column.AddRow("Code", "Code", UiViews.TextBox, "Code", true, true);

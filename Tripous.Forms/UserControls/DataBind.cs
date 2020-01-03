@@ -3,25 +3,33 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace Tripous.Forms
 {
 
+ 
     /// <summary>
-    /// Represents a row with a control, on a column  
+    /// Represents a control with simple binding
     /// </summary>
     public interface IControlRow
     {
         /// <summary>
-        /// Returns the height of the row
+        /// Data bind method
         /// </summary>
-        int RowHeight { get; }
-    }
-    /// <summary>
-    /// Represents a control with simple binding
-    /// </summary>
-    public interface IDataControlRow: IControlRow
-    {
+        Binding Bind();
+ 
+
+        string Name { get; set; }
+        /// <summary>
+        /// The height of the row
+        /// </summary>
+        int Height { get; }
+        /// <summary>
+        /// The parent control
+        /// </summary>
+        Control Parent { get; set; }
+
         /// <summary>
         /// The control text (caption)
         /// </summary>
@@ -44,7 +52,7 @@ namespace Tripous.Forms
     /// <summary>
     /// Represents a control with lookup binding
     /// </summary>
-    public interface ILookUpControlRow: IDataControlRow
+    public interface ILookUpControlRow: IControlRow
     {
 
         /// <summary>
@@ -72,7 +80,7 @@ namespace Tripous.Forms
     /// <summary>
     /// Represents a control with grid binding
     /// </summary>
-    public interface IGridControlRow : IDataControlRow
+    public interface IGridControlRow : IControlRow // IDataControlRow
     {
     }
 }

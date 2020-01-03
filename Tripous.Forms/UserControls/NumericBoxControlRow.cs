@@ -12,9 +12,9 @@ namespace Tripous.Forms
 {
 
     /// <summary>
-    /// NumericUpDown box <see cref="DataControl"/>
+    /// NumericUpDown box <see cref="ControlRow"/>
     /// </summary>
-    public partial class NumericBoxDataControl : DataControl
+    public partial class NumericBoxControlRow : ControlRow
     {
         /// <summary>
         /// Returns the value of the <see cref="Value"/> property
@@ -50,7 +50,7 @@ namespace Tripous.Forms
         /// <summary>
         /// Constructor
         /// </summary>
-        public NumericBoxDataControl()
+        public NumericBoxControlRow()
         {
             InitializeComponent();
 

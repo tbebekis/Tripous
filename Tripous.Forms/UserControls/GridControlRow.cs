@@ -12,16 +12,16 @@ namespace Tripous.Forms
 {
 
     /// <summary>
-    /// <see cref="DataGridView"/> <see cref="DataControl"/>
+    /// <see cref="DataGridView"/> <see cref="ControlRow"/>
     /// </summary>
-    public partial class GridViewDataControl : DataControl, IGridControlRow
+    public partial class GridControlRow : ControlRow, IGridControlRow
     {
 
         /* constructor */
         /// <summary>
         /// Constructor
         /// </summary>
-        public GridViewDataControl()
+        public GridControlRow()
         {
             InitializeComponent();
 

@@ -10,40 +10,53 @@ using System.Windows.Forms;
 
 namespace Tripous.Forms
 {
+
     /// <summary>
-    /// Text box <see cref="DataControl"/>
+    /// DateTimePicker box <see cref="ControlRow"/>
     /// </summary>
-    public partial class TextDataControl : DataControl
+    public partial class DateBoxControlRow : ControlRow
     {
         /// <summary>
         /// Returns the value of the <see cref="Value"/> property
         /// </summary>
         protected override object GetValue()
         {
-            return edtText.Text;
+            return edtDateTimePicker.Value;
         }
         /// <summary>
         /// Sets the value of the <see cref="Value"/> property
         /// </summary>
         protected override void SetValue(object V)
         {
-            edtText.Text = Sys.IsNull(V) ? null : V.ToString();
+            try
+            {
+                if (V.GetType().IsAssignableFrom(typeof(DateTime)))
+                {
+                    edtDateTimePicker.Value = Convert.ToDateTime(V);
+                }
+            }
+            catch
+            {
+            }
+
         }
+
 
         /// <summary>
         /// The name of the property to bind to
         /// </summary>
-        protected override string BindPropertyName { get { return "Text"; } }
+        protected override string BindPropertyName { get { return "Value"; } }
+
 
         /* constructor */
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public TextDataControl()
+                /// <summary>
+                /// Constructor
+                /// </summary>
+                public DateBoxControlRow()
         {
             InitializeComponent();
 
-            this.Control = edtText;
+            this.Control = edtDateTimePicker;
         }
     }
 }

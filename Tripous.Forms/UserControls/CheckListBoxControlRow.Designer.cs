@@ -1,6 +1,6 @@
 ﻿namespace Tripous.Forms
 {
-    partial class TextDataControl
+    partial class CheckListBoxControlRow
     {
         /// <summary> 
         /// Required designer variable.
@@ -28,10 +28,14 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.edtText = new System.Windows.Forms.TextBox();
+            this.ListControl = new System.Windows.Forms.CheckedListBox();
             this.pnlText.SuspendLayout();
             this.pnlControl.SuspendLayout();
             this.SuspendLayout();
+            // 
+            // pnlText
+            // 
+            this.pnlText.Size = new System.Drawing.Size(140, 130);
             // 
             // lblText
             // 
@@ -39,34 +43,35 @@
             // 
             // pnlControl
             // 
-            this.pnlControl.Controls.Add(this.edtText);
+            this.pnlControl.Controls.Add(this.ListControl);
             this.pnlControl.Location = new System.Drawing.Point(140, 0);
-            this.pnlControl.Size = new System.Drawing.Size(260, 28);
+            this.pnlControl.Size = new System.Drawing.Size(260, 130);
             // 
-            // edtText
+            // lboBox
             // 
-            this.edtText.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.edtText.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.edtText.Location = new System.Drawing.Point(4, 4);
-            this.edtText.Name = "edtText";
-            this.edtText.Size = new System.Drawing.Size(252, 20);
-            this.edtText.TabIndex = 0;
+            this.ListControl.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.ListControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ListControl.FormattingEnabled = true;
+            this.ListControl.Location = new System.Drawing.Point(4, 4);
+            this.ListControl.Name = "lboBox";
+            this.ListControl.Size = new System.Drawing.Size(252, 122);
+            this.ListControl.TabIndex = 0;
             // 
-            // TextDataControl
+            // CheckListBoxDataControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.Name = "TextDataControl";
+            this.Name = "CheckListBoxDataControl";
+            this.Size = new System.Drawing.Size(400, 130);
             this.pnlText.ResumeLayout(false);
             this.pnlControl.ResumeLayout(false);
-            this.pnlControl.PerformLayout();
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.TextBox edtText;
+        private System.Windows.Forms.CheckedListBox ListControl;
     }
 }

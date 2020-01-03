@@ -34,7 +34,7 @@ namespace Tripous.Model
     /// <summary>
     /// Top level container. Represents a desktop form or a html page
     /// </summary>
-    public class UiView
+    public class UiViewInfo
     {
         string fSourceName;
 
@@ -53,15 +53,15 @@ namespace Tripous.Model
         /// <summary>
         /// A list of tabs. Could be empty.
         /// </summary>
-        public List<UiTab> Tabs { get; } = new List<UiTab>();
+        public List<UiTabInfo> Tabs { get; } = new List<UiTabInfo>();
         /// <summary>
         /// A list of groups. Could be empty.
         /// </summary>
-        public List<UiGroup> Groups { get; } = new List<UiGroup>();
+        public List<UiGroupInfo> Groups { get; } = new List<UiGroupInfo>();
         /// <summary>
         /// A list of columns. Could be empty.
         /// </summary>
-        public List<UiColumn> Columns { get; } = new List<UiColumn>();
+        public List<UiColumnInfo> Columns { get; } = new List<UiColumnInfo>();
 
         /// <summary>
         /// Columns per screen size
@@ -72,13 +72,13 @@ namespace Tripous.Model
     /// <summary>
     /// Represents a tab page
     /// </summary>
-    public class UiTab
+    public class UiTabInfo
     {
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public UiTab()
+        public UiTabInfo()
         {
         }
 
@@ -93,11 +93,11 @@ namespace Tripous.Model
         /// <summary>
         /// A list of groups. Could be empty.
         /// </summary>
-        public List<UiGroup> Groups { get; } = new List<UiGroup>();
+        public List<UiGroupInfo> Groups { get; } = new List<UiGroupInfo>();
         /// <summary>
         /// A list of columns. Could be empty.
         /// </summary>
-        public List<UiColumn> Columns { get; } = new List<UiColumn>();
+        public List<UiColumnInfo> Columns { get; } = new List<UiColumnInfo>();
 
         /// <summary>
         /// Columns per screen size
@@ -109,7 +109,7 @@ namespace Tripous.Model
     /// <summary>
     /// Represents a container such as a DIV or panel which groups controls under a specified text.
     /// </summary>
-    public class UiGroup
+    public class UiGroupInfo
     {
         /// <summary>
         /// The text of the group.
@@ -122,7 +122,7 @@ namespace Tripous.Model
         /// <summary>
         /// A list of columns. Could be empty.
         /// </summary>
-        public List<UiColumn> Columns { get; } = new List<UiColumn>();
+        public List<UiColumnInfo> Columns { get; } = new List<UiColumnInfo>();
 
         /// <summary>
         /// Columns per screen size
@@ -131,16 +131,16 @@ namespace Tripous.Model
     }
 
     /// <summary>
-    /// Represents a column in any container, <see cref="UiView"/>, <see cref="UiTab"/> or <see cref="UiGroup"/>
+    /// Represents a column in any container, <see cref="UiViewInfo"/>, <see cref="UiTabInfo"/> or <see cref="UiGroupInfo"/>
     /// </summary>
-    public class UiColumn
+    public class UiColumnInfo
     {
         /// <summary>
         /// Adds and returns a control row to the column.
         /// </summary>
-        public UiControlRow AddRow(string TextKey, string Id, string TypeName, string DataField, bool Required = false, bool ReadOnly = false)
+        public UiControlRowInfo AddRow(string TextKey, string Id, string TypeName, string DataField, bool Required = false, bool ReadOnly = false)
         {
-            UiControlRow Result = new UiControlRow();
+            UiControlRowInfo Result = new UiControlRowInfo();
             Rows.Add(Result);
 
             Result.TextKey = TextKey;
@@ -166,15 +166,15 @@ namespace Tripous.Model
         /// <summary>
         /// A list of rows.  
         /// </summary>
-        public List<UiControlRow> Rows { get; } = new List<UiControlRow>();
+        public List<UiControlRowInfo> Rows { get; } = new List<UiControlRowInfo>();
     }
 
     /// <summary>
-    /// Represents a row in a <see cref="UiColumn"/>.
+    /// Represents a row in a <see cref="UiColumnInfo"/>.
     /// <para>The row is the control container along with its caption text.</para>
     /// <para>The control may be data-bindable or not.</para>
     /// </summary>
-    public class UiControlRow
+    public class UiControlRowInfo
     {
 
         /// <summary>

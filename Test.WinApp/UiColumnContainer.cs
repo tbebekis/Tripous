@@ -15,7 +15,9 @@ namespace Tripous.Forms
     // https://www.cyotek.com/blog/creating-a-multi-paged-container-control-with-design-time-support
 
 
-    [Designer(typeof(System.Windows.Forms.Design.ParentControlDesigner))]
+    //[Designer(typeof(System.Windows.Forms.Design.ParentControlDesigner))]
+
+    [ToolboxItem(false), DesignTimeVisible(false)]
     public class UiColumnContainer: UserControl
     {
         const int DefaultHeight = 60;
@@ -30,15 +32,15 @@ namespace Tripous.Forms
             { ScreenMode.Large, 3 },
         };
 
-        protected List<UiColumnPanel> GetColumns()
+        protected List<UiColumn> GetColumns()
         {
-            List<UiColumnPanel> Result = new List<UiColumnPanel>();
+            List<UiColumn> Result = new List<UiColumn>();
 
             for (int i = 0; i < Controls.Count; i++)
             {
-                if (Controls[i] is UiColumnPanel)
+                if (Controls[i] is UiColumn)
                 {
-                    Result.Add(Controls[i] as UiColumnPanel);
+                    Result.Add(Controls[i] as UiColumn);
                 }
             }
 
@@ -54,7 +56,7 @@ namespace Tripous.Forms
                 {
                     if (this.Parent != null)
                     {
-                        List<UiColumnPanel> Columns = GetColumns();
+                        List<UiColumn> Columns = GetColumns();
 
                         if (Columns.Count == 0)
                             return;

@@ -12,20 +12,19 @@ namespace Tripous.Forms
 {
 
     /// <summary>
-    /// TreeView <see cref="DataControl"/>
+    /// ListView <see cref="ControlRow"/>
     /// </summary>
-    public partial class TreeViewDataControl : DataControl
+    public partial class ListViewControlRow : ControlRow
     {
-
         /* constructor */
         /// <summary>
         /// Constructor
         /// </summary>
-        public TreeViewDataControl()
+        public ListViewControlRow()
         {
             InitializeComponent();
 
-            this.Control = tv;
+            this.Control = lv;
         }
     }
 }
