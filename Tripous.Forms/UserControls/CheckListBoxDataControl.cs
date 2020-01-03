@@ -14,7 +14,7 @@ namespace Tripous.Forms
     /// <summary>
     /// CheckedListBox <see cref="DataControl"/>
     /// </summary>
-    public partial class CheckListBoxDataControl : DataControl, IDataBindLookUp
+    public partial class CheckListBoxDataControl : DataControl, ILookUpControlRow
     {
 
         /* constructor */

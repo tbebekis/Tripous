@@ -12,11 +12,7 @@ namespace Tripous.Model
         /// <summary>
         /// How many columns to have in a certain screen size.
         /// </summary>
-        public int Large { get; set; } = 3;
-        /// <summary>
-        /// How many columns to have in a certain screen size.
-        /// </summary>
-        public int Medium { get; set; } = 2;
+        public int XSmall { get; set; } = 1;
         /// <summary>
         /// How many columns to have in a certain screen size.
         /// </summary>
@@ -24,8 +20,15 @@ namespace Tripous.Model
         /// <summary>
         /// How many columns to have in a certain screen size.
         /// </summary>
-        public int XSmall { get; set; } = 1;
+        public int Medium { get; set; } = 2;
+        /// <summary>
+        /// How many columns to have in a certain screen size.
+        /// </summary>
+        public int Large { get; set; } = 3;
+
     }
+
+
 
  
     /// <summary>
@@ -173,7 +176,6 @@ namespace Tripous.Model
     /// </summary>
     public class UiControlRow
     {
-
 
         /// <summary>
         /// The caption text of the control

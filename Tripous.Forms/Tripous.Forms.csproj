@@ -185,6 +185,7 @@
     </Compile>
     <Compile Include="Extensions\RichTextBoxExtensions.cs" />
     <Compile Include="ResourceProvider.cs" />
+    <Compile Include="ScreenMode.cs" />
     <Compile Include="SingleRowPickDialog.cs">
       <SubType>Form</SubType>
     </Compile>

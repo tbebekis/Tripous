@@ -14,7 +14,7 @@ namespace Tripous.Forms
     /// <summary>
     /// <see cref="DataGridView"/> <see cref="DataControl"/>
     /// </summary>
-    public partial class GridViewDataControl : DataControl, IDataBindGrid
+    public partial class GridViewDataControl : DataControl, IGridControlRow
     {
 
         /* constructor */

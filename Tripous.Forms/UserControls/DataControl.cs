@@ -17,7 +17,7 @@ namespace Tripous.Forms
     /// <summary>
     /// Represents a control that can be placed on a <see cref="UiView"/>
     /// </summary>
-    public partial class DataControl : UserControl, IDataBindControl
+    public partial class DataControl : UserControl, IDataControlRow
     {
         protected const int TextPanelDefaultHeight = 28;
         int fSplit = 35;
@@ -196,6 +196,10 @@ namespace Tripous.Forms
 
 
         /* properties */
+        /// <summary>
+        /// Returns the height of the row
+        /// </summary>
+        public virtual int RowHeight { get { return this.Height; } }
         /// <summary>
         /// The control text (caption)
         /// </summary>

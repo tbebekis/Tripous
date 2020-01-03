@@ -6,10 +6,21 @@ using System.Threading.Tasks;
 
 namespace Tripous.Forms
 {
+
+    /// <summary>
+    /// Represents a row with a control, on a column  
+    /// </summary>
+    public interface IControlRow
+    {
+        /// <summary>
+        /// Returns the height of the row
+        /// </summary>
+        int RowHeight { get; }
+    }
     /// <summary>
     /// Represents a control with simple binding
     /// </summary>
-    public interface IDataBindControl
+    public interface IDataControlRow: IControlRow
     {
         /// <summary>
         /// The control text (caption)
@@ -33,7 +44,7 @@ namespace Tripous.Forms
     /// <summary>
     /// Represents a control with lookup binding
     /// </summary>
-    public interface IDataBindLookUp: IDataBindControl
+    public interface ILookUpControlRow: IDataControlRow
     {
 
         /// <summary>
@@ -61,7 +72,7 @@ namespace Tripous.Forms
     /// <summary>
     /// Represents a control with grid binding
     /// </summary>
-    public interface IDataBindGrid : IDataBindControl
+    public interface IGridControlRow : IDataControlRow
     {
     }
 }

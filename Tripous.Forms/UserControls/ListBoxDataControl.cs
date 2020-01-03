@@ -14,7 +14,7 @@ namespace Tripous.Forms
     /// <summary>
     /// ListBox <see cref="DataControl"/>
     /// </summary>
-    public partial class ListBoxDataControl : DataControl, IDataBindLookUp
+    public partial class ListBoxDataControl : DataControl, ILookUpControlRow
     {
         /// <summary>
         /// Returns the value of the <see cref="Value"/> property

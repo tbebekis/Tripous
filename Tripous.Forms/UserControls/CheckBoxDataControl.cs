@@ -13,7 +13,7 @@ namespace Tripous.Forms
     /// <summary>
     /// CheckBox <see cref="UserControl"/>
     /// </summary>
-    public partial class CheckBoxDataControl : UserControl, IDataBindControl
+    public partial class CheckBoxDataControl : UserControl, IDataControlRow
     {
         bool fReadOnly;
         bool fRequired;
@@ -140,10 +140,15 @@ namespace Tripous.Forms
             string PropertyName = "CheckState"; //"CheckState";       // Checked  CheckState
             return Ui.Bind(Control, PropertyName, DataSource, DataField);
         }
- 
+
 
 
         /* properties */
+        /// <summary>
+        /// Returns the height of the row
+        /// </summary>
+        public virtual int RowHeight { get { return this.Height; } }
+
         /// <summary>
         /// The control text (caption)
         /// </summary>

@@ -24,7 +24,10 @@ namespace Tripous.Forms
         static int fWaiting;
         static int fWaitCursor;
  
+
         static object syncLock = new LockObject();
+
+ 
 
         /// <summary>
         /// The id of the primary thread
@@ -601,11 +604,44 @@ namespace Tripous.Forms
             return control;
         }
 
+        /// <summary>
+        /// Returns the "screen mode" of a container control.
+        /// </summary>
+        static public ScreenMode GetScreenMode(Control Container)
+        {
+            /*
+None: 0,
+XSmall: 1,     //    0 ..  767
+Small: 2,      //  768 ..  991
+Medium: 4,     //  992 .. 1200
+Large: 8       // 1201 .. 
+*/
+
+            ScreenMode Result = ScreenMode.None;
+
+            if (Container != null)
+            {
+                int W = Container.ClientRectangle.Width;
+
+                if (W <= 767)
+                    Result = ScreenMode.XSmall;
+                else if (W <= 991)
+                    Result = ScreenMode.Small;
+                else if (W <= 1200)
+                    Result = ScreenMode.Medium;
+                else
+                    Result = ScreenMode.Large;
+            }
+
+            return Result;
+        }
         /* properties */
         /// <summary>
         /// The main form of the application, if any, else null
         /// </summary>
         static public Form MainForm { get; set; }
+
+
 
         /// <summary>
         /// Gets a value indicating whether the caller must call an invoke method when making method calls 
@@ -688,6 +724,7 @@ namespace Tripous.Forms
         /// The parent for all dock forms
         /// </summary>      
         static public DockPanel Docker { get; set; }
+ 
 
         /* events */
         /// <summary>

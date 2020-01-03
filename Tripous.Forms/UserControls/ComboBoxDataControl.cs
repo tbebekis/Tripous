@@ -13,7 +13,7 @@ namespace Tripous.Forms
     /// <summary>
     /// Combo box <see cref="DataControl"/>
     /// </summary>
-    public partial class ComboBoxDataControl : DataControl, IDataBindLookUp
+    public partial class ComboBoxDataControl : DataControl, ILookUpControlRow
     {
         /// <summary>
         /// Returns the value of the <see cref="Value"/> property
