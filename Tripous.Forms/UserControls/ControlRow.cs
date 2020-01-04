@@ -14,10 +14,31 @@ using Tripous.Model;
 namespace Tripous.Forms
 {
     /*
-                 this.AutoScroll = false;
-                this.HorizontalScroll.Enabled = false;
-                this.HorizontalScroll.Visible = false;
-             */
+     EDW
+
+
+    - To create a scrolling container for one or more UiGroup instances
+        this.AutoScroll = false;
+        this.HorizontalScroll.Enabled = false;
+        this.HorizontalScroll.Visible = false;
+
+    - in ControlRow add a virtual method to be called OnParentChanged
+    and if the Parent is not null 
+    will place the Control to pnlControl as
+
+        All Anchors
+
+        Left = 2
+        Top = 3
+        Right = pnlControl.Wight - 3
+
+        if Control is a Single Line one
+            adjust the height of the Row to be 3px  more than the bottom of the Control
+
+        if Control is a Multi Line one
+            Bottom = pnlControl.Height - 4
+        
+    */
 
     /// <summary>
     /// Represents a control that can be placed on a <see cref="UiViewInfo"/>

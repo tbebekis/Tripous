@@ -55,9 +55,6 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UiColumnContainer.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
     <Compile Include="UiColumn.cs">
       <SubType>Component</SubType>
     </Compile>

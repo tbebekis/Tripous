@@ -240,9 +240,9 @@ namespace Tripous.Forms
                     //System.Diagnostics.Debug.WriteLine($"Count = {A.Length}");
                     this.Height = H;
 
-                    if (Parent is UiColumnContainer)
+                    if (Parent is UiGroup)
                     {
-                        (Parent as UiColumnContainer).PerformLayout();
+                        (Parent as UiGroup).PerformLayout();
                     }
                 }
                 finally
