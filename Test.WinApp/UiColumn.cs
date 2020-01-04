@@ -45,7 +45,7 @@ namespace Tripous.Forms
                 {
                     base.InsertItem(Index, Item);
 
-                    if (Item.Parent != Owner)
+                    if (!Owner.Controls.Contains(Item as Control))
                         Owner.Controls.Add(Item as Control);
                 }
             }
@@ -56,8 +56,11 @@ namespace Tripous.Forms
             {
                 if ((Index >= 0) && (Index < Count))
                 {
-                    Owner.Controls.Remove(this[Index] as Control);
+                    IControlRow Item = this[Index];
                     base.RemoveItem(Index);
+
+                    if (Owner.Controls.Contains(Item as Control))
+                        Owner.Controls.Remove(Item as Control); 
                 }
             }
             /// <summary>
@@ -65,9 +68,13 @@ namespace Tripous.Forms
             /// </summary>
             protected override void ClearItems()
             {
-                this.Owner.RemoveAll();
-                base.ClearItems();
+                IControlRow[] A = this.ToArray();
+                foreach (var Item in A)
+                {
+                    this.Remove(Item);
+                }
             }
+
 
             /// <summary>
             /// Constructor.
@@ -130,7 +137,7 @@ namespace Tripous.Forms
         /// </summary>
         protected class UiColumnControlCollection : Control.ControlCollection
         {
-            private UiColumn owner;
+            UiColumn owner;
 
             /// <summary>
             /// Constructor
@@ -146,17 +153,17 @@ namespace Tripous.Forms
             /// </summary>
             public override void Add(Control value)
             {
-                bool Flag = value is IControlRow;
-
-                if (!Flag)
+                if (!Contains(value))
                 {
-                    throw new ArgumentException("A UiColumn can not be a parent of any other control except of a IControlRow");
-                }
+                    bool Flag = value is IControlRow;
 
-                base.Add(value);
+                    if (!Flag)
+                    {
+                        throw new ArgumentException("A UiColumn can not be a parent of any other control except of a IControlRow");
+                    }
 
-                if (value is UiColumn)
-                {
+                    base.Add(value);
+
                     ISite site = owner.Site;
                     if ((site != null) && (value.Site == null))
                     {
@@ -169,6 +176,7 @@ namespace Tripous.Forms
 
                     if (!owner.Rows.Contains(value as IControlRow))
                         owner.Rows.Add(value as IControlRow);
+
                     owner.OnLayoutRows();
                 }
             }
@@ -177,13 +185,35 @@ namespace Tripous.Forms
             /// </summary>
             public override void Remove(Control value)
             {
-                base.Remove(value);
-                owner.OnLayoutRows();
+                if (Contains(value))
+                {
+                    base.Remove(value);
+
+                    if (owner.Rows.Contains(value as IControlRow))
+                        owner.Rows.Remove(value as IControlRow);
+
+                    owner.OnLayoutRows();
+                } 
+            }
+            /// <summary>
+            /// Override
+            /// </summary>
+            public override void Clear()
+            {
+                List<Control> List = new List<Control>();
+
+                foreach (Control C in this)
+                    List.Add(C);
+
+                foreach (var Item in List)
+                {
+                    this.Remove(Item);
+                }
             }
         }
         #endregion
  
-        const int DefaultHeight = 30;
+        const int DefaultHeight = 40;
 
 
         /* protected */
@@ -192,12 +222,13 @@ namespace Tripous.Forms
         /// </summary>
         protected virtual void OnLayoutRows()
         {
-            //if (!Layouting)
+            if (!Layouting)
             {
                 Layouting = true;
                 try
                 {
                     IControlRow[] A = Rows.ToArray();
+
                     int H = 0;
                     foreach (var Row in A)
                     {
@@ -206,7 +237,7 @@ namespace Tripous.Forms
 
                     H = DesignMode ? H + DefaultHeight : H;
 
-                    System.Diagnostics.Debug.WriteLine($"Count = {A.Length}");
+                    //System.Diagnostics.Debug.WriteLine($"Count = {A.Length}");
                     this.Height = H;
 
                     if (Parent is UiColumnContainer)
@@ -220,16 +251,7 @@ namespace Tripous.Forms
                 }
             }
         }
-        /// <summary>
-        /// Removes all pages from the column collection
-        /// </summary>
-        protected virtual void RemoveAll()
-        {
-            base.Controls.Clear();
-            OnLayoutRows();
-        }
-
-        
+ 
         /* overrides */
         /// <summary>
         /// Override
@@ -295,7 +317,7 @@ namespace Tripous.Forms
         /// <summary>
         /// Override
         /// </summary>
-        protected override Size DefaultSize { get { return new Size(120, DefaultHeight); } }
+        protected override Size DefaultSize { get { return new Size(200, DefaultHeight); } }
 
 
         /* construction */
@@ -326,14 +348,14 @@ namespace Tripous.Forms
 
         /* properties */
         /// <summary>
-        /// Returns the number of pages in the collection
+        /// Returns the number of items in the collection
         /// </summary>
         [Browsable(false), ReadOnly(true), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public int Count { get { return Rows.Count; } }
         /// <summary>
         /// The collection of pages.
         /// </summary>
-        [Description("The collection of pages."), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Description("The collection of items."), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public ControlRowCollection Rows { get; }
 
     }
@@ -378,6 +400,66 @@ namespace Tripous.Forms
             return null;
         }
 
+        void AnyVerbClick(object sender, EventArgs e)
+        {
+ 
+            DesignerVerb Verb = sender as DesignerVerb;
+            if (Verb != null)
+            {
+                string Key = Verb.Text;  
+                if (Key.Length > "Add ".Length)
+                    Key = Key.Remove(0, "Add ".Length);
+
+                if (Ui.ControlRowTypes.ContainsKey(Key))
+                {
+                    Type T = Ui.ControlRowTypes[Key];
+
+                    IDesignerHost DesignerHost = (IDesignerHost)this.GetService(typeof(IDesignerHost));
+                    if (DesignerHost != null)
+                    {
+                        DesignerTransaction Transaction = null;
+                        try
+                        {
+                            try
+                            {
+                                Transaction = DesignerHost.CreateTransaction("Tripous_UiColumn_AddControlRow");
+                            }
+                            catch (CheckoutException Ex)
+                            {
+                                if (Ex != CheckoutException.Canceled)
+                                {
+                                    throw Ex;
+                                }
+                                return;
+                            }
+
+
+                            MemberDescriptor ControlsProp = TypeDescriptor.GetProperties(this.Column)["Controls"];
+
+                            Control Row = DesignerHost.CreateComponent(T) as Control;
+                            base.RaiseComponentChanging(ControlsProp);
+
+                           
+                            //Column.Rows.Insert(Column.Rows.Count, Row);
+                            Column.Controls.Add(Row);
+                            Row.BringToFront();
+                            Column.PerformLayout();
+
+                            base.RaiseComponentChanged(ControlsProp, null, null);
+                        }
+                        finally
+                        {
+                            if (Transaction != null)
+                            {
+                                Transaction.Commit();
+                            }
+                        }
+                    }
+                }
+ 
+            }
+        }
+
         /* overrides */
         /// <summary>
         /// Called when the control that the designer is managing has painted its surface
@@ -406,7 +488,7 @@ namespace Tripous.Forms
         /// </summary>
         public override bool CanBeParentedTo(IDesigner parentDesigner)
         {
-            return ((parentDesigner != null) && (parentDesigner.Component is Pager));
+            return ((parentDesigner != null) && (parentDesigner.Component is UiGroup));
         }
 
         /* constructor */
@@ -418,7 +500,7 @@ namespace Tripous.Forms
             base.AutoResizeHandles = true;
         }
 
-        /* internal - to be called by the PagerDesigner */
+        /* internal - to be called by the parent Designer */
         internal void OnDragDropInternal(DragEventArgs de)
         {
             this.OnDragDrop(de);
@@ -475,6 +557,14 @@ namespace Tripous.Forms
                 {
                     foreach (DesignerVerb Verb in ParentDesigner.Verbs)
                         Result.Add(Verb);
+                }
+
+                Result.Add(new DesignerVerb("-", null));
+
+                foreach (var Entry in Ui.ControlRowTypes)
+                {
+                    DesignerVerb Verb = new DesignerVerb("Add " + Entry.Key, AnyVerbClick);
+                    Result.Add(Verb);
                 }
 
                 return Result;

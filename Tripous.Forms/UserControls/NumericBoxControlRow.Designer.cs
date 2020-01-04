@@ -34,31 +34,26 @@
             ((System.ComponentModel.ISupportInitialize)(this.edtNumericUpDown)).BeginInit();
             this.SuspendLayout();
             // 
-            // lblText
-            // 
-            this.lblText.Size = new System.Drawing.Size(131, 16);
-            // 
             // pnlControl
             // 
             this.pnlControl.Controls.Add(this.edtNumericUpDown);
-            this.pnlControl.Location = new System.Drawing.Point(140, 0);
-            this.pnlControl.Size = new System.Drawing.Size(260, 28);
+            this.pnlControl.Padding = new System.Windows.Forms.Padding(1, 4, 2, 0);
             // 
             // edtNumericUpDown
             // 
             this.edtNumericUpDown.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.edtNumericUpDown.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.edtNumericUpDown.Location = new System.Drawing.Point(4, 4);
+            this.edtNumericUpDown.Location = new System.Drawing.Point(1, 4);
             this.edtNumericUpDown.Name = "edtNumericUpDown";
-            this.edtNumericUpDown.Size = new System.Drawing.Size(252, 20);
+            this.edtNumericUpDown.Size = new System.Drawing.Size(323, 25);
             this.edtNumericUpDown.TabIndex = 0;
             // 
-            // NumericBoxDataControl
+            // NumericBoxControlRow
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.Name = "NumericBoxDataControl";
+            this.Name = "NumericBoxControlRow";
             this.pnlText.ResumeLayout(false);
             this.pnlControl.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.edtNumericUpDown)).EndInit();

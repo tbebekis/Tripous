@@ -46,5 +46,12 @@ namespace Tripous.Forms
 
             this.Control = edtText;
         }
+
+        /* properties */
+        /// <summary>
+        /// The control
+        /// </summary>
+        [Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public RichTextBox Box { get { return edtText; } }
     }
 }

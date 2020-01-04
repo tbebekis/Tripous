@@ -25,10 +25,15 @@ namespace Tripous.Forms
         {
             InitializeComponent();
 
-            this.Control = Grid;
+            this.Control = GridControl;
         }
 
         /* properties */
+        /// <summary>
+        /// The control
+        /// </summary>
+        [Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public DataGridView Grid { get { return GridControl; } }
         /// <summary>
         /// The data source of the Control.
         /// </summary>

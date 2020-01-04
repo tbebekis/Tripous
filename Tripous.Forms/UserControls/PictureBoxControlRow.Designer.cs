@@ -36,36 +36,38 @@
             // 
             // pnlText
             // 
-            this.pnlText.Size = new System.Drawing.Size(140, 130);
+            this.pnlText.Margin = new System.Windows.Forms.Padding(0);
+            this.pnlText.Size = new System.Drawing.Size(140, 170);
             // 
             // lblText
             // 
-            this.lblText.Size = new System.Drawing.Size(131, 16);
+            this.lblText.Size = new System.Drawing.Size(103, 21);
             // 
             // pnlControl
             // 
             this.pnlControl.Controls.Add(this.picBox);
-            this.pnlControl.Location = new System.Drawing.Point(140, 0);
-            this.pnlControl.Size = new System.Drawing.Size(260, 130);
+            this.pnlControl.Size = new System.Drawing.Size(327, 170);
             // 
             // picBox
             // 
+            this.picBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.picBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.picBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.picBox.Location = new System.Drawing.Point(4, 4);
+            this.picBox.Location = new System.Drawing.Point(3, 4);
             this.picBox.Name = "picBox";
-            this.picBox.Size = new System.Drawing.Size(252, 122);
+            this.picBox.Size = new System.Drawing.Size(320, 162);
             this.picBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.picBox.TabIndex = 0;
             this.picBox.TabStop = false;
             // 
-            // PictureBoxDataControl
+            // PictureBoxControlRow
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.Name = "PictureBoxDataControl";
-            this.Size = new System.Drawing.Size(400, 130);
+            this.Name = "PictureBoxControlRow";
+            this.Size = new System.Drawing.Size(467, 170);
             this.pnlText.ResumeLayout(false);
             this.pnlControl.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.picBox)).EndInit();

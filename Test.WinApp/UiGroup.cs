@@ -39,7 +39,7 @@ namespace Tripous.Forms
                 {
                     base.InsertItem(Index, Item);
 
-                    if (Item.Parent != Owner)
+                    if (!Owner.Controls.Contains(Item))
                         Owner.Controls.Add(Item);
                 }
             }
@@ -50,8 +50,11 @@ namespace Tripous.Forms
             {
                 if ((Index >= 0) && (Index < Count))
                 {
-                    Owner.Controls.Remove(this[Index]);
+                    UiColumn Item = this[Index];                    
                     base.RemoveItem(Index);
+
+                    if (Owner.Controls.Contains(Item))
+                        Owner.Controls.Remove(Item);
                 }
             }
             /// <summary>
@@ -59,9 +62,13 @@ namespace Tripous.Forms
             /// </summary>
             protected override void ClearItems()
             {
-                Owner.RemoveAll();
-                base.ClearItems();
+                UiColumn[] A = this.ToArray();
+                foreach (var Item in A)
+                {
+                    this.Remove(Item);
+                }
             }
+
 
             /// <summary>
             /// Constructor.
@@ -148,17 +155,17 @@ namespace Tripous.Forms
             /// </summary>
             public override void Add(Control value)
             {
-                bool Flag = (this.Count == 0 && value is Panel) || value is UiColumn;
-
-                if (!Flag)
+                if (!Contains(value))
                 {
-                    throw new ArgumentException("A UiGroup can not be a parent of any other control except of a UiColumn");
-                }
+                    bool Flag = (this.Count == 0 && value is Panel) || value is UiColumn;
 
-                base.Add(value);
+                    if (!Flag)
+                    {
+                        throw new ArgumentException("A UiGroup can not be a parent of any other control except of a UiColumn");
+                    }
 
-                if (value is UiColumn)
-                {
+                    base.Add(value);
+
                     ISite site = owner.Site;
                     if ((site != null) && (value.Site == null))
                     {
@@ -168,10 +175,11 @@ namespace Tripous.Forms
                             container.Add(value);
                         }
                     }
- 
+
                     if (!owner.Columns.Contains(value as UiColumn))
                         owner.Columns.Add(value as UiColumn);
-                    owner.OnColumnsChanged();
+
+                    owner.OnLayoutColumns();
                 }
             }
             /// <summary>
@@ -179,8 +187,30 @@ namespace Tripous.Forms
             /// </summary>
             public override void Remove(Control value)
             {
-                base.Remove(value);
-                owner.OnColumnsChanged(); 
+                if (Contains(value))
+                {
+                    base.Remove(value);
+
+                    if (owner.Columns.Contains(value as UiColumn))
+                        owner.Columns.Remove(value as UiColumn);
+
+                    owner.OnLayoutColumns();
+                }             
+            }
+            /// <summary>
+            /// Override
+            /// </summary>
+            public override void Clear()
+            {
+                List<Control> List = new List<Control>();
+
+                foreach (Control C in this)
+                    List.Add(C);
+ 
+                foreach (var Item in List)
+                {
+                    this.Remove(Item);
+                }
             }
         }
         #endregion
@@ -288,15 +318,7 @@ namespace Tripous.Forms
             OnLayoutColumns();
         }
 
-        /* protected */
-        /// <summary>
-        /// Removes all pages from the column collection
-        /// </summary>
-        protected void RemoveAll()
-        {
-            base.Controls.Clear();
-            OnLayoutColumns();
-        }
+ 
 
         /* overrides */
         protected override void OnParentChanged(EventArgs e)
@@ -343,7 +365,7 @@ namespace Tripous.Forms
 
 
         /// <summary>
-        /// Clears all pages from the collection.
+        /// Clears all items from the collection.
         /// </summary>
         public void Clear()
         {
@@ -356,7 +378,7 @@ namespace Tripous.Forms
         public void Add(UiColumn Item)
         {
             Columns.Add(Item);
-            OnColumnsChanged();
+            OnLayoutColumns();
         }
         /// <summary>
         /// Removes an item from the collection
@@ -364,8 +386,7 @@ namespace Tripous.Forms
         public void Remove(UiColumn Item)
         {
             Columns.Remove(Item);
-            OnColumnsChanged();
-            Invalidate();
+            OnLayoutColumns();
         }
         /// <summary>
         /// Returns the index of an item in the collection, if any, else -1
@@ -401,14 +422,14 @@ namespace Tripous.Forms
 
         /* properties */
         /// <summary>
-        /// Returns the number of pages in the collection
+        /// Returns the number of items in the collection
         /// </summary>
         [Browsable(false), ReadOnly(true), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public int Count { get { return Columns.Count; } } 
         /// <summary>
-        /// The collection of pages.
+        /// The collection of items.
         /// </summary>
-        [Description("The collection of pages."), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Description("The collection of items."), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public UiColumnCollection Columns { get; }
 
         public string Title
@@ -462,8 +483,6 @@ namespace Tripous.Forms
         DesignerVerbCollection verbs;
 
         UiColumn SelectedColumn;
-
-        //
 
         /* private methods */
         void VerbAdd_Click(object sender, EventArgs e)

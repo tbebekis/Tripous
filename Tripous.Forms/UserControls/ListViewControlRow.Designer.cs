@@ -35,36 +35,32 @@
             // 
             // pnlText
             // 
-            this.pnlText.Size = new System.Drawing.Size(140, 130);
-            // 
-            // lblText
-            // 
-            this.lblText.Size = new System.Drawing.Size(131, 16);
+            this.pnlText.Size = new System.Drawing.Size(140, 170);
             // 
             // pnlControl
             // 
             this.pnlControl.Controls.Add(this.lv);
-            this.pnlControl.Location = new System.Drawing.Point(140, 0);
-            this.pnlControl.Size = new System.Drawing.Size(260, 130);
+            this.pnlControl.Size = new System.Drawing.Size(326, 170);
             // 
             // lv
             // 
-            this.lv.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lv.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lv.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.lv.HideSelection = false;
-            this.lv.Location = new System.Drawing.Point(4, 4);
+            this.lv.Location = new System.Drawing.Point(2, 4);
             this.lv.Name = "lv";
-            this.lv.Size = new System.Drawing.Size(252, 122);
+            this.lv.Size = new System.Drawing.Size(320, 162);
             this.lv.TabIndex = 0;
             this.lv.UseCompatibleStateImageBehavior = false;
             // 
-            // ListViewDataControl
+            // ListViewControlRow
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.Name = "ListViewDataControl";
-            this.Size = new System.Drawing.Size(400, 130);
+            this.Name = "ListViewControlRow";
+            this.Size = new System.Drawing.Size(466, 170);
             this.pnlText.ResumeLayout(false);
             this.pnlControl.ResumeLayout(false);
             this.ResumeLayout(false);

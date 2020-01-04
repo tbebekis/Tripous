@@ -33,31 +33,26 @@
             this.pnlControl.SuspendLayout();
             this.SuspendLayout();
             // 
-            // lblText
-            // 
-            this.lblText.Size = new System.Drawing.Size(131, 16);
-            // 
             // pnlControl
             // 
             this.pnlControl.Controls.Add(this.ListControl);
-            this.pnlControl.Location = new System.Drawing.Point(140, 0);
-            this.pnlControl.Size = new System.Drawing.Size(260, 28);
+            this.pnlControl.Padding = new System.Windows.Forms.Padding(1, 4, 2, 0);
             // 
-            // cboBox
+            // ListControl
             // 
             this.ListControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ListControl.FormattingEnabled = true;
-            this.ListControl.Location = new System.Drawing.Point(4, 4);
-            this.ListControl.Name = "cboBox";
-            this.ListControl.Size = new System.Drawing.Size(252, 21);
+            this.ListControl.Location = new System.Drawing.Point(1, 4);
+            this.ListControl.Name = "ListControl";
+            this.ListControl.Size = new System.Drawing.Size(323, 25);
             this.ListControl.TabIndex = 0;
             // 
-            // ComboBoxDataControl
+            // ComboBoxControlRow
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.Name = "ComboBoxDataControl";
+            this.Name = "ComboBoxControlRow";
             this.pnlText.ResumeLayout(false);
             this.pnlControl.ResumeLayout(false);
             this.ResumeLayout(false);

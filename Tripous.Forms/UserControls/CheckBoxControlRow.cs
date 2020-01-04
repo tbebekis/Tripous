@@ -144,8 +144,6 @@ namespace Tripous.Forms
 
 
         /* properties */
- 
-
         /// <summary>
         /// The control text (caption)
         /// </summary>
@@ -248,6 +246,19 @@ namespace Tripous.Forms
         [Browsable(false)]
         new public AutoSizeMode AutoSizeMode { get => base.AutoSizeMode; set => base.AutoSizeMode = value; }
 
- 
+        /// <summary>
+        /// Indicates the cheked state of the control
+        /// </summary>
+        [DefaultValue(true), Description("Indicates the cheked state of the control"), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public bool Checked
+        {
+            get { return chBox.Checked; }
+            set { chBox.Checked = value; }
+        }
+        /// <summary>
+        /// The control
+        /// </summary>
+        [Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public CheckBox Box { get { return chBox; } }
     }
 }

@@ -56,5 +56,12 @@ namespace Tripous.Forms
 
             this.Control = edtNumericUpDown;
         }
+
+        /* properties */
+        /// <summary>
+        /// The control
+        /// </summary>
+        [Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public NumericUpDown Box { get { return edtNumericUpDown; } }
     }
 }

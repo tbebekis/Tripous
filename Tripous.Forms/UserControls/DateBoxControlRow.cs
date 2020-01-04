@@ -49,14 +49,21 @@ namespace Tripous.Forms
 
 
         /* constructor */
-                /// <summary>
-                /// Constructor
-                /// </summary>
-                public DateBoxControlRow()
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public DateBoxControlRow()
         {
             InitializeComponent();
 
             this.Control = edtDateTimePicker;
         }
+
+
+        /// <summary>
+        /// The control
+        /// </summary>
+        [Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public DateTimePicker Box { get { return edtDateTimePicker; } }
     }
 }

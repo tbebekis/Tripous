@@ -35,35 +35,32 @@
             // 
             // pnlText
             // 
-            this.pnlText.Size = new System.Drawing.Size(140, 130);
-            // 
-            // lblText
-            // 
-            this.lblText.Size = new System.Drawing.Size(131, 16);
+            this.pnlText.Size = new System.Drawing.Size(140, 170);
             // 
             // pnlControl
             // 
             this.pnlControl.Controls.Add(this.ListControl);
-            this.pnlControl.Location = new System.Drawing.Point(140, 0);
-            this.pnlControl.Size = new System.Drawing.Size(260, 130);
+            this.pnlControl.Size = new System.Drawing.Size(326, 170);
             // 
-            // lboBox
+            // ListControl
             // 
-            this.ListControl.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ListControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ListControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.ListControl.FormattingEnabled = true;
-            this.ListControl.Location = new System.Drawing.Point(4, 4);
-            this.ListControl.Name = "lboBox";
-            this.ListControl.Size = new System.Drawing.Size(252, 122);
+            this.ListControl.ItemHeight = 17;
+            this.ListControl.Location = new System.Drawing.Point(2, 5);
+            this.ListControl.Name = "ListControl";
+            this.ListControl.Size = new System.Drawing.Size(321, 157);
             this.ListControl.TabIndex = 0;
             // 
-            // ListBoxDataControl
+            // ListBoxControlRow
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.Name = "ListBoxDataControl";
-            this.Size = new System.Drawing.Size(400, 130);
+            this.Name = "ListBoxControlRow";
+            this.Size = new System.Drawing.Size(466, 170);
             this.pnlText.ResumeLayout(false);
             this.pnlControl.ResumeLayout(false);
             this.ResumeLayout(false);

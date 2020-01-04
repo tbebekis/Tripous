@@ -26,5 +26,12 @@ namespace Tripous.Forms
 
             this.Control = lv;
         }
+
+        /* properties */
+        /// <summary>
+        /// The control
+        /// </summary>
+        [Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public ListView ListView { get { return lv; } }
     }
 }

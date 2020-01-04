@@ -54,7 +54,7 @@
             this.lblTitle.Padding = new System.Windows.Forms.Padding(4, 0, 0, 0);
             this.lblTitle.Size = new System.Drawing.Size(699, 26);
             this.lblTitle.TabIndex = 0;
-            this.lblTitle.Text = "Gagoutis";
+            this.lblTitle.Text = "Title";
             this.lblTitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // UiGroup

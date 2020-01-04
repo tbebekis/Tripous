@@ -27,5 +27,12 @@ namespace Tripous.Forms
 
             this.Control = tv;
         }
+
+        /* properties */
+        /// <summary>
+        /// The control
+        /// </summary>
+        [Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public TreeView TreeView { get { return tv; } }
     }
 }

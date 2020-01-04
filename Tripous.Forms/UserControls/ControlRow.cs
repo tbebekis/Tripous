@@ -13,6 +13,11 @@ using Tripous.Model;
 
 namespace Tripous.Forms
 {
+    /*
+                 this.AutoScroll = false;
+                this.HorizontalScroll.Enabled = false;
+                this.HorizontalScroll.Visible = false;
+             */
 
     /// <summary>
     /// Represents a control that can be placed on a <see cref="UiViewInfo"/>

@@ -69,6 +69,8 @@ namespace Tripous.Forms
 
             return Ui.Bind(Control, BindPropertyName, DataSource, DataField);
         }
+        
+        
         /* properties */
         /// <summary>
         /// The name of the field to display.
@@ -105,6 +107,24 @@ namespace Tripous.Forms
         {
             get { return this.ListControl.DataSource; }
             set { this.ListControl.DataSource = value; }
+        }
+
+        /// <summary>
+        /// The control
+        /// </summary>
+        [Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public ComboBox Box { get { return ListControl; } }
+        [Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public object SelectedItem
+        {
+            get { return ListControl.SelectedItem; }
+            set { ListControl.SelectedItem = value; }
+        }
+        [Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public int SelectedIndex
+        {
+            get { return ListControl.SelectedIndex; }
+            set { ListControl.SelectedIndex = value; }
         }
     }
 }

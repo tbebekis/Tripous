@@ -80,5 +80,11 @@ namespace Tripous.Forms
             get { return this.ListControl.DataSource; }
             set { this.ListControl.DataSource = value; }
         }
+
+        /// <summary>
+        /// The control
+        /// </summary>
+        [Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public CheckedListBox Box { get { return ListControl; } }
     }
 }

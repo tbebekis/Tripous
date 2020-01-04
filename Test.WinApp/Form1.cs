@@ -16,6 +16,10 @@ namespace Test.WinApp
         public Form1()
         {
             InitializeComponent();
+
+            this.AutoScroll = false;
+            this.HorizontalScroll.Enabled = false;
+            this.HorizontalScroll.Visible = false;
         }
 
  

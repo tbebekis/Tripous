@@ -35,35 +35,32 @@
             // 
             // pnlText
             // 
-            this.pnlText.Size = new System.Drawing.Size(140, 140);
-            // 
-            // lblText
-            // 
-            this.lblText.Size = new System.Drawing.Size(131, 16);
+            this.pnlText.Size = new System.Drawing.Size(140, 170);
             // 
             // pnlControl
             // 
             this.pnlControl.Controls.Add(this.edtText);
-            this.pnlControl.Location = new System.Drawing.Point(140, 0);
-            this.pnlControl.Size = new System.Drawing.Size(260, 140);
+            this.pnlControl.Size = new System.Drawing.Size(326, 170);
             // 
             // edtText
             // 
+            this.edtText.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.edtText.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.edtText.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.edtText.Location = new System.Drawing.Point(4, 4);
+            this.edtText.Location = new System.Drawing.Point(3, 5);
             this.edtText.Name = "edtText";
-            this.edtText.Size = new System.Drawing.Size(252, 132);
+            this.edtText.Size = new System.Drawing.Size(318, 160);
             this.edtText.TabIndex = 0;
             this.edtText.Text = "";
             // 
-            // MemoBoxDataControl
+            // MemoControlRow
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.Name = "MemoBoxDataControl";
-            this.Size = new System.Drawing.Size(400, 140);
+            this.Name = "MemoControlRow";
+            this.Size = new System.Drawing.Size(466, 170);
             this.pnlText.ResumeLayout(false);
             this.pnlControl.ResumeLayout(false);
             this.ResumeLayout(false);

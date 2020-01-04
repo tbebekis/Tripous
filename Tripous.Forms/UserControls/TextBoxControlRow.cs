@@ -45,5 +45,22 @@ namespace Tripous.Forms
 
             this.Control = edtText;
         }
+
+
+        /* properties */
+        /// <summary>
+        /// The control
+        /// </summary>
+        [Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public TextBox Box { get { return edtText; } }
+        /// <summary>
+        /// The text of the edit box
+        /// </summary>
+        [DefaultValue(""), Localizable(false), Description("The text of the edit box.")]
+        public string EditText
+        {
+            get { return edtText.Text; }
+            set { edtText.Text = value; }
+        }
     }
 }

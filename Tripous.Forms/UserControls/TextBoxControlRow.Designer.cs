@@ -33,31 +33,24 @@
             this.pnlControl.SuspendLayout();
             this.SuspendLayout();
             // 
-            // lblText
-            // 
-            this.lblText.Size = new System.Drawing.Size(131, 16);
-            // 
             // pnlControl
             // 
             this.pnlControl.Controls.Add(this.edtText);
-            this.pnlControl.Location = new System.Drawing.Point(140, 0);
-            this.pnlControl.Size = new System.Drawing.Size(260, 28);
+            this.pnlControl.Padding = new System.Windows.Forms.Padding(1, 4, 2, 0);
             // 
             // edtText
             // 
-            this.edtText.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.edtText.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.edtText.Location = new System.Drawing.Point(4, 4);
+            this.edtText.Location = new System.Drawing.Point(1, 4);
             this.edtText.Name = "edtText";
-            this.edtText.Size = new System.Drawing.Size(252, 20);
+            this.edtText.Size = new System.Drawing.Size(323, 25);
             this.edtText.TabIndex = 0;
             // 
-            // TextDataControl
+            // TextBoxControlRow
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.Name = "TextDataControl";
+            this.Name = "TextBoxControlRow";
             this.pnlText.ResumeLayout(false);
             this.pnlControl.ResumeLayout(false);
             this.pnlControl.PerformLayout();

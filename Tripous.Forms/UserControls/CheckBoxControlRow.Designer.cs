@@ -54,7 +54,7 @@
             this.pnlControl.Location = new System.Drawing.Point(5, 5);
             this.pnlControl.Name = "pnlControl";
             this.pnlControl.Padding = new System.Windows.Forms.Padding(4, 4, 0, 0);
-            this.pnlControl.Size = new System.Drawing.Size(24, 20);
+            this.pnlControl.Size = new System.Drawing.Size(24, 25);
             this.pnlControl.TabIndex = 1;
             // 
             // pnlText
@@ -63,29 +63,30 @@
             this.pnlText.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlText.Location = new System.Drawing.Point(29, 5);
             this.pnlText.Name = "pnlText";
-            this.pnlText.Padding = new System.Windows.Forms.Padding(0, 3, 0, 0);
-            this.pnlText.Size = new System.Drawing.Size(368, 20);
+            this.pnlText.Padding = new System.Windows.Forms.Padding(0, 1, 0, 0);
+            this.pnlText.Size = new System.Drawing.Size(434, 25);
             this.pnlText.TabIndex = 3;
             // 
             // lblText
             // 
             this.lblText.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblText.Location = new System.Drawing.Point(0, 3);
+            this.lblText.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            this.lblText.Location = new System.Drawing.Point(0, 1);
             this.lblText.Name = "lblText";
-            this.lblText.Size = new System.Drawing.Size(368, 17);
+            this.lblText.Size = new System.Drawing.Size(434, 24);
             this.lblText.TabIndex = 0;
             this.lblText.Text = "Text";
             // 
-            // CheckBoxDataControl
+            // CheckBoxControlRow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.Controls.Add(this.pnlText);
             this.Controls.Add(this.pnlControl);
-            this.Name = "CheckBoxDataControl";
+            this.Name = "CheckBoxControlRow";
             this.Padding = new System.Windows.Forms.Padding(5, 5, 3, 3);
-            this.Size = new System.Drawing.Size(400, 28);
+            this.Size = new System.Drawing.Size(466, 33);
             this.pnlControl.ResumeLayout(false);
             this.pnlControl.PerformLayout();
             this.pnlText.ResumeLayout(false);

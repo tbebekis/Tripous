@@ -41,36 +41,38 @@
             this.pnlText.Dock = System.Windows.Forms.DockStyle.Left;
             this.pnlText.Location = new System.Drawing.Point(0, 0);
             this.pnlText.Name = "pnlText";
-            this.pnlText.Padding = new System.Windows.Forms.Padding(3, 7, 6, 6);
-            this.pnlText.Size = new System.Drawing.Size(120, 28);
+            this.pnlText.Size = new System.Drawing.Size(140, 33);
             this.pnlText.TabIndex = 1;
             // 
             // lblText
             // 
-            this.lblText.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lblText.Location = new System.Drawing.Point(3, 7);
+            this.lblText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblText.Location = new System.Drawing.Point(9, 7);
+            this.lblText.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblText.Name = "lblText";
-            this.lblText.Size = new System.Drawing.Size(111, 16);
+            this.lblText.Padding = new System.Windows.Forms.Padding(0, 0, 2, 0);
+            this.lblText.Size = new System.Drawing.Size(126, 21);
             this.lblText.TabIndex = 0;
             this.lblText.Text = "Text";
             // 
             // pnlControl
             // 
             this.pnlControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlControl.Location = new System.Drawing.Point(120, 0);
+            this.pnlControl.Location = new System.Drawing.Point(140, 0);
             this.pnlControl.Name = "pnlControl";
-            this.pnlControl.Padding = new System.Windows.Forms.Padding(4);
-            this.pnlControl.Size = new System.Drawing.Size(280, 28);
+            this.pnlControl.Size = new System.Drawing.Size(326, 33);
             this.pnlControl.TabIndex = 2;
             // 
-            // DataControl
+            // ControlRow
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.pnlControl);
             this.Controls.Add(this.pnlText);
-            this.Name = "DataControl";
-            this.Size = new System.Drawing.Size(400, 28);
+            this.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            this.Name = "ControlRow";
+            this.Size = new System.Drawing.Size(466, 33);
             this.pnlText.ResumeLayout(false);
             this.ResumeLayout(false);
 

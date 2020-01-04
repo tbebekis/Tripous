@@ -85,5 +85,11 @@ namespace Tripous.Forms
             get { return picBox.DoubleClickDialog; }
             set { picBox.DoubleClickDialog = value; }
         }
+
+        /// <summary>
+        /// The control
+        /// </summary>
+        [Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public PictureBoxEx Box { get { return picBox; } }
     }
 }

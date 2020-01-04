@@ -69,7 +69,13 @@ namespace Tripous.Forms
 
             return Ui.Bind(Control, BindPropertyName, DataSource, DataField);
         }
+
         /* properties */
+        /// <summary>
+        /// The control
+        /// </summary>
+        [Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public ListBox Box { get { return ListControl; } }
         /// <summary>
         /// The name of the field to display.
         /// <para>NOTE: For ComboBox and ListBox only.</para>

@@ -33,34 +33,30 @@
             this.pnlControl.SuspendLayout();
             this.SuspendLayout();
             // 
-            // lblText
-            // 
-            this.lblText.Size = new System.Drawing.Size(131, 16);
-            // 
             // pnlControl
             // 
             this.pnlControl.Controls.Add(this.edtDateTimePicker);
-            this.pnlControl.Location = new System.Drawing.Point(140, 0);
-            this.pnlControl.Size = new System.Drawing.Size(260, 28);
+            this.pnlControl.Padding = new System.Windows.Forms.Padding(1, 4, 2, 0);
             // 
             // edtDateTimePicker
             // 
             this.edtDateTimePicker.CustomFormat = "yyyy-MM-dd";
             this.edtDateTimePicker.Dock = System.Windows.Forms.DockStyle.Fill;
             this.edtDateTimePicker.Format = Tripous.DateTimeFormatType.Date;
-            this.edtDateTimePicker.Location = new System.Drawing.Point(4, 4);
+            this.edtDateTimePicker.Location = new System.Drawing.Point(1, 4);
+            this.edtDateTimePicker.Margin = new System.Windows.Forms.Padding(4);
             this.edtDateTimePicker.Name = "edtDateTimePicker";
             this.edtDateTimePicker.NullValue = "[select a date]";
-            this.edtDateTimePicker.Size = new System.Drawing.Size(252, 20);
+            this.edtDateTimePicker.Size = new System.Drawing.Size(323, 25);
             this.edtDateTimePicker.TabIndex = 0;
             this.edtDateTimePicker.Value = new System.DateTime(2020, 1, 2, 16, 57, 32, 787);
             // 
-            // DateBoxDataControl
+            // DateBoxControlRow
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.Name = "DateBoxDataControl";
+            this.Name = "DateBoxControlRow";
             this.pnlText.ResumeLayout(false);
             this.pnlControl.ResumeLayout(false);
             this.ResumeLayout(false);
