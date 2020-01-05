@@ -62,6 +62,12 @@ namespace Tripous.Forms
         {
             return null;
         }
+        /// <summary>
+        /// Called by a parent <see cref="UiGroup"/> when the size changing of that parent "changes screen mode".
+        /// </summary>
+        public virtual void OnScreenModeChanged(ScreenMode Mode)
+        {
+        }
 
         /* properties */
         /// <summary>
@@ -126,6 +132,10 @@ namespace Tripous.Forms
             }
         }
 
- 
+        /// <summary>
+        /// True means stack as column (text on top), false means stack as row.
+        /// <para>NOT APPLICABLE</para>
+        /// </summary>
+        public virtual bool TextOnTop { get; set; }
     }
 }

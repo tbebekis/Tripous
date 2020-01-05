@@ -22,6 +22,7 @@ namespace Tripous.Forms
     [Designer(typeof(UiGroupDesigner))]
     public partial class UiGroup : UserControl
     {
+        bool fAutoTextOnTop = false;
 
         #region UiColumnCollection
         /// <summary>
@@ -221,7 +222,8 @@ namespace Tripous.Forms
         const int PlusHeight = 24;
 
         bool Layouting = false;
-        ScreenMode fScreenMode;
+        ScreenMode LastScreenMode = ScreenMode.None;
+ 
         Dictionary<ScreenMode, int> Splits = new Dictionary<ScreenMode, int>()
         {
             { ScreenMode.XSmall, 1 },
@@ -229,6 +231,7 @@ namespace Tripous.Forms
             { ScreenMode.Medium, 2 },
             { ScreenMode.Large, 3 },
         };
+
 
         void UpdateTitlePanelHeight()
         {
@@ -241,7 +244,7 @@ namespace Tripous.Forms
         }
         void OnLayoutColumns()
         {
-            if (!Layouting)
+            if (!Layouting && this.ScreenMode != ScreenMode.None)
             {
                 Layouting = true;
                 try
@@ -250,10 +253,9 @@ namespace Tripous.Forms
                     {
                         UpdateTitlePanelHeight();
 
-                        UiColumn[] A = Columns.ToArray();
+                        UiColumn[] A = Columns.ToArray(); 
  
-                        fScreenMode = Ui.GetScreenMode(this.Parent);
-                        int ColumnsPerRow = Splits[fScreenMode];
+                        int ColumnsPerRow = Splits[this.ScreenMode];
 
                         int Y = TitleVisible? pnlTitle.Height: 0;
 
@@ -316,9 +318,31 @@ namespace Tripous.Forms
         void TitleFontChanged(object sender, EventArgs e)
         {
             OnLayoutColumns();
+        } 
+        void OnAutoTextOnTopChanged()
+        {
+            ApplyTextOnTop();
         }
+        void OnScreenModeChanged()
+        {
+            foreach (var Column in Columns)
+                Column.OnScreenModeChanged(this.ScreenMode);
 
- 
+            ApplyTextOnTop();
+        }
+        void ApplyTextOnTop()
+        {
+            if (AutoTextOnTop && ScreenMode != LastScreenMode)
+            {
+                foreach (var Column in Columns)
+                {
+                    foreach (var Row in Column.Rows)
+                    {
+                        Row.TextOnTop = ScreenMode == ScreenMode.XSmall? true: false;
+                    }
+                }
+            }
+        }
 
         /* overrides */
         protected override void OnParentChanged(EventArgs e)
@@ -329,6 +353,15 @@ namespace Tripous.Forms
         protected override void OnLayout(LayoutEventArgs e)
         {
             base.OnLayout(e);
+
+            ScreenMode Mode = Ui.GetScreenMode(this.Parent);
+            if (Mode != this.ScreenMode)
+            {
+                this.LastScreenMode = this.ScreenMode;
+                this.ScreenMode = Mode;
+                OnScreenModeChanged();
+            }
+
             OnLayoutColumns();
         }
         protected override void OnControlAdded(ControlEventArgs e)
@@ -353,10 +386,9 @@ namespace Tripous.Forms
         public UiGroup()
         {
             this.Columns = new UiColumnCollection(this);
+            base.Dock = DockStyle.Top;
 
             InitializeComponent();
-
-            base.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right;
 
             lblTitle.FontChanged += TitleFontChanged;
             lblTitle.TextChanged += TitleTextChanged;
@@ -429,14 +461,16 @@ namespace Tripous.Forms
         /// <summary>
         /// The collection of items.
         /// </summary>
-        [Description("The collection of items."), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [ Description("The collection of items."), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)] // 
         public UiColumnCollection Columns { get; }
 
+        [DefaultValue("Title")]
         public string Title
         {
             get { return lblTitle.Text; }
             set { lblTitle.Text = value; }
         }
+        [DefaultValue(true)]
         public bool TitleVisible
         {
             get { return pnlTitle.Visible; }
@@ -458,6 +492,23 @@ namespace Tripous.Forms
             set { lblTitle.BackColor = value; }
         }
 
+        [Browsable(false), ReadOnly(true), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public ScreenMode ScreenMode { get; private set; }
+        [DefaultValue(false)]
+        public bool AutoTextOnTop
+        {
+            get { return fAutoTextOnTop; }
+            set
+            {
+                if (fAutoTextOnTop != value)
+                {
+                    fAutoTextOnTop = value;
+                    OnAutoTextOnTopChanged();
+                }
+            }
+        }
+        
+        [Browsable(false), ReadOnly(true), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public override AnchorStyles Anchor
         {
             get { return base.Anchor; }
@@ -507,14 +558,14 @@ namespace Tripous.Forms
                     }
 
 
-                    MemberDescriptor ControlsProp = TypeDescriptor.GetProperties(UiGroup)["Controls"];
+                    MemberDescriptor ControlsProp = TypeDescriptor.GetProperties(Group)["Controls"];
                     UiColumn Column = DesignerHost.CreateComponent(typeof(UiColumn)) as UiColumn;
                     if (!this.addingOnInitialize)
                     {
                         base.RaiseComponentChanging(ControlsProp);
                     }
  
-                    UiGroup.Add(Column);
+                    Group.Add(Column);
 
                     if (!this.addingOnInitialize)
                     {
@@ -532,9 +583,9 @@ namespace Tripous.Forms
         }
         void VerbRemove_Click(object sender, EventArgs e)
         {
-            if (UiGroup != null && UiGroup.Columns.Count != 0 && SelectedColumn != null)
+            if (Group != null && Group.Columns.Count != 0 && SelectedColumn != null)
             {
-                MemberDescriptor ControlsProp = TypeDescriptor.GetProperties(UiGroup)["Controls"];
+                MemberDescriptor ControlsProp = TypeDescriptor.GetProperties(Group)["Controls"];
  
                 IDesignerHost DesignerHost = this.GetService(typeof(IDesignerHost)) as IDesignerHost;
                 if (DesignerHost != null)
@@ -557,7 +608,7 @@ namespace Tripous.Forms
                         }
 
                         DesignerHost.DestroyComponent(SelectedColumn);                        
-                        UiGroup.Remove(SelectedColumn);
+                        Group.Remove(SelectedColumn);
                         SelectedColumn = null;
                         base.RaiseComponentChanged(ControlsProp, null, null);                        
                     }
@@ -581,17 +632,17 @@ namespace Tripous.Forms
         }
         void MoveColumn(bool Down)
         {
-            if (UiGroup != null && UiGroup.Columns.Count != 0 && SelectedColumn != null)
+            if (Group != null && Group.Columns.Count != 0 && SelectedColumn != null)
             {
 
-                int Index = UiGroup.IndexOf(SelectedColumn);
+                int Index = Group.IndexOf(SelectedColumn);
  
-                if (Index < 0 || (Down && Index >= UiGroup.Count - 1) || (!Down && Index <= 0))
+                if (Index < 0 || (Down && Index >= Group.Count - 1) || (!Down && Index <= 0))
                     return;
 
                 int IndexB = Down ? Index + 1 : Index - 1;
 
-                MemberDescriptor ControlsProp = TypeDescriptor.GetProperties(UiGroup)["Controls"];
+                MemberDescriptor ControlsProp = TypeDescriptor.GetProperties(Group)["Controls"];
 
                 IDesignerHost DesignerHost = this.GetService(typeof(IDesignerHost)) as IDesignerHost;
                 if (DesignerHost != null)
@@ -613,9 +664,9 @@ namespace Tripous.Forms
                             return;
                         }
 
-                        UiGroup.Exchange(Index, IndexB);
+                        Group.Exchange(Index, IndexB);
                         base.RaiseComponentChanged(ControlsProp, null, null);
-                        UiGroup.PerformLayout();
+                        Group.PerformLayout();
                     }
                     finally
                     {
@@ -647,7 +698,7 @@ namespace Tripous.Forms
                 foreach (object Item in SelectedComponents)
                 { 
                     Column = UiColumn.ParentColumnOf(Item as Control);
-                    if ((Column != null) && (Column.Parent == UiGroup))
+                    if ((Column != null) && (Column.Parent == Group))
                     {
                         SelectedColumn = Column;
                         break;
@@ -658,9 +709,11 @@ namespace Tripous.Forms
  
         void EnableCommands()
         {
-            if (this.verbRemove != null)
+            if (this.Control != null && this.verbRemove != null)
             {
-                this.verbRemove.Enabled = this.Control.Controls.Count > 0;
+                verbRemove.Enabled = Group != null && SelectedColumn != null;
+                verbMoveUp.Enabled = Group != null && SelectedColumn != null && Group.IndexOf(SelectedColumn) > 0;
+                verbMoveDown.Enabled = Group != null && SelectedColumn != null && Group.Count >= 2 && Group.IndexOf(SelectedColumn) <= Group.Count - 2;
             }
         }
         UiColumnDesigner GetSelectedColumnDesigner()
@@ -676,7 +729,7 @@ namespace Tripous.Forms
         }
 
         /* private properties */
-        UiGroup UiGroup { get { return Control as UiGroup; } }
+        UiGroup Group { get { return Control as UiGroup; } }
 
 
         /* overrides */
@@ -718,6 +771,7 @@ namespace Tripous.Forms
                 this.disableDrawGrid = false;
             }
         }
+       
         /// <summary>
         /// override
         /// </summary>
@@ -756,8 +810,8 @@ namespace Tripous.Forms
         /// </summary>
         protected override void OnDragOver(DragEventArgs de)
         {
-            Point P = UiGroup.PointToClient(new Point(de.X, de.Y));
-            if (!UiGroup.ClientRectangle.Contains(P))
+            Point P = Group.PointToClient(new Point(de.X, de.Y));
+            if (!Group.ClientRectangle.Contains(P))
             {
                 de.Effect = DragDropEffects.None;
             }
@@ -878,12 +932,9 @@ namespace Tripous.Forms
                     this.verbs.Add(verbMoveUp);
                     this.verbs.Add(verbMoveDown);
                 }
-                if (this.Control != null)
-                {
-                    verbRemove.Enabled = UiGroup != null && SelectedColumn != null;
-                    verbMoveUp.Enabled = UiGroup != null && SelectedColumn != null && UiGroup.IndexOf(SelectedColumn) > 0;
-                    verbMoveDown.Enabled = UiGroup != null && SelectedColumn != null && UiGroup.Count >= 2 &&  UiGroup.IndexOf(SelectedColumn) <= UiGroup.Count - 2;
-                }
+
+                EnableCommands();
+
                 return this.verbs;
             }
         }

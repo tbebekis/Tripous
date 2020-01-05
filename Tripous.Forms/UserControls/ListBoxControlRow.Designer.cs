@@ -35,21 +35,20 @@
             // 
             // pnlText
             // 
-            this.pnlText.Size = new System.Drawing.Size(140, 170);
+            this.pnlText.Size = new System.Drawing.Size(140, 163);
             // 
             // pnlControl
             // 
             this.pnlControl.Controls.Add(this.ListControl);
-            this.pnlControl.Size = new System.Drawing.Size(326, 170);
+            this.pnlControl.Size = new System.Drawing.Size(326, 163);
             // 
             // ListControl
             // 
-            this.ListControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.ListControl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.ListControl.FormattingEnabled = true;
             this.ListControl.ItemHeight = 17;
-            this.ListControl.Location = new System.Drawing.Point(2, 5);
+            this.ListControl.Location = new System.Drawing.Point(2, 3);
             this.ListControl.Name = "ListControl";
             this.ListControl.Size = new System.Drawing.Size(321, 157);
             this.ListControl.TabIndex = 0;
@@ -60,7 +59,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.Name = "ListBoxControlRow";
-            this.Size = new System.Drawing.Size(466, 170);
+            this.Size = new System.Drawing.Size(466, 163);
             this.pnlText.ResumeLayout(false);
             this.pnlControl.ResumeLayout(false);
             this.ResumeLayout(false);

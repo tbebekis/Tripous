@@ -21,6 +21,11 @@ namespace Tripous.Forms
         string fDataField;
 
         /// <summary>
+        /// True when is a control row with a multiline control, such as grid, list box, etc
+        /// </summary>
+        protected virtual bool IsMultiLine { get { return false; } }
+
+        /// <summary>
         /// Override
         /// </summary>
         protected override void OnSizeChanged(EventArgs e)
@@ -34,12 +39,15 @@ namespace Tripous.Forms
         /// </summary>
         protected virtual void UpdateTextPanelWidth()
         {
-            Size Size = TextRenderer.MeasureText(lblText.Text, pnlText.Font, new Size(pnlText.ClientSize.Width, 0), TextFormatFlags.WordBreak);
-            int H = Size.Height + pnlText.Padding.Top + pnlText.Padding.Bottom + this.Padding.Top + this.Padding.Bottom;
-            if (H <= 28)
-                return;
+            if (this.Parent != null)
+            {
+                Size Size = TextRenderer.MeasureText(lblText.Text, pnlText.Font, new Size(pnlText.ClientSize.Width, 0), TextFormatFlags.WordBreak);
+                int H = Size.Height + pnlText.Padding.Top + pnlText.Padding.Bottom + this.Padding.Top + this.Padding.Bottom;
+                if (H <= 28)
+                    return;
 
-            this.Height = H;
+                this.Height = H;
+            }
         }
         /// <summary>
         /// Called when the caption text is changed.
@@ -47,6 +55,13 @@ namespace Tripous.Forms
         protected virtual void OnCaptionTextChanged(object sender, EventArgs e)
         {
             UpdateTextPanelWidth();
+        }
+        /// <summary>
+        /// Event handler
+        /// </summary>
+        protected virtual void OnCaptionTextClick(object sender, EventArgs e)
+        {
+            this.Checked = !this.Checked;
         }
         /// <summary>
         /// Override
@@ -127,7 +142,10 @@ namespace Tripous.Forms
             Dock = DockStyle.Top;
 
             this.lblText.TextChanged += OnCaptionTextChanged;
+            this.lblText.Click += OnCaptionTextClick;
         }
+
+
 
 
 
@@ -140,10 +158,16 @@ namespace Tripous.Forms
             string PropertyName = "CheckState"; //"CheckState";       // Checked  CheckState
             return Ui.Bind(Control, PropertyName, DataSource, DataField);
         }
-
+        /// <summary>
+        /// Called by a parent <see cref="UiGroup"/> when screen mode is changed.
+        /// </summary>
+        public virtual void OnScreenModeChanged(ScreenMode Mode)
+        {
+        }
 
 
         /* properties */
+ 
         /// <summary>
         /// The control text (caption)
         /// </summary>
@@ -226,6 +250,13 @@ namespace Tripous.Forms
         public object DataSource { get; set; }
 
         /// <summary>
+        /// True means stack as column (text on top), false means stack as row.
+        /// <para>NOT APPLICABLE</para>
+        /// </summary>
+        public virtual bool TextOnTop { get; set; }
+ 
+
+        /// <summary>
         /// The value of the control
         /// </summary>
         [Browsable(false)]
@@ -243,8 +274,8 @@ namespace Tripous.Forms
         /// <summary>
         /// Hides a property from PropertyGrid
         /// </summary>
-        [Browsable(false)]
-        new public AutoSizeMode AutoSizeMode { get => base.AutoSizeMode; set => base.AutoSizeMode = value; }
+        //[Browsable(false)]
+        //new public AutoSizeMode AutoSizeMode { get => base.AutoSizeMode; set => base.AutoSizeMode = value; }
 
         /// <summary>
         /// Indicates the cheked state of the control

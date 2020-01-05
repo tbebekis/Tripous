@@ -126,5 +126,16 @@ namespace Tripous.Forms
             get { return ListControl.SelectedIndex; }
             set { ListControl.SelectedIndex = value; }
         }
+        /// <summary>
+        /// Controls the appearance and functionality of the combo-box
+        /// </summary>
+        [DefaultValue(ComboBoxStyle.DropDown)]
+        [RefreshProperties(RefreshProperties.Repaint)]
+        [Description("Controls the appearance and functionality of the combo-box. ")]
+        public ComboBoxStyle DropDownStyle
+        {
+            get { return this.ListControl.DropDownStyle; }
+            set { this.ListControl.DropDownStyle = value; }
+        }
     }
 }

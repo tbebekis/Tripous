@@ -36,12 +36,10 @@
             // pnlControl
             // 
             this.pnlControl.Controls.Add(this.edtDateTimePicker);
-            this.pnlControl.Padding = new System.Windows.Forms.Padding(1, 4, 2, 0);
             // 
             // edtDateTimePicker
             // 
             this.edtDateTimePicker.CustomFormat = "yyyy-MM-dd";
-            this.edtDateTimePicker.Dock = System.Windows.Forms.DockStyle.Fill;
             this.edtDateTimePicker.Format = Tripous.DateTimeFormatType.Date;
             this.edtDateTimePicker.Location = new System.Drawing.Point(1, 4);
             this.edtDateTimePicker.Margin = new System.Windows.Forms.Padding(4);

@@ -37,12 +37,9 @@
             // pnlControl
             // 
             this.pnlControl.Controls.Add(this.edtNumericUpDown);
-            this.pnlControl.Padding = new System.Windows.Forms.Padding(1, 4, 2, 0);
             // 
             // edtNumericUpDown
             // 
-            this.edtNumericUpDown.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.edtNumericUpDown.Dock = System.Windows.Forms.DockStyle.Fill;
             this.edtNumericUpDown.Location = new System.Drawing.Point(1, 4);
             this.edtNumericUpDown.Name = "edtNumericUpDown";
             this.edtNumericUpDown.Size = new System.Drawing.Size(323, 25);

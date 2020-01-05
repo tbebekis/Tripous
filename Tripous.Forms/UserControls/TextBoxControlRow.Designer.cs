@@ -36,11 +36,9 @@
             // pnlControl
             // 
             this.pnlControl.Controls.Add(this.edtText);
-            this.pnlControl.Padding = new System.Windows.Forms.Padding(1, 4, 2, 0);
             // 
             // edtText
             // 
-            this.edtText.Dock = System.Windows.Forms.DockStyle.Fill;
             this.edtText.Location = new System.Drawing.Point(1, 4);
             this.edtText.Name = "edtText";
             this.edtText.Size = new System.Drawing.Size(323, 25);

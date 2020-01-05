@@ -36,11 +36,9 @@
             // pnlControl
             // 
             this.pnlControl.Controls.Add(this.ListControl);
-            this.pnlControl.Padding = new System.Windows.Forms.Padding(1, 4, 2, 0);
             // 
             // ListControl
             // 
-            this.ListControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ListControl.FormattingEnabled = true;
             this.ListControl.Location = new System.Drawing.Point(1, 4);
             this.ListControl.Name = "ListControl";

@@ -16,6 +16,10 @@ namespace Tripous.Forms
     /// </summary>
     public partial class GridControlRow : ControlRow, IGridControlRow
     {
+        /// <summary>
+        /// True when is a control row with a multiline control, such as grid, list box, etc
+        /// </summary>
+        protected override bool IsMultiLine { get { return true; } }
 
         /* constructor */
         /// <summary>

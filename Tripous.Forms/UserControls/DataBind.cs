@@ -18,8 +18,15 @@ namespace Tripous.Forms
         /// Data bind method
         /// </summary>
         Binding Bind();
- 
 
+        /// <summary>
+        /// True means stack as column (Text on top), false means stack as row.
+        /// </summary>
+        bool TextOnTop { get; set; }
+
+        /// <summary>
+        /// Name
+        /// </summary>
         string Name { get; set; }
         /// <summary>
         /// The height of the row
@@ -47,6 +54,11 @@ namespace Tripous.Forms
         /// The data source of the Control.
         /// </summary>        
         object DataSource { get; set; }
+
+        /// <summary>
+        /// Called by a parent <see cref="UiGroup"/> when the size changing of that parent "changes screen mode".
+        /// </summary>
+        void OnScreenModeChanged(ScreenMode Mode);
     }
 
     /// <summary>

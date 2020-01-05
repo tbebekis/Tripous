@@ -18,6 +18,11 @@ namespace Tripous.Forms
     {
         ImageContextMenu mnuImage = new ImageContextMenu();
 
+        /// <summary>
+        /// True when is a control row with a multiline control, such as grid, list box, etc
+        /// </summary>
+        protected override bool IsMultiLine { get { return true; } }
+
 
         /// <summary>
         /// Called on a property change

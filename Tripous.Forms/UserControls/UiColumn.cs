@@ -345,6 +345,16 @@ namespace Tripous.Forms
             return null;
         }
 
+        /// <summary>
+        /// Called by a parent <see cref="UiGroup"/> when the size changing of that parent "changes screen mode".
+        /// </summary>
+        public virtual void OnScreenModeChanged(ScreenMode Mode)
+        {
+            foreach (var Row in Rows)
+                Row.OnScreenModeChanged(Mode);
+        }
+
+
 
         /* properties */
         /// <summary>
@@ -355,7 +365,7 @@ namespace Tripous.Forms
         /// <summary>
         /// The collection of pages.
         /// </summary>
-        [Description("The collection of items."), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [ Description("The collection of items."), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)] // 
         public ControlRowCollection Rows { get; }
 
     }
@@ -390,15 +400,13 @@ namespace Tripous.Forms
             }
             //*/
         }
-        IDesigner GetParentControlDesigner()
-        {
-            IDesignerHost DesignerHost = GetService(typeof(IDesignerHost)) as IDesignerHost;
 
-            if ((Column != null) && (Column.Parent != null) && (DesignerHost != null))
-                return DesignerHost.GetDesigner(Control.Parent);
 
-            return null;
-        }
+        DesignerVerbCollection verbs;
+        DesignerVerb verbMoveDown;
+        DesignerVerb verbMoveUp;
+
+        IControlRow SelectedRow;
 
         void AnyVerbClick(object sender, EventArgs e)
         {
@@ -459,6 +467,123 @@ namespace Tripous.Forms
  
             }
         }
+        void AnyMoveUpOrDownClick(object sender, EventArgs ea)
+        {
+            if (Column != null && Column.Rows.Count != 0 && SelectedRow != null)
+            {
+                bool Down = sender == verbMoveDown;
+
+                int Index = Column.Rows.IndexOf(SelectedRow);
+
+                if (Index < 0 || (Down && Index >= Column.Rows.Count - 1) || (!Down && Index <= 0))
+                    return;
+
+                int IndexB = Down ? Index + 1 : Index - 1;
+
+                MemberDescriptor ControlsProp = TypeDescriptor.GetProperties(Column)["Controls"];
+
+                IDesignerHost DesignerHost = this.GetService(typeof(IDesignerHost)) as IDesignerHost;
+                if (DesignerHost != null)
+                {
+                    DesignerTransaction Transaction = null;
+                    try
+                    {
+                        try
+                        {
+                            Transaction = DesignerHost.CreateTransaction("Tripous_UiColumn_MoveRowUpOrDown");
+                            base.RaiseComponentChanging(ControlsProp);
+                        }
+                        catch (CheckoutException Ex)
+                        {
+                            if (Ex != CheckoutException.Canceled)
+                            {
+                                throw Ex;
+                            }
+                            return;
+                        }
+
+                        //UiGroup.Exchange(Index, IndexB);
+
+                        if ((Index != IndexB) && ((Index >= 0) && (Index < Column.Rows.Count)) && ((IndexB >= 0) && (IndexB < Column.Rows.Count)))
+                        {
+                            IControlRow A = Column.Rows[Index];
+                            IControlRow B = Column.Rows[IndexB];
+
+                            Column.Rows[Index] = B;
+                            Column.Rows[IndexB] = A;
+
+                            Column.PerformLayout();
+                        }
+
+
+                        base.RaiseComponentChanged(ControlsProp, null, null);
+                        Column.PerformLayout();
+                    }
+                    finally
+                    {
+                        if (Transaction != null)
+                        {
+                            Transaction.Commit();
+                        }
+                    }
+                }
+            }
+        }
+
+
+        void ComponentChangeService_ComponentChanged(object sender, ComponentChangedEventArgs e)
+        {
+            EnableCommands();
+        }
+        void SelectionService_SelectionChanged(object sender, EventArgs e)
+        {
+            ISelectionService SelectionService = this.GetService(typeof(ISelectionService)) as ISelectionService;
+
+            if (SelectionService != null)
+            {
+                ICollection SelectedComponents = SelectionService.GetSelectedComponents();
+
+                SelectedRow = null;
+                IControlRow Row;
+                foreach (object Item in SelectedComponents)
+                {
+                    Row = ControlRow.ParentRowOf(Item as Control);
+                    if ((Row != null) && ((Row as Control).Parent == Column))
+                    {
+                        SelectedRow = Row;
+                        break;
+                    }
+                }
+            }
+        }
+        void EnableCommands()
+        {
+            if (this.Control != null && verbMoveUp != null)
+            {
+                verbMoveUp.Enabled = Column != null && SelectedRow != null && Column.Rows.IndexOf(SelectedRow) > 0;
+                verbMoveDown.Enabled = Column != null && SelectedRow != null && Column.Count >= 2 && Column.Rows.IndexOf(SelectedRow) <= Column.Rows.Count - 2;
+            }
+        }
+        IDesigner GetParentControlDesigner()
+        {
+            IDesignerHost DesignerHost = GetService(typeof(IDesignerHost)) as IDesignerHost;
+
+            if ((Column != null) && (Column.Parent != null) && (DesignerHost != null))
+                return DesignerHost.GetDesigner(Control.Parent);
+
+            return null;
+        }
+        ParentControlDesigner GetSelectedRowDesigner()
+        {
+            if (SelectedRow != null)
+            {
+                IDesignerHost DesignerHost = GetService(typeof(IDesignerHost)) as IDesignerHost;
+                if (DesignerHost != null)
+                    return DesignerHost.GetDesigner(SelectedRow as Control) as ParentControlDesigner;
+            }
+
+            return null;
+        }
 
         /* overrides */
         /// <summary>
@@ -483,14 +608,29 @@ namespace Tripous.Forms
             return new ControlBodyGlyph(Rectangle.Empty, Cursor.Current, this.Control, this);
         }
         /// <summary>
-        /// Indicates if this designer's control can be parented by the control of the
-        /// specified designer.
+        /// override
         /// </summary>
-        public override bool CanBeParentedTo(IDesigner parentDesigner)
+        protected override void Dispose(bool disposing)
         {
-            return ((parentDesigner != null) && (parentDesigner.Component is UiGroup));
-        }
+            if (disposing)
+            {
+                ISelectionService SelectionService = this.GetService(typeof(ISelectionService)) as ISelectionService;
+                if (SelectionService != null)
+                {
+                    SelectionService.SelectionChanged -= new EventHandler(this.SelectionService_SelectionChanged);
+                }
 
+                IComponentChangeService ComponentChangeService = this.GetService(typeof(IComponentChangeService)) as IComponentChangeService;
+                if (ComponentChangeService != null)
+                {
+                    ComponentChangeService.ComponentChanged -= new ComponentChangedEventHandler(this.ComponentChangeService_ComponentChanged);
+                }
+
+            }
+
+            base.Dispose(disposing);
+        }
+ 
         /* constructor */
         /// <summary>
         /// Constructor
@@ -522,6 +662,37 @@ namespace Tripous.Forms
             this.OnGiveFeedback(e);
         }
 
+        /// <summary>
+        /// override
+        /// </summary>
+        public override void Initialize(IComponent component)
+        {
+            base.Initialize(component);
+
+            //base.AutoResizeHandles = true;
+
+            ISelectionService SelectionService = this.GetService(typeof(ISelectionService)) as ISelectionService;
+            if (SelectionService != null)
+            {
+                SelectionService.SelectionChanged += new EventHandler(this.SelectionService_SelectionChanged);
+            }
+            IComponentChangeService ComponentChangeService = this.GetService(typeof(IComponentChangeService)) as IComponentChangeService;
+            if (ComponentChangeService != null)
+            {
+                ComponentChangeService.ComponentChanged += new ComponentChangedEventHandler(this.ComponentChangeService_ComponentChanged);
+            }
+
+        }
+        /// <summary>
+        /// Indicates if this designer's control can be parented by the control of the
+        /// specified designer.
+        /// </summary>
+        public override bool CanBeParentedTo(IDesigner parentDesigner)
+        {
+            return ((parentDesigner != null) && (parentDesigner.Component is UiGroup));
+        }
+
+
         /* properties */
         /// <summary>
         /// Gets the selection rules that indicate the movement capabilities of a component.
@@ -533,7 +704,7 @@ namespace Tripous.Forms
                 if (Control != null)
                 {
                     // base.SelectionRules & ~(SelectionRules.TopSizeable | SelectionRules.BottomSizeable);
-                    return this.Control.Parent is UiGroup ? SelectionRules.BottomSizeable : SelectionRules.AllSizeable; 
+                    return this.Control.Parent is UiGroup ? SelectionRules.None : SelectionRules.AllSizeable; 
                 }
 
                 return base.SelectionRules;
@@ -546,28 +717,35 @@ namespace Tripous.Forms
         {
             get
             {
-                DesignerVerbCollection Result = new DesignerVerbCollection();
-
-                foreach (DesignerVerb Verb in base.Verbs)
-                    Result.Add(Verb);
-
-                UiGroupDesigner ParentDesigner = GetParentControlDesigner() as UiGroupDesigner;
-
-                if (ParentDesigner != null)
+                if (this.verbs == null)
                 {
-                    foreach (DesignerVerb Verb in ParentDesigner.Verbs)
-                        Result.Add(Verb);
+                    this.verbs = new DesignerVerbCollection();
+
+                    foreach (DesignerVerb Verb in base.Verbs)
+                        verbs.Add(Verb);
+
+                    UiGroupDesigner ParentDesigner = GetParentControlDesigner() as UiGroupDesigner;
+
+                    if (ParentDesigner != null)
+                    {
+                        foreach (DesignerVerb Verb in ParentDesigner.Verbs)
+                            verbs.Add(Verb);
+                    }
+
+                    verbs.Add(new DesignerVerb("--", null));
+
+                    foreach (var Entry in Ui.ControlRowTypes)
+                    {
+                        DesignerVerb Verb = new DesignerVerb("Add " + Entry.Key, AnyVerbClick);
+                        verbs.Add(Verb);
+                    }
+
+                    verbMoveDown = new DesignerVerb("Move Row Down", AnyMoveUpOrDownClick);
+                    verbMoveUp = new DesignerVerb("Move Row Up", AnyMoveUpOrDownClick);
                 }
 
-                Result.Add(new DesignerVerb("-", null));
 
-                foreach (var Entry in Ui.ControlRowTypes)
-                {
-                    DesignerVerb Verb = new DesignerVerb("Add " + Entry.Key, AnyVerbClick);
-                    Result.Add(Verb);
-                }
-
-                return Result;
+                return verbs;
             }
         }
     }

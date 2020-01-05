@@ -50,7 +50,7 @@
             this.ListControl.FormattingEnabled = true;
             this.ListControl.Location = new System.Drawing.Point(3, 4);
             this.ListControl.Name = "ListControl";
-            this.ListControl.Size = new System.Drawing.Size(317, 164);
+            this.ListControl.Size = new System.Drawing.Size(317, 124);
             this.ListControl.TabIndex = 0;
             // 
             // CheckListBoxControlRow

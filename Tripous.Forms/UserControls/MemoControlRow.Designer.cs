@@ -47,7 +47,6 @@
             this.edtText.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.edtText.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.edtText.Location = new System.Drawing.Point(3, 5);
             this.edtText.Name = "edtText";
             this.edtText.Size = new System.Drawing.Size(318, 160);

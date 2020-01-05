@@ -40,10 +40,11 @@
             // 
             this.chBox.AutoSize = true;
             this.chBox.Dock = System.Windows.Forms.DockStyle.Top;
-            this.chBox.Location = new System.Drawing.Point(4, 4);
+            this.chBox.Location = new System.Drawing.Point(5, 5);
+            this.chBox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.chBox.Name = "chBox";
-            this.chBox.Padding = new System.Windows.Forms.Padding(0, 0, 6, 0);
-            this.chBox.Size = new System.Drawing.Size(20, 14);
+            this.chBox.Padding = new System.Windows.Forms.Padding(6, 1, 0, 0);
+            this.chBox.Size = new System.Drawing.Size(28, 15);
             this.chBox.TabIndex = 0;
             this.chBox.UseVisualStyleBackColor = true;
             // 
@@ -51,42 +52,44 @@
             // 
             this.pnlControl.Controls.Add(this.chBox);
             this.pnlControl.Dock = System.Windows.Forms.DockStyle.Left;
-            this.pnlControl.Location = new System.Drawing.Point(5, 5);
+            this.pnlControl.Location = new System.Drawing.Point(6, 2);
+            this.pnlControl.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.pnlControl.Name = "pnlControl";
-            this.pnlControl.Padding = new System.Windows.Forms.Padding(4, 4, 0, 0);
-            this.pnlControl.Size = new System.Drawing.Size(24, 25);
+            this.pnlControl.Padding = new System.Windows.Forms.Padding(5, 5, 0, 0);
+            this.pnlControl.Size = new System.Drawing.Size(33, 37);
             this.pnlControl.TabIndex = 1;
             // 
             // pnlText
             // 
             this.pnlText.Controls.Add(this.lblText);
             this.pnlText.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlText.Location = new System.Drawing.Point(29, 5);
+            this.pnlText.Location = new System.Drawing.Point(39, 2);
+            this.pnlText.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.pnlText.Name = "pnlText";
             this.pnlText.Padding = new System.Windows.Forms.Padding(0, 1, 0, 0);
-            this.pnlText.Size = new System.Drawing.Size(434, 25);
+            this.pnlText.Size = new System.Drawing.Size(501, 37);
             this.pnlText.TabIndex = 3;
             // 
             // lblText
             // 
             this.lblText.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblText.Font = new System.Drawing.Font("Segoe UI", 9.75F);
             this.lblText.Location = new System.Drawing.Point(0, 1);
             this.lblText.Name = "lblText";
-            this.lblText.Size = new System.Drawing.Size(434, 24);
+            this.lblText.Size = new System.Drawing.Size(501, 36);
             this.lblText.TabIndex = 0;
             this.lblText.Text = "Text";
             // 
             // CheckBoxControlRow
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.Controls.Add(this.pnlText);
             this.Controls.Add(this.pnlControl);
+            this.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "CheckBoxControlRow";
-            this.Padding = new System.Windows.Forms.Padding(5, 5, 3, 3);
-            this.Size = new System.Drawing.Size(466, 33);
+            this.Padding = new System.Windows.Forms.Padding(6, 2, 4, 4);
+            this.Size = new System.Drawing.Size(544, 43);
             this.pnlControl.ResumeLayout(false);
             this.pnlControl.PerformLayout();
             this.pnlText.ResumeLayout(false);

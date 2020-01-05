@@ -37,6 +37,7 @@
             // pnlText
             // 
             this.pnlText.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.pnlText.BackColor = System.Drawing.SystemColors.Control;
             this.pnlText.Controls.Add(this.lblText);
             this.pnlText.Dock = System.Windows.Forms.DockStyle.Left;
             this.pnlText.Location = new System.Drawing.Point(0, 0);
@@ -48,7 +49,7 @@
             // 
             this.lblText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblText.Location = new System.Drawing.Point(9, 7);
+            this.lblText.Location = new System.Drawing.Point(9, 3);
             this.lblText.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblText.Name = "lblText";
             this.lblText.Padding = new System.Windows.Forms.Padding(0, 0, 2, 0);
@@ -58,6 +59,7 @@
             // 
             // pnlControl
             // 
+            this.pnlControl.BackColor = System.Drawing.SystemColors.Control;
             this.pnlControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlControl.Location = new System.Drawing.Point(140, 0);
             this.pnlControl.Name = "pnlControl";

@@ -55,15 +55,6 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UiColumn.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="UiGroup.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UiGroup.Designer.cs">
-      <DependentUpon>UiGroup.cs</DependentUpon>
-    </Compile>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
@@ -76,9 +67,6 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="UiGroup.resx">
-      <DependentUpon>UiGroup.cs</DependentUpon>
-    </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

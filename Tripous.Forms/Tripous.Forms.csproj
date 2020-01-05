@@ -292,6 +292,18 @@
     <Compile Include="UserControls\TreeViewControlRow.Designer.cs">
       <DependentUpon>TreeViewControlRow.cs</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\UiColumn.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="UserControls\UiGroup.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\UiGroup.Designer.cs">
+      <DependentUpon>UiGroup.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\UiGroupContainer.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Wait.cs" />
     <Compile Include="WaitDialog.cs">
       <SubType>Form</SubType>
@@ -396,6 +408,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UserControls\TreeViewControlRow.resx">
       <DependentUpon>TreeViewControlRow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\UiGroup.resx">
+      <DependentUpon>UiGroup.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="WaitDialog.resx">
       <DependentUpon>WaitDialog.cs</DependentUpon>

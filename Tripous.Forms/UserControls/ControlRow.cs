@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -8,6 +9,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Reflection;
+
+using System.Windows.Forms.Design;
+using System.ComponentModel.Design;
 
 using Tripous.Model;
 
@@ -22,21 +26,13 @@ namespace Tripous.Forms
         this.HorizontalScroll.Enabled = false;
         this.HorizontalScroll.Visible = false;
 
-    - in ControlRow add a virtual method to be called OnParentChanged
-    and if the Parent is not null 
-    will place the Control to pnlControl as
+    TODO: In UiColumnDesigner add a DesignerVerb "Arrange Rows" which will display a dialog box with the rows for moving up and down
+ 
+    TODO: Automatic binding, see: Tripous.Model.UiViews and Tripous.Model.UiViewInfo
 
-        All Anchors
+    TODO: RadioGroup and RadioGroup row
 
-        Left = 2
-        Top = 3
-        Right = pnlControl.Wight - 3
-
-        if Control is a Single Line one
-            adjust the height of the Row to be 3px  more than the bottom of the Control
-
-        if Control is a Multi Line one
-            Bottom = pnlControl.Height - 4
+    TODO: MultiCheck ComboBox
         
     */
 
@@ -46,45 +42,81 @@ namespace Tripous.Forms
     public partial class ControlRow : UserControl, IControlRow
     {
         protected const int TextPanelDefaultHeight = 28;
+        protected const int ControlPanelMultilineDefaultHeight = 163;
+        protected const int HeightPadding = 3;
+        protected const int WidthPadding = 6;
+
+        bool Layouting;
         int fSplit = 35;
-        bool fStacked;
+        bool fTextOnTop;
         bool fReadOnly;
         bool fRequired;
         string fDataSourceName;
         string fDataField;
 
         /// <summary>
+        /// True when is a control row with a multiline control, such as grid, list box, etc
+        /// </summary>
+        protected virtual bool IsMultiLine { get { return false; } }
+
+        /// <summary>
         /// Updates the width of the text panel
         /// </summary>
         protected virtual void UpdateTextPanelWidth()
         {
-            if (!Stacked && pnlText.Visible)
+            if (!TextOnTop && pnlText.Visible)
                 pnlText.Width = Convert.ToInt32((Width / 100) * Split);
         }
         /// <summary>
         /// Updates the height after a change to <see cref="Stacked"/> property
         /// </summary>
-        protected virtual void UpdateHeight()
+        protected virtual void LayoutControls()
         {
-            this.AutoSize = true;
-            this.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            if (Control != null)
+            {
+                this.MaximumSize = new Size(0, 0);
+                this.MinimumSize = new Size(0, 0);
 
-            if (Stacked)
-            {
-                int TextPanelHeight = 0;
-                if (pnlText.Visible)
+                // control
+                Control.Dock = DockStyle.None;
+                Control.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right;
+                if (IsMultiLine)
+                    Control.Anchor |= AnchorStyles.Bottom;
+
+                int L = WidthPadding;
+                int T = HeightPadding;
+                int W = pnlControl.Width - (WidthPadding * 2);
+                int H = !IsMultiLine ? Control.Height - (HeightPadding * 2) : pnlControl.Height - (HeightPadding * 2);
+                this.Control.SetBounds(L, T, W, H);
+
+                pnlControl.Height = !IsMultiLine ? Control.Height + (HeightPadding * 2) : pnlControl.Height;
+
+                if (TextOnTop)
                 {
-                    this.pnlText.Height = TextPanelDefaultHeight;
-                    TextPanelHeight = this.pnlText.Height;
+                    int TextPanelHeight = 0;
+                    if (pnlText.Visible)
+                    {
+                        this.pnlText.Height = TextPanelDefaultHeight;
+                        TextPanelHeight = this.pnlText.Height;
+                    }
+
+                    this.Height = pnlControl.Height + TextPanelHeight;
                 }
-                
-                this.Height = pnlControl.Height + TextPanelHeight;
+                else
+                {
+                    pnlText.Height = pnlControl.Height;
+                    this.Height = pnlControl.Height;
+                }
+
+                if (!IsMultiLine)
+                {
+                    this.MaximumSize = new Size(0, this.Height);
+                    this.MinimumSize = new Size(0, this.Height);
+                }
+
             }
-            else
-            {
-                this.Height = pnlControl.Height;
-                this.AutoSize = false;
-            } 
+ 
+
         }
         /// <summary>
         /// Calls all custom update methods
@@ -92,8 +124,31 @@ namespace Tripous.Forms
         protected virtual void UpdateAll()
         {
             UpdateTextPanelWidth();
-            UpdateHeight();
+            LayoutControls();
         }
+        /// <summary>
+        /// Called on a property change
+        /// </summary>
+        protected virtual void OnTextOnTopChanged()
+        {
+            pnlText.Dock = DockStyle.None;
+            pnlControl.Dock = DockStyle.None;
+            LayoutControls();
+
+            if (TextOnTop)
+            {
+                pnlText.Dock = DockStyle.Top;
+                pnlControl.Dock = DockStyle.Top;                
+            }
+            else
+            {                
+                UpdateTextPanelWidth(); 
+                pnlText.Dock = DockStyle.Left;
+                pnlControl.Dock = DockStyle.Fill;                
+            } 
+            
+        }
+       
         /// <summary>
         /// Override
         /// </summary>
@@ -110,28 +165,17 @@ namespace Tripous.Forms
             UpdateAll();
             base.OnParentChanged(e);
         }
-
         /// <summary>
-        /// Called on a property change
+        /// Override
         /// </summary>
-        protected virtual void OnStackedChanged()
+        protected override void OnLayout(LayoutEventArgs e)
         {
-            if (Stacked)
-            {
-                pnlControl.Dock = DockStyle.None;
-                pnlText.Dock = DockStyle.Top;
-                pnlControl.Dock = DockStyle.Top;
-            }
-            else
-            {
-                pnlControl.Dock = DockStyle.None;
-                pnlText.Dock = DockStyle.Left;
-                pnlControl.Dock = DockStyle.Fill;
-                UpdateTextPanelWidth();
-            }
+            base.OnLayout(e);
 
-            UpdateHeight();
+            //UpdateTextPanelWidth();
+            //LayoutControls();
         }
+
         /// <summary>
         /// Called on a property change
         /// </summary>
@@ -211,6 +255,22 @@ namespace Tripous.Forms
             lblText.TextChanged += OnCaptionTextChanged;
         }
 
+        /// <summary>
+        /// Returns the parent IControlRow of the specified Control, if any, else null.
+        /// </summary>
+        static public IControlRow ParentRowOf(Control Control)
+        {
+            while (Control != null)
+            {
+                if (Control is IControlRow)
+                    return Control as IControlRow;
+                Control = Control.Parent;
+            }
+
+            return null;
+        }
+
+
         /* public */
         /// <summary>
         /// Data bind method
@@ -219,13 +279,18 @@ namespace Tripous.Forms
         { 
             return Ui.Bind(Control, BindPropertyName, DataSource, DataField);
         }
-
+        /// <summary>
+        /// Called by a parent <see cref="UiGroup"/> when the size changing of that parent "changes screen mode".
+        /// </summary>
+        public virtual void OnScreenModeChanged(ScreenMode Mode)
+        {
+        }
 
         /* properties */
- 
         /// <summary>
         /// The control text (caption)
         /// </summary>
+        [DefaultValue("Text")]
         public virtual string Caption
         {
             get { return lblText.Text; }
@@ -234,6 +299,7 @@ namespace Tripous.Forms
         /// <summary>
         /// Percent of the Text portion.
         /// </summary>
+        [DefaultValue(35)]
         public virtual int Split
         {
             get { return fSplit; }
@@ -247,23 +313,25 @@ namespace Tripous.Forms
             }
         }
         /// <summary>
-        /// True means stack as column, false means stack as row.
+        /// True means stack as column (text on top), false means stack as row.
         /// </summary>
-        public virtual bool Stacked
+        [DefaultValue(false)]
+        public virtual bool TextOnTop
         {
-            get { return fStacked; }
+            get { return fTextOnTop; }
             set
             {
-                if (fStacked != value)
+                if (fTextOnTop != value)
                 {
-                    fStacked = value;
-                    OnStackedChanged();
+                    fTextOnTop = value;
+                    OnTextOnTopChanged();
                 }
             }
         }
         /// <summary>
         /// When true the control is readonly
         /// </summary>
+        [DefaultValue(false)]
         public virtual bool ReadOnly
         {
             get { return fReadOnly; }
@@ -279,6 +347,7 @@ namespace Tripous.Forms
         /// <summary>
         /// When true the control must have a value
         /// </summary>
+        [DefaultValue(false)]
         public virtual bool Required
         {
             get { return fRequired; }
@@ -295,6 +364,7 @@ namespace Tripous.Forms
         /// <summary>
         /// The data source name. When empty then it binds to its parent's source.
         /// </summary>
+        [DefaultValue("")]
         public virtual string DataSourceName
         {
             get { return fDataSourceName; }
@@ -310,6 +380,7 @@ namespace Tripous.Forms
         /// <summary>
         /// The data field to bind
         /// </summary>
+        [DefaultValue("")]
         public virtual string DataField
         {
             get { return fDataField; }
@@ -358,4 +429,8 @@ namespace Tripous.Forms
         [Browsable(false)]
         new public AutoSizeMode AutoSizeMode { get => base.AutoSizeMode; set => base.AutoSizeMode = value; }
     }
+
+
+
+
 }

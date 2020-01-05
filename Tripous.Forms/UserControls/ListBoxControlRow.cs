@@ -17,6 +17,11 @@ namespace Tripous.Forms
     public partial class ListBoxControlRow : ControlRow, ILookUpControlRow
     {
         /// <summary>
+        /// True when is a control row with a multiline control, such as grid, list box, etc
+        /// </summary>
+        protected override bool IsMultiLine { get { return true; } }
+
+        /// <summary>
         /// Returns the value of the <see cref="Value"/> property
         /// </summary>
         protected override object GetValue()
