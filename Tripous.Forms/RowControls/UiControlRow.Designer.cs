@@ -1,6 +1,6 @@
 ﻿namespace Tripous.Forms
 {
-    partial class ControlRow
+    partial class UiControlRow
     {
         /// <summary> 
         /// Required designer variable.

@@ -12,6 +12,9 @@ using Tripous.Data;
 
 namespace Tripous.Forms
 {
+    /// <summary>
+    /// Connection string dialog
+    /// </summary>
     public partial class ConnectionStringDialog : Form
     {
         SqlConnectionInfo ConInfo;
@@ -44,18 +47,26 @@ namespace Tripous.Forms
             this.ActiveControl = edtConnectionString;
         }
 
+        /// <summary>
+        /// Override
+        /// </summary>
         protected override void OnShown(EventArgs e)
         {
             base.OnShown(e);
             FormInitialize();
         }
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public ConnectionStringDialog()
         {
             InitializeComponent();
         }
 
-
+        /// <summary>
+        /// Displays the dialog
+        /// </summary>
         static public bool ShowDialog(SqlConnectionInfo ConInfo)
         {
             using (var F = new ConnectionStringDialog())

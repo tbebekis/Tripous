@@ -5,14 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+
 namespace Tripous.Forms
 {
-
- 
     /// <summary>
     /// Represents a control with simple binding
     /// </summary>
-    public interface IControlRow
+    public interface IUiControlRow
     {
         /// <summary>
         /// Data bind method
@@ -59,40 +58,5 @@ namespace Tripous.Forms
         /// Called by a parent <see cref="UiGroup"/> when the size changing of that parent "changes screen mode".
         /// </summary>
         void OnScreenModeChanged(ScreenMode Mode);
-    }
-
-    /// <summary>
-    /// Represents a control with lookup binding
-    /// </summary>
-    public interface ILookUpControlRow: IControlRow
-    {
-
-        /// <summary>
-        /// The name of the field to display.
-        /// <para>NOTE: For ComboBox and ListBox only.</para>
-        /// </summary>
-        string DisplayMember { get; set; }
-        /// <summary>
-        /// The name of the field to be used as the actual control value.
-        /// <para>NOTE: For ComboBox and ListBox only.</para>
-        /// </summary>
-        string ValueMember { get; set; }
-        /// <summary>
-        /// The list source name of the Control.
-        /// <para>NOTE: For ComboBox and ListBox only.</para>
-        /// </summary>
-        string ListSourceName { get; set; }
-        /// <summary>
-        /// The list source of the Control.
-        /// <para>NOTE: For ComboBox and ListBox only.</para>
-        /// </summary>        
-        object ListSource { get; set; }
-    }
-
-    /// <summary>
-    /// Represents a control with grid binding
-    /// </summary>
-    public interface IGridControlRow : IControlRow // IDataControlRow
-    {
     }
 }

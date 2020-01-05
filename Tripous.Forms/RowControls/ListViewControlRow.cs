@@ -12,25 +12,24 @@ namespace Tripous.Forms
 {
 
     /// <summary>
-    /// TreeView <see cref="ControlRow"/>
+    /// ListView <see cref="UiControlRow"/>
     /// </summary>
-    public partial class TreeViewControlRow : ControlRow
+    public partial class ListViewControlRow : UiControlRow
     {
         /// <summary>
         /// True when is a control row with a multiline control, such as grid, list box, etc
         /// </summary>
         protected override bool IsMultiLine { get { return true; } }
 
-
         /* constructor */
         /// <summary>
         /// Constructor
         /// </summary>
-        public TreeViewControlRow()
+        public ListViewControlRow()
         {
             InitializeComponent();
 
-            this.Control = tv;
+            this.Control = lv;
         }
 
         /* properties */
@@ -38,6 +37,6 @@ namespace Tripous.Forms
         /// The control
         /// </summary>
         [Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public TreeView TreeView { get { return tv; } }
+        public ListView ListView { get { return lv; } }
     }
 }

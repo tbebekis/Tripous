@@ -10,11 +10,18 @@ using System.Windows.Forms;
 
 namespace Tripous.Forms
 {
+
     /// <summary>
-    /// Text box <see cref="ControlRow"/>
+    /// Multiline textbox <see cref="UiControlRow"/>
     /// </summary>
-    public partial class TextBoxControlRow : ControlRow
+    public partial class MemoControlRow : UiControlRow
     {
+        /// <summary>
+        /// True when is a control row with a multiline control, such as grid, list box, etc
+        /// </summary>
+        protected override bool IsMultiLine { get { return true; } }
+
+
         /// <summary>
         /// Returns the value of the <see cref="Value"/> property
         /// </summary>
@@ -39,28 +46,18 @@ namespace Tripous.Forms
         /// <summary>
         /// Constructor
         /// </summary>
-        public TextBoxControlRow()
+        public MemoControlRow()
         {
             InitializeComponent();
 
             this.Control = edtText;
         }
 
-
         /* properties */
         /// <summary>
         /// The control
         /// </summary>
         [Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public TextBox Box { get { return edtText; } }
-        /// <summary>
-        /// The text of the edit box
-        /// </summary>
-        [DefaultValue(""), Localizable(false), Description("The text of the edit box.")]
-        public string EditText
-        {
-            get { return edtText.Text; }
-            set { edtText.Text = value; }
-        }
+        public RichTextBox Box { get { return edtText; } }
     }
 }

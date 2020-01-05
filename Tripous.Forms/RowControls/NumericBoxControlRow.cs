@@ -12,9 +12,9 @@ namespace Tripous.Forms
 {
 
     /// <summary>
-    /// NumericUpDown box <see cref="ControlRow"/>
+    /// NumericUpDown box <see cref="UiControlRow"/>
     /// </summary>
-    public partial class NumericBoxControlRow : ControlRow
+    public partial class NumericBoxControlRow : UiControlRow
     {
         /// <summary>
         /// Returns the value of the <see cref="Value"/> property

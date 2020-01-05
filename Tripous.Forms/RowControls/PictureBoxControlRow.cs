@@ -12,9 +12,9 @@ namespace Tripous.Forms
 {
 
     /// <summary>
-    /// A <see cref="PictureBoxEx"/> <see cref="ControlRow"/>
+    /// A <see cref="PictureBoxEx"/> <see cref="UiControlRow"/>
     /// </summary>
-    public partial class PictureBoxControlRow : ControlRow
+    public partial class PictureBoxControlRow : UiControlRow
     {
         ImageContextMenu mnuImage = new ImageContextMenu();
 

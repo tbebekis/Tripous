@@ -14,7 +14,8 @@ namespace Tripous.Forms
     /// <summary>
     /// A panel control row
     /// </summary>
-    public class PanelControlRow: Panel, IControlRow
+    //[Designer(typeof(UiControlRowControlDesigner))]
+    public class PanelControlRow: Panel, IUiControlRow
     {
         string fCaption;
         string fDataSourceName;

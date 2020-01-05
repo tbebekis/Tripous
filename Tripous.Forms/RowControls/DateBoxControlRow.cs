@@ -12,9 +12,9 @@ namespace Tripous.Forms
 {
 
     /// <summary>
-    /// DateTimePicker box <see cref="ControlRow"/>
+    /// DateTimePicker box <see cref="UiControlRow"/>
     /// </summary>
-    public partial class DateBoxControlRow : ControlRow
+    public partial class DateBoxControlRow : UiControlRow
     {
         /// <summary>
         /// Returns the value of the <see cref="Value"/> property

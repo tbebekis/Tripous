@@ -34,7 +34,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1296, 438);
+            this.ClientSize = new System.Drawing.Size(627, 419);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.Margin = new System.Windows.Forms.Padding(1, 3, 1, 3);
             this.Name = "Form1";
@@ -43,6 +43,7 @@
             this.ResumeLayout(false);
 
         }
+
 
 
 

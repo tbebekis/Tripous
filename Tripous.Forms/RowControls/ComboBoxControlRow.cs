@@ -11,9 +11,9 @@ using System.Windows.Forms;
 namespace Tripous.Forms
 {
     /// <summary>
-    /// Combo box <see cref="ControlRow"/>
+    /// Combo box <see cref="UiControlRow"/>
     /// </summary>
-    public partial class ComboBoxControlRow : ControlRow, ILookUpControlRow
+    public partial class ComboBoxControlRow : UiControlRow, IUiLookUpControlRow
     {
         /// <summary>
         /// Returns the value of the <see cref="Value"/> property

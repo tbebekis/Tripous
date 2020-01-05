@@ -18,35 +18,24 @@ using Tripous.Model;
 namespace Tripous.Forms
 {
     /*
-     EDW
-
-
     - To create a scrolling container for one or more UiGroup instances
         this.AutoScroll = false;
         this.HorizontalScroll.Enabled = false;
-        this.HorizontalScroll.Visible = false;
-
-    TODO: In UiColumnDesigner add a DesignerVerb "Arrange Rows" which will display a dialog box with the rows for moving up and down
- 
-    TODO: Automatic binding, see: Tripous.Model.UiViews and Tripous.Model.UiViewInfo
-
-    TODO: RadioGroup and RadioGroup row
-
-    TODO: MultiCheck ComboBox
-        
+        this.HorizontalScroll.Visible = false; 
     */
 
     /// <summary>
     /// Represents a control that can be placed on a <see cref="UiViewInfo"/>
     /// </summary>
-    public partial class ControlRow : UserControl, IControlRow
+    [Designer(typeof(UiControlRowControlDesigner))]
+    public partial class UiControlRow : UserControl, IUiControlRow
     {
         protected const int TextPanelDefaultHeight = 28;
         protected const int ControlPanelMultilineDefaultHeight = 163;
         protected const int HeightPadding = 3;
         protected const int WidthPadding = 6;
 
-        bool Layouting;
+        //bool Layouting;
         int fSplit = 35;
         bool fTextOnTop;
         bool fReadOnly;
@@ -247,7 +236,7 @@ namespace Tripous.Forms
         /// <summary>
         /// Constructor
         /// </summary>
-        public ControlRow()
+        public UiControlRow()
         {
             InitializeComponent();
 
@@ -258,12 +247,12 @@ namespace Tripous.Forms
         /// <summary>
         /// Returns the parent IControlRow of the specified Control, if any, else null.
         /// </summary>
-        static public IControlRow ParentRowOf(Control Control)
+        static public IUiControlRow ParentRowOf(Control Control)
         {
             while (Control != null)
             {
-                if (Control is IControlRow)
-                    return Control as IControlRow;
+                if (Control is IUiControlRow)
+                    return Control as IUiControlRow;
                 Control = Control.Parent;
             }
 

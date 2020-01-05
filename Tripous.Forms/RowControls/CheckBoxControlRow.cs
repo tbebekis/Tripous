@@ -13,7 +13,8 @@ namespace Tripous.Forms
     /// <summary>
     /// CheckBox <see cref="UserControl"/>
     /// </summary>
-    public partial class CheckBoxControlRow : UserControl, IControlRow
+    [Designer(typeof(UiControlRowControlDesigner))]
+    public partial class CheckBoxControlRow : UserControl, IUiControlRow
     {
         bool fReadOnly;
         bool fRequired;

@@ -12,9 +12,9 @@ namespace Tripous.Forms
 {
 
     /// <summary>
-    /// CheckedListBox <see cref="ControlRow"/>
+    /// CheckedListBox <see cref="UiControlRow"/>
     /// </summary>
-    public partial class CheckListBoxControlRow : ControlRow, ILookUpControlRow
+    public partial class CheckListBoxControlRow : UiControlRow, IUiLookUpControlRow
     {
         /// <summary>
         /// True when is a control row with a multiline control, such as grid, list box, etc

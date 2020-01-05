@@ -29,13 +29,13 @@
         private void InitializeComponent()
         {
             this.pnlTitle = new System.Windows.Forms.Panel();
-            this.lblTitle = new System.Windows.Forms.Label();
+            this.lblCaption = new System.Windows.Forms.Label();
             this.pnlTitle.SuspendLayout();
             this.SuspendLayout();
             // 
             // pnlTitle
             // 
-            this.pnlTitle.Controls.Add(this.lblTitle);
+            this.pnlTitle.Controls.Add(this.lblCaption);
             this.pnlTitle.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlTitle.Location = new System.Drawing.Point(0, 0);
             this.pnlTitle.Name = "pnlTitle";
@@ -43,19 +43,19 @@
             this.pnlTitle.Size = new System.Drawing.Size(703, 30);
             this.pnlTitle.TabIndex = 0;
             // 
-            // lblTitle
+            // lblCaption
             // 
-            this.lblTitle.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.lblTitle.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblTitle.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTitle.ForeColor = System.Drawing.Color.DimGray;
-            this.lblTitle.Location = new System.Drawing.Point(2, 2);
-            this.lblTitle.Name = "lblTitle";
-            this.lblTitle.Padding = new System.Windows.Forms.Padding(4, 0, 0, 0);
-            this.lblTitle.Size = new System.Drawing.Size(699, 26);
-            this.lblTitle.TabIndex = 0;
-            this.lblTitle.Text = "Title";
-            this.lblTitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lblCaption.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.lblCaption.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblCaption.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblCaption.ForeColor = System.Drawing.Color.DimGray;
+            this.lblCaption.Location = new System.Drawing.Point(2, 2);
+            this.lblCaption.Name = "lblCaption";
+            this.lblCaption.Padding = new System.Windows.Forms.Padding(4, 0, 0, 0);
+            this.lblCaption.Size = new System.Drawing.Size(699, 26);
+            this.lblCaption.TabIndex = 0;
+            this.lblCaption.Text = "Caption";
+            this.lblCaption.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // UiGroup
             // 
@@ -72,6 +72,6 @@
         #endregion
 
         private System.Windows.Forms.Panel pnlTitle;
-        private System.Windows.Forms.Label lblTitle;
+        private System.Windows.Forms.Label lblCaption;
     }
 }
