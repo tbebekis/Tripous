@@ -34,10 +34,8 @@
             this.components = new System.ComponentModel.Container();
             this.ToolBar = new System.Windows.Forms.ToolStrip();
             this.btnHome = new System.Windows.Forms.ToolStripDropDownButton();
-            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.btnFind = new System.Windows.Forms.ToolStripButton();
             this.edtFind = new System.Windows.Forms.ToolStripTextBox();
-            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.btnList = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.btnInsert = new System.Windows.Forms.ToolStripButton();
@@ -46,7 +44,8 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.btnSave = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.btnCancelEdit = new System.Windows.Forms.ToolStripButton();
+            this.btnCancel = new System.Windows.Forms.ToolStripButton();
+            this.btnOK = new System.Windows.Forms.ToolStripButton();
             this.btnClose = new System.Windows.Forms.ToolStripButton();
             this.ToolTips = new System.Windows.Forms.ToolTip(this.components);
             this.ToolBar.SuspendLayout();
@@ -57,10 +56,8 @@
             this.ToolBar.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.ToolBar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.btnHome,
-            this.toolStripSeparator4,
             this.btnFind,
             this.edtFind,
-            this.toolStripSeparator5,
             this.btnList,
             this.toolStripSeparator3,
             this.btnInsert,
@@ -69,7 +66,8 @@
             this.toolStripSeparator1,
             this.btnSave,
             this.toolStripSeparator2,
-            this.btnCancelEdit,
+            this.btnCancel,
+            this.btnOK,
             this.btnClose});
             this.ToolBar.Location = new System.Drawing.Point(0, 0);
             this.ToolBar.Name = "ToolBar";
@@ -86,11 +84,6 @@
             this.btnHome.Size = new System.Drawing.Size(37, 28);
             this.btnHome.Text = "Home";
             // 
-            // toolStripSeparator4
-            // 
-            this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(6, 31);
-            // 
             // btnFind
             // 
             this.btnFind.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -102,14 +95,8 @@
             // 
             // edtFind
             // 
-            this.edtFind.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.edtFind.Name = "edtFind";
             this.edtFind.Size = new System.Drawing.Size(100, 31);
-            // 
-            // toolStripSeparator5
-            // 
-            this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(6, 31);
             // 
             // btnList
             // 
@@ -171,14 +158,23 @@
             this.toolStripSeparator2.Name = "toolStripSeparator2";
             this.toolStripSeparator2.Size = new System.Drawing.Size(6, 31);
             // 
-            // btnCancelEdit
+            // btnCancel
             // 
-            this.btnCancelEdit.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnCancelEdit.Image = global::Tripous.Forms.Properties.Resources.cancel;
-            this.btnCancelEdit.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnCancelEdit.Name = "btnCancelEdit";
-            this.btnCancelEdit.Size = new System.Drawing.Size(28, 28);
-            this.btnCancelEdit.Text = "Cancel Edit";
+            this.btnCancel.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnCancel.Image = global::Tripous.Forms.Properties.Resources.cancel;
+            this.btnCancel.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnCancel.Name = "btnCancel";
+            this.btnCancel.Size = new System.Drawing.Size(28, 28);
+            this.btnCancel.Text = "Cancel Edit";
+            // 
+            // btnOK
+            // 
+            this.btnOK.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnOK.Image = global::Tripous.Forms.Properties.Resources.accept;
+            this.btnOK.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnOK.Name = "btnOK";
+            this.btnOK.Size = new System.Drawing.Size(28, 28);
+            this.btnOK.Text = "OK";
             // 
             // btnClose
             // 
@@ -215,13 +211,12 @@
         protected System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         protected System.Windows.Forms.ToolStripButton btnSave;
         protected System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
-        protected System.Windows.Forms.ToolStripButton btnCancelEdit;
+        protected System.Windows.Forms.ToolStripButton btnCancel;
         protected System.Windows.Forms.ToolStripButton btnClose;
-        protected System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         protected System.Windows.Forms.ToolStripDropDownButton btnHome;
         protected System.Windows.Forms.ToolStripButton btnFind;
         protected System.Windows.Forms.ToolStripTextBox edtFind;
-        protected System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
         protected System.Windows.Forms.ToolTip ToolTips;
+        private System.Windows.Forms.ToolStripButton btnOK;
     }
 }

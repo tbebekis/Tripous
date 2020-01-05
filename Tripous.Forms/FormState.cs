@@ -6,14 +6,35 @@ using System.Threading.Tasks;
 
 namespace Tripous.Forms
 {
+    /// <summary>
+    /// The state of a data-form
+    /// </summary>
     [Flags]
     public enum FormState
     {
+        /// <summary>
+        /// None
+        /// </summary>
         None = 0,
+        /// <summary>
+        /// List
+        /// </summary>
         List = 1,
+        /// <summary>
+        /// Insert
+        /// </summary>
         Insert = 2,
+        /// <summary>
+        /// Edit
+        /// </summary>
         Edit = 4,
+        /// <summary>
+        /// Delete
+        /// </summary>
         Delete = 8,
+        /// <summary>
+        /// Find
+        /// </summary>
         Find = 0x10,
     }
 

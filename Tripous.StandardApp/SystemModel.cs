@@ -33,8 +33,6 @@ namespace Tripous.Model
 select
   {0}.Id                as Id       
  ,{0}.Name              as Name  
- ,{0}.OfficialName      as OfficialName       
- ,{0}.Tin               as Tin            
 from
    {0}               
 ", SysTables.Company);

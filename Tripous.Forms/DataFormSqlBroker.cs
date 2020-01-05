@@ -13,6 +13,9 @@ using Tripous.Model;
 
 namespace Tripous.Forms
 {
+    /// <summary>
+    /// A data form that uses an <see cref="SqlBroker"/>
+    /// </summary>
     public partial class DataFormSqlBroker : DataForm
     {
         protected SqlBroker Broker;
@@ -44,7 +47,6 @@ namespace Tripous.Forms
             }         
 
         }
-
         protected virtual void PrepareBroker()
         {
             if (Options != null)
@@ -62,7 +64,7 @@ namespace Tripous.Forms
 
                     if (BrokerDes != null)
                     {
-                        Broker = Tripous.Model.Broker.Create(BrokerDes, true) as SqlBroker;
+                        Broker = Tripous.Model.Broker.Create(BrokerDes, true, IsListForm) as SqlBroker;
                     }
                 }
             }

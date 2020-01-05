@@ -47,13 +47,80 @@ namespace Tripous.Forms
             {
                 DataSave();
             }
-            else if (btnCancelEdit == sender)
+            else if (btnCancel == sender)
             {
-                DataCancelEdit();
+                if (IsListMode)
+                {
+                    if (Modal)
+                    {
+                        this.DialogResult = DialogResult.Cancel;
+                    }
+                    else
+                    {
+                        Close();
+                    }
+                }
+                else if (IsMasterForm)
+                {
+                    if (Modal)
+                    {
+                        if (Bf.In(FormState, FormState.List | FormState.Find))
+                        {
+                            this.DialogResult = DialogResult.Cancel;
+                        }
+                        else if (Bf.In(FormState, FormState.Insert | FormState.Edit))
+                        {
+                            DataCancelEdit();
+                        }                        
+                    }
+                    else
+                    {
+                        if (Bf.In(FormState, FormState.List | FormState.Find))
+                        {
+                            Close();
+                        }
+                        else if (Bf.In(FormState, FormState.Insert | FormState.Edit))
+                        {
+                            DataCancelEdit();
+                        }
+                    }
+                }               
+            }
+            else if (btnOK == sender)
+            {
+                if (IsListMode)
+                {
+                    ListSave();
+
+                    if (Modal)
+                    {
+                        this.DialogResult = DialogResult.Cancel;
+                    }
+                    else
+                    {
+                        Close();
+                    }
+                }
+                else if (IsMasterForm)
+                {
+                    if (Modal)
+                    {
+                        this.DialogResult = DialogResult.OK;
+                    }
+                    else
+                    {
+                        Close();
+                    } 
+                }
             }
             else if (btnClose == sender)
             {
                 Close();
+            }
+
+            if (!IsDisposed)
+            {
+                UpdateUi();
             }
 
         }
@@ -151,7 +218,9 @@ namespace Tripous.Forms
         protected virtual void ListSelect()
         {
         }
-
+        protected virtual void ListSave()
+        {
+        }
         protected virtual object ListGetCurrentId()
         {
             object Result = null;
@@ -277,8 +346,9 @@ namespace Tripous.Forms
             btnDelete.Click += AnyClick;
             btnSave.Click += AnyClick;
 
-            btnCancelEdit.Click += AnyClick;
-            btnClose.Click += AnyClick; 
+            btnCancel.Click += AnyClick;
+            btnClose.Click += AnyClick;
+            btnOK.Click += AnyClick;
 
             base.FormInitializeBefore();
 
@@ -319,7 +389,60 @@ namespace Tripous.Forms
 
             return base.ProcessEscapeKey();
         }
+        /// <summary>
+        /// Enables and disables buttons and menu items.
+        /// </summary>
+        protected override void EnableCommands()
+        {
+            if (!IsDisposed)
+            {
+                base.EnableCommands();
 
+                if (btnHome == null)
+                    return;
+
+                // visible ===============================================================
+                btnHome.Visible = true;
+                btnFind.Visible = IsMasterForm;
+                edtFind.Visible = btnFind.Visible;
+                btnList.Visible = IsMasterForm;
+
+                btnInsert.Visible = IsMasterForm;
+                btnEdit.Visible = IsMasterForm;
+                btnDelete.Visible = true;
+                btnInsert.Visible = IsMasterForm;
+
+                btnCancel.Visible = true;                       // btnCancel - visible with all form modes
+                btnOK.Visible = IsListForm || Modal;
+                btnClose.Visible = IsMasterMode && !Modal;      // btnClose - visible with non-list master forms
+
+                // enable ================================================================
+                btnHome.Enabled = btnHome.HasDropDownItems;
+                btnFind.Enabled = Options != null && !Bf.In(FormState.Find, Options.InvalidStates);
+                btnList.Enabled = Options != null && !Bf.In(FormState.List, Options.InvalidStates);
+                
+                btnInsert.Enabled = Options != null && !Bf.In(FormState.Insert, Options.InvalidStates) && !Bf.In(FormState, FormState.Insert | FormState.Edit) && FormMode != FormMode.List;
+                btnEdit.Enabled = Options != null && !Bf.In(FormState.Insert, Options.InvalidStates) && !Bf.In(FormState, FormState.Insert | FormState.Edit) && FormMode != FormMode.List;
+                btnDelete.Enabled = Options != null && !Bf.In(FormState.Delete, Options.InvalidStates) && FormMode == FormMode.List && gridList != null && gridList.RowCount > 0;
+                btnSave.Enabled = (IsMasterForm && Bf.In(FormState, FormState.Insert | FormState.Edit)) || (IsListMode && FormState == FormState.List);
+ 
+                // List state and Modal: cancels the form
+                // List state and List forms: closes the form without saving
+                // Edit states: cancels edits and returns to List state
+                btnCancel.Enabled = IsListMode
+                    || (IsMasterForm && Bf.In(FormState, FormState.Insert | FormState.Edit))
+                    || (IsMasterForm && Bf.In(FormState, FormState.List | FormState.Find));
+
+                // btnOK - accessible in List state only, with list forms and all modal forms
+                // List state and Modal: saves any edits, closes the form with OK and returns the current row               
+                btnOK.Enabled = IsListForm || (Modal && FormState == FormState.List);
+ 
+                // List state: closes the form                
+                btnClose.Enabled = IsMasterMode && Bf.In(FormState, FormState.List | FormState.Find);
+            }       
+
+            
+        }
 
         /* construction */
         public DataForm()

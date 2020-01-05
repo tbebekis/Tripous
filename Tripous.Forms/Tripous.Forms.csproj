@@ -136,6 +136,13 @@
     <Compile Include="DataFormSqlBroker.Designer.cs">
       <DependentUpon>DataFormSqlBroker.cs</DependentUpon>
     </Compile>
+    <Compile Include="DataFormSqlBrokerList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DataFormSqlBrokerList.Designer.cs">
+      <DependentUpon>DataFormSqlBrokerList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormMode.cs" />
     <Compile Include="FormState.cs" />
     <Compile Include="Extensions\ComboBoxExtensions.cs" />
     <Compile Include="Extensions\ControlExtensions.cs" />
@@ -200,6 +207,7 @@
     <Compile Include="SingleRowPickDialog.designer.cs">
       <DependentUpon>SingleRowPickDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="SystemForms.cs" />
     <Compile Include="TableBoxDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -511,6 +519,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\page_find.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\accept.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

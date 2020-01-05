@@ -132,11 +132,16 @@ namespace Tripous.Forms
         /// </summary>
         protected virtual void EnableCommands()
         {
-
         }
  
 
         /* miscs */
+        /// <summary>
+        /// Passes any result to the caller of the form, if any. Useful with modal forms.
+        /// </summary>
+        protected virtual void PassResultBack()
+        {
+        }
         /// <summary>
         /// Returns the control that is last added to the container
         /// </summary>
@@ -241,7 +246,9 @@ namespace Tripous.Forms
         /// Override
         /// </summary>
         protected override void OnFormClosed(FormClosedEventArgs e)
-        {            
+        {
+            PassResultBack();
+
             if (DockForm != null)
             {
                 if (!DockForm.InClosing)
@@ -351,7 +358,15 @@ namespace Tripous.Forms
 
             return Result;
         }
-        
+
+        /// <summary>
+        /// Creates and shows a form as a modal dialog and returns true if the <see cref="DialogResult"/> is OK.
+        /// </summary>
+        static public bool ShowModal(string FormUniqueId, Action<BaseForm> AfterCreateFunc = null)
+        {
+            FormOptions Options = FormOptions.Get(FormUniqueId);
+            return ShowModal(Options, AfterCreateFunc);
+        }
         /// <summary>
         /// Creates and shows a form as a modal dialog and returns true if the <see cref="DialogResult"/> is OK.
         /// </summary>
@@ -370,18 +385,21 @@ namespace Tripous.Forms
         /// <summary>
         /// Creates and shows a form as a modal dialog and returns true if the <see cref="DialogResult"/> is OK.
         /// </summary>
-        static public bool ShowModal(Type FormClass, string Text = "", Action<BaseForm> AfterCreateFunc = null)
+        static public bool ShowModal(Type FormClass, string TextKey = "", Action<BaseForm> AfterCreateFunc = null)
         {
-            return ShowModal(new FormOptions(FormClass, Text), AfterCreateFunc);
+            return ShowModal(new FormOptions(FormClass, TextKey), AfterCreateFunc);
         }
-        /// <summary>
-        /// Creates and shows a form as a modal dialog and returns true if the <see cref="DialogResult"/> is OK.
-        /// </summary>
-        static public bool ShowModal(string FormClassFullName, string Text = "", Action<BaseForm> AfterCreateFunc = null)
-        {
-            return ShowModal(new FormOptions(FormClassFullName, Text), AfterCreateFunc);
-        }
+ 
 
+        /// <summary>
+        /// Creates and shows a form as a docked one.
+        /// <para>Actually it first creates a <see cref="DockContent"/> form and sets the <see cref="BaseForm"/> as a child. </para>
+        /// </summary>
+        static public void ShowDocked(string FormUniqueId, Action<BaseForm> AfterCreateFunc = null)
+        {
+            FormOptions Options = FormOptions.Get(FormUniqueId);
+            ShowDocked(Options, AfterCreateFunc);
+        }
         /// <summary>
         /// Creates and shows a form as a docked one.
         /// <para>Actually it first creates a <see cref="DockContent"/> form and sets the <see cref="BaseForm"/> as a child. </para>
@@ -408,37 +426,75 @@ namespace Tripous.Forms
         /// Creates and shows a form as a docked one.
         /// <para>Actually it first creates a <see cref="DockContent"/> form and sets the <see cref="BaseForm"/> as a child. </para>
         /// </summary>
-        static public void ShowDocked(Type FormClass, string Text = "", Action<BaseForm> AfterCreateFunc = null)
+        static public void ShowDocked(Type FormClass, string TextKey = "", Action<BaseForm> AfterCreateFunc = null)
         {
-            ShowDocked(new FormOptions(FormClass, Text), AfterCreateFunc);
+            ShowDocked(new FormOptions(FormClass, TextKey), AfterCreateFunc);
         }
-        /// <summary>
-        /// Creates and shows a form as a docked one.
-        /// <para>Actually it first creates a <see cref="DockContent"/> form and sets the <see cref="BaseForm"/> as a child. </para>
-        /// </summary>
-        static public void ShowDocked(string FormClassFullName, string Text = "", Action<BaseForm> AfterCreateFunc = null)
-        {
-            ShowDocked(new FormOptions(FormClassFullName, Text), AfterCreateFunc);
-        }
+ 
         
-        
+
         /* properties */
+        [Browsable(false), ReadOnly(true), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         /// <summary>
         /// True when initialized
         /// </summary>
         public bool Initialized { get; private set; }
+        [Browsable(false), ReadOnly(true), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         /// <summary>
         /// The form options
         /// </summary>
-        public virtual FormOptions Options { get; protected set; }  
+        public virtual FormOptions Options { get; protected set; }
+        [Browsable(false), ReadOnly(true), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         /// <summary>
         /// The parent container form, which is a <see cref="DockContent"/> form.
         /// </summary>
         public ParentDockForm DockForm { get; private set; }
+        [Browsable(false), ReadOnly(true), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         /// <summary>
         /// True when this is the main form.
         /// </summary>
         public bool IsMainForm { get { return Ui.MainForm == this; } }
+
+        /// <summary>
+        /// Returns the form mode
+        /// </summary>
+        [Browsable(false), ReadOnly(true), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public virtual FormMode FormMode { get { return FormMode.None; } }
+        /// <summary>
+        /// Indicates a "list" form. A list form has just a single "part" where displays a read-write grid.
+        /// </summary>
+        [Browsable(false), ReadOnly(true), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public bool IsListMode { get { return this.FormMode == FormMode.List; } }
+        /// <summary>
+        /// Indicates a "master" form. A master form provides two "parts": A list or browser which displays a
+        /// a read-only grid and an "entry" part where data bound controls are placed.
+        /// <para>NOTE: Those two parts are bound to DIFFERENT DataTable objects.</para>
+        /// </summary>
+        [Browsable(false), ReadOnly(true), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public bool IsMasterMode { get { return this.FormMode == FormMode.Master; } }
+        /// <summary>
+        /// Indicates a "master list" form. A master list form provides two "parts": A list or browser which displays a
+        /// a read-only grid and an "entry" part where data bound controls are placed.
+        /// <para>NOTE: Those two parts are bound to the SAME DataTable object.</para>
+        /// </summary>
+        [Browsable(false), ReadOnly(true), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public bool IsListMasterMode { get { return this.FormMode == FormMode.ListMaster; } }
+        /// <summary>
+        /// Returns true if the form is in FormMode.List mode or in FormMode.ListMaster mode.
+        /// </summary>
+        [Browsable(false), ReadOnly(true), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public bool IsListForm { get { return IsListMode || IsListMasterMode; } }
+        /// <summary>
+        /// Returns true if the form is in FormMode.Master mode or in FormMode.ListMaster mode.
+        /// </summary>
+        [Browsable(false), ReadOnly(true), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public bool IsMasterForm { get { return IsMasterMode || IsListMasterMode; } }
+        /// <summary>
+        /// Returns true if this is a fixed-list (no row insert-delete allowed) form.
+        /// </summary>
+        [Browsable(false), ReadOnly(true), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public virtual bool IsFixedListForm { get { return false; } }
+
         internal bool IsClosing { get; private set; }
 
     }

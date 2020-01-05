@@ -107,7 +107,9 @@ namespace DevApp.WinForms
                 case SystemCommands.CMD_TOOL_BAR:  return true;
 
                 /* SYSTEM */
-                case SystemCommands.CMD_SYS_COMPANY:  return true;
+                case SystemCommands.CMD_SYS_COMPANY:
+                    BaseForm.ShowDocked(Cmd.Name); // EDW οκ, παίζει
+                    return true;
                 case SystemCommands.CMD_SYS_LANG: return true;
                 case SystemCommands.CMD_SYS_SMTP_PROVIDERS: return true;
 

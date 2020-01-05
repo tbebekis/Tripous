@@ -9,15 +9,26 @@ using Newtonsoft.Json;
 
 namespace Tripous.Forms
 {
+
+    /// <summary>
+    /// Form creation options.
+    /// <para>This class serves as a registry for form option instances.</para>
+    /// </summary>
     public class FormOptions
     {
         /* private */
         static List<FormOptions> Registry = new List<FormOptions>();
 
         /* construction */
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public FormOptions()
         {
         }
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public FormOptions(string FormClassFullName, string TextKey = "", string UniqueId = "")
         {
             this.FormClassName = FormClassFullName;
@@ -25,24 +36,51 @@ namespace Tripous.Forms
             this.TextKey = TextKey;
 
         }
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public FormOptions(Type FormClass, string TextKey = "", string UniqueId = "")
             : this(FormClass.FullName, TextKey, UniqueId)
         { 
         }
 
         /* static */
+        /// <summary>
+        /// True when a form specified by a unique id is registered.
+        /// </summary>
         static public bool Contains(string UniqueId)
         {
             return Find(UniqueId) != null;
         }
+        /// <summary>
+        /// Finds and returns a form registered under a unique id, if any, else returns null.
+        /// </summary>
+        /// <param name="UniqueId"></param>
+        /// <returns></returns>
         static public FormOptions Find(string UniqueId)
         {
             return !string.IsNullOrWhiteSpace(UniqueId)? Registry.FirstOrDefault(item => UniqueId.IsSameText(item.UniqueId)): null;
         }
+        /// <summary>
+        /// Finds and returns a form registered under a unique id, if any, else throws and exception
+        /// </summary>
+        static public FormOptions Get(string UniqueId)
+        {
+            FormOptions Result = Find(UniqueId);
+            if (Result == null)
+                Sys.Error($"Form not registered. UniqueId: {UniqueId}");
+            return Result;
+        }
+        /// <summary>
+        /// Returns an array with all registered forms.
+        /// </summary>
         static public FormOptions[] GetList()
         {
             return Registry.ToArray();
         }
+        /// <summary>
+        /// Registers a form. See the properties of this class for details.
+        /// </summary>
         static public FormOptions Register(Type FormClass, string UniqueId, string BrokerName = "", string TextKey = "",  FormState StartState = FormState.List, FormState InvalidStates = FormState.None)
         {
             if (string.IsNullOrWhiteSpace(UniqueId))
@@ -73,26 +111,67 @@ namespace Tripous.Forms
             return Result;
         }
 
-        /* properties */        
+        /// <summary>
+        /// Returns a string representation of this instance
+        /// </summary>
+        public override string ToString()
+        {
+            return UniqueId;
+        }
+
+        /* properties */
         /// <summary>
         /// The full class name of the form, i.e. fully qualified with its namespace.
         /// </summary>
         public string FormClassName { get; set; }
+        /// <summary>
+        /// The key for a resource string that is used as the caption of the form
+        /// </summary>
         public string TextKey { get; set; }
+        /// <summary>
+        /// A string that uniquely identifies the form and this options instance. This is the registration name.
+        /// </summary>
         public string UniqueId { get; private set; }
+        /// <summary>
+        /// The key field. Used with data-forms
+        /// </summary>
         public string KeyField { get; set; } = "Id";
+        /// <summary>
+        /// The broker registration name. Used with data-forms
+        /// </summary>
         public string BrokerName { get; set; }
+        /// <summary>
+        /// The start state of a data form.
+        /// </summary>
         public FormState StartState { get; set; } = FormState.List;
+        /// <summary>
+        /// States a data-form can not go.
+        /// </summary>
         public FormState InvalidStates { get; set; }
 
+        /// <summary>
+        /// The <see cref="Type"/> of the form. Used in creating the form instance.
+        /// </summary>
         [JsonIgnore]
         public Type FormClass { get { return Type.GetType(FormClassName, true); } }
+        /// <summary>
+        /// A user defined object. Useful with modal dialogs.
+        /// </summary>
         [JsonIgnore]
         public object Result { get; set; }
+        /// <summary>
+        /// Used internally.
+        /// </summary>
         [JsonIgnore]
         public bool AsModal { get; set; }
+        /// <summary>
+        /// Passed to the form when its <see cref="StartState"/> is <see cref="FormState.Edit"/>
+        /// </summary>
         [JsonIgnore]
         public object Id { get; set; }
+        /// <summary>
+        /// User defined.
+        /// </summary>
         [JsonIgnore]
         public Dictionary<string, object> Params { get; } = new Dictionary<string, object>();
     }

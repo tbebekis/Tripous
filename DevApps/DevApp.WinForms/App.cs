@@ -52,9 +52,13 @@ namespace DevApp.WinForms
 
             Cn.Add(AppLib.Trader, AppLib.Trader).IconPath = Icons32.User;
         }
-
+        /// <summary>
+        /// Registration method
+        /// </summary>
         static public void RegisterForms()
         {
+            SystemForms.Register();
+
             FormOptions Options;
 
             Options = FormOptions.Register(typeof(DataFormSqlBroker), AppLib.Trader);
