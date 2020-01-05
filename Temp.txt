@@ -1,4 +1,1 @@
-﻿ ● Comments in Tripous.Windows.Forms
- ● Automatic binding, see: Tripous.Model.UiViews and Tripous.Model.UiViewInfo
- ● RadioGroup and RadioGroup row
- ● MultiCheck ComboBox
+﻿
