@@ -1,4 +1,4 @@
-﻿namespace Tripous.Forms
+﻿namespace Tripous.Forms.Standard
 {
     partial class DataFormSqlBroker
     {

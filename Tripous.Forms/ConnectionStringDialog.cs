@@ -23,11 +23,11 @@ namespace Tripous.Forms
         {
             if (btnOK == sender)
             {
-                PassBackResult();
+                PassResultBack();
             }
         }
 
-        void PassBackResult()
+        void PassResultBack()
         {
             if (!string.IsNullOrWhiteSpace(edtConnectionString.Text))
             {

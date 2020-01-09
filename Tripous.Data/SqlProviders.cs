@@ -47,16 +47,16 @@ namespace Tripous.Data
         /// <summary>
         /// Finds and returns a <see cref="SqlProvider"/> by name, if any, else null.
         /// </summary>
-        static public SqlProvider FindSqlProvider(string Name)
+        static public SqlProvider FindSqlProvider(string ProviderName)
         {
-            return Providers.FirstOrDefault(item => string.Compare(item.Name, Name, StringComparison.InvariantCultureIgnoreCase) == 0);
+            return Providers.FirstOrDefault(item => string.Compare(item.Name, ProviderName, StringComparison.InvariantCultureIgnoreCase) == 0);
         }
         /// <summary>
         /// Returns a provider specified by name, if any, else throws an exception.
         /// </summary>
         static public SqlProvider GetSqlProvider(string ProviderName)
         {
-            SqlProvider Provider = Providers.FirstOrDefault(item => string.Compare(item.Name, ProviderName, StringComparison.InvariantCultureIgnoreCase) == 0);
+            SqlProvider Provider = FindSqlProvider(ProviderName);
             if (Provider == null)
                 throw new ApplicationException($"Sql Provider not registered: {ProviderName}");
             return Provider;
@@ -64,9 +64,9 @@ namespace Tripous.Data
         /// <summary>
         /// Returns true if a <see cref="SqlProvider"/>  specified by its name, is registered.
         /// </summary>
-        static public bool ContainsSqlProvider(string Name)
+        static public bool ContainsSqlProvider(string ProviderName)
         {
-            return FindSqlProvider(Name) != null;
+            return FindSqlProvider(ProviderName) != null;
         }
     }
 }

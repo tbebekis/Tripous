@@ -11,12 +11,12 @@ using System.Windows.Forms;
 using Tripous.Data;
 using Tripous.Model;
 
-namespace Tripous.Forms
+namespace Tripous.Forms.Standard
 {
     /// <summary>
     /// A data form that uses an <see cref="SqlBroker"/>
     /// </summary>
-    public partial class DataFormSqlBroker : DataForm
+    public partial class DataFormSqlBroker : DataFormStandard
     {
         protected SqlBroker Broker;
         protected SelectSql MainSelectSql;

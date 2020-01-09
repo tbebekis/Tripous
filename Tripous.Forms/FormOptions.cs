@@ -81,7 +81,7 @@ namespace Tripous.Forms
         /// <summary>
         /// Registers a form. See the properties of this class for details.
         /// </summary>
-        static public FormOptions Register(Type FormClass, string UniqueId, string BrokerName = "", string TextKey = "",  FormState StartState = FormState.List, FormState InvalidStates = FormState.None)
+        static public FormOptions Register(Type FormClass, string UniqueId, string BrokerName = "", string TextKey = "", FormAction StartAction = FormAction.List, FormAction InvalidActions = FormAction.None)
         {
             if (string.IsNullOrWhiteSpace(UniqueId))
                 Sys.Error("Can not register a form with an empty or null UniqueId");
@@ -101,8 +101,8 @@ namespace Tripous.Forms
                     UniqueId = UniqueId,
                     BrokerName = BrokerName,
                     TextKey = TextKey,
-                    StartState = StartState,
-                    InvalidStates = InvalidStates
+                    StartAction = StartAction,
+                    InvalidActions = InvalidActions
                 };
 
                 Registry.Add(Result);
@@ -141,13 +141,13 @@ namespace Tripous.Forms
         /// </summary>
         public string BrokerName { get; set; }
         /// <summary>
-        /// The start state of a data form.
+        /// The first action a data form should execute.
         /// </summary>
-        public FormState StartState { get; set; } = FormState.List;
+        public FormAction StartAction { get; set; } = FormAction.List;
         /// <summary>
-        /// States a data-form can not go.
+        /// Form action a data-form can not execute.
         /// </summary>
-        public FormState InvalidStates { get; set; }
+        public FormAction InvalidActions { get; set; }
 
         /// <summary>
         /// The <see cref="Type"/> of the form. Used in creating the form instance.
@@ -165,7 +165,7 @@ namespace Tripous.Forms
         [JsonIgnore]
         public bool AsModal { get; set; }
         /// <summary>
-        /// Passed to the form when its <see cref="StartState"/> is <see cref="FormState.Edit"/>
+        /// Passed to the form when its <see cref="StartAction"/> is <see cref="FormAction.Edit"/>
         /// </summary>
         [JsonIgnore]
         public object Id { get; set; }

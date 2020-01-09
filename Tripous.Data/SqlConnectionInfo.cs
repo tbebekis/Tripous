@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.Common;
 
 namespace Tripous.Data
 {
@@ -39,7 +40,25 @@ namespace Tripous.Data
         {
             return $"{Provider}:{Name}";
         }
+        /// <summary>
+        /// Returns true if this connection info is valid and can connect to a database.
+        /// </summary>
+        public bool CanConnect()
+        {
+            try
+            {
+                using (DbConnection Con = Db.CreateConnection(this))
+                {
+                    Con.Open();
+                    return true;
+                }
+            }
+            catch
+            {
+            }
 
+            return false;
+        }
 
 
         /* properties */

@@ -459,26 +459,26 @@ namespace Tripous.Forms
         /// Returns the form mode
         /// </summary>
         [Browsable(false), ReadOnly(true), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public virtual FormMode FormMode { get { return FormMode.None; } }
+        public virtual FormType FormMode { get { return FormType.None; } }
         /// <summary>
         /// Indicates a "list" form. A list form has just a single "part" where displays a read-write grid.
         /// </summary>
         [Browsable(false), ReadOnly(true), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public bool IsListMode { get { return this.FormMode == FormMode.List; } }
+        public bool IsListMode { get { return this.FormMode == FormType.List; } }
         /// <summary>
         /// Indicates a "master" form. A master form provides two "parts": A list or browser which displays a
         /// a read-only grid and an "entry" part where data bound controls are placed.
         /// <para>NOTE: Those two parts are bound to DIFFERENT DataTable objects.</para>
         /// </summary>
         [Browsable(false), ReadOnly(true), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public bool IsMasterMode { get { return this.FormMode == FormMode.Master; } }
+        public bool IsMasterMode { get { return this.FormMode == FormType.Master; } }
         /// <summary>
         /// Indicates a "master list" form. A master list form provides two "parts": A list or browser which displays a
         /// a read-only grid and an "entry" part where data bound controls are placed.
         /// <para>NOTE: Those two parts are bound to the SAME DataTable object.</para>
         /// </summary>
         [Browsable(false), ReadOnly(true), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public bool IsListMasterMode { get { return this.FormMode == FormMode.ListMaster; } }
+        public bool IsListMasterMode { get { return this.FormMode == FormType.ListMaster; } }
         /// <summary>
         /// Returns true if the form is in FormMode.List mode or in FormMode.ListMaster mode.
         /// </summary>

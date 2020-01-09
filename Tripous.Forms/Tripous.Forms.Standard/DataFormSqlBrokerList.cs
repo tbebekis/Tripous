@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Tripous.Forms
+namespace Tripous.Forms.Standard
 {
 
     /// <summary>
@@ -25,7 +25,7 @@ namespace Tripous.Forms
 
             if (Options != null)
             {
-                Options.InvalidStates |= FormState.Insert | FormState.Edit | FormState.Delete | FormState.Find;
+                Options.InvalidActions |= FormAction.Insert | FormAction.Edit | FormAction.Delete | FormAction.Find;
             }
         }
 
@@ -43,6 +43,6 @@ namespace Tripous.Forms
         /// <summary>
         /// Returns the form mode
         /// </summary>
-        public override FormMode FormMode { get { return FormMode.List; } }
+        public override FormType FormMode { get { return FormType.List; } }
     }
 }

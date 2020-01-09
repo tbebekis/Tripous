@@ -2,19 +2,19 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Tripous.Web
+namespace Tripous
 {
     /// <summary>
     /// The action result used with ajax calls
     /// </summary>
-    public class AjaxResult
+    public class WebPacketResult
     {
 
         /* construction */
         /// <summary>
         /// Constructor
         /// </summary>
-        public AjaxResult()
+        public WebPacketResult()
         {
         }
 
@@ -24,15 +24,16 @@ namespace Tripous.Web
         /// </summary>
         public void SerializePacket(object Packet)
         {
-            this.Packet = Tripous.Json.ToJson(Packet);
+            this.Packet = Json.ToJson(Packet);
         }
         /// <summary>
         /// Deserializes Packet string property to an instance of a specified type
         /// </summary>
         public T DeserializePacket<T>()
         {
-            return Tripous.Json.FromJson<T>(this.Packet);
+            return Json.FromJson<T>(this.Packet);
         }
+
 
         /* properties */
         /// <summary>
@@ -44,8 +45,8 @@ namespace Tripous.Web
         /// </summary>
         public string ErrorText { get; set; }
         /// <summary>
-        /// True when the call succeeds.
+        /// True when the call succeeds business-logic-wise.
         /// </summary>
-        public bool Result { get; set; } = false;
+        public bool IsSuccess { get; set; } = false;
     }
 }

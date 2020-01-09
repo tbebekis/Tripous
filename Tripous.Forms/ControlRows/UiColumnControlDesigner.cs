@@ -82,10 +82,10 @@ namespace Tripous.Forms
                 if (Key.Length > "Add ".Length)
                     Key = Key.Remove(0, "Add ".Length);
 
-                if (Ui.ControlRowTypes.ContainsKey(Key))
+                if (UiControlRows.Types.ContainsKey(Key))
                 {
                     ExecTrans((DesignerHost) => {
-                        Type T = Ui.ControlRowTypes[Key];
+                        Type T = UiControlRows.Types[Key];
                         Control Child = DesignerHost.CreateComponent(T) as Control;
                         Widget.Controls.Add(Child);
                         Child.BringToFront();
@@ -325,7 +325,7 @@ namespace Tripous.Forms
             // verbs
             verbs = new DesignerVerbCollection();
 
-            foreach (var Entry in Ui.ControlRowTypes)            
+            foreach (var Entry in UiControlRows.Types)            
             {
                 DesignerVerb Verb = new DesignerVerb("Add " + Entry.Key, AnyClick);
                 verbs.Add(Verb);

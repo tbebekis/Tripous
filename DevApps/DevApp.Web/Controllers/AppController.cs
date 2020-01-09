@@ -45,9 +45,9 @@ namespace DevApp.Web.Controllers
             for (int i = 0; i < 5; i++)
                 JItems.Add(i);
 
-            AjaxResult Result = new AjaxResult();
+            WebPacketResult Result = new WebPacketResult();
             Result.SerializePacket(JPacket);
-            Result.Result = true;
+            Result.IsSuccess = true;
 
             return this.Json(Result);
         }
@@ -55,18 +55,18 @@ namespace DevApp.Web.Controllers
         [HttpGet] 
         public JsonResult Culture()
         { 
-            AjaxResult Result = new AjaxResult();
+            WebPacketResult Result = new WebPacketResult();
             Result.Packet = Session.LanguageCode;
-            Result.Result = true;
+            Result.IsSuccess = true;
 
             return this.Json(Result);
         }
         [HttpPost]
         public JsonResult Culture(string LanguageCode)
         {
-            AjaxResult SimpleResult = new AjaxResult();
+            WebPacketResult SimpleResult = new WebPacketResult();
             Session.LanguageCode = LanguageCode;
-            SimpleResult.Result = true;
+            SimpleResult.IsSuccess = true;
             return this.Json(SimpleResult);
         }
 

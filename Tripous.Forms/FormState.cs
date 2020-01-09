@@ -7,54 +7,35 @@ using System.Threading.Tasks;
 namespace Tripous.Forms
 {
     /// <summary>
-    /// The state of a data-form
+    /// The state of a data-form indicates the UI the form is currently displaying
     /// </summary>
-    [Flags]
     public enum FormState
     {
         /// <summary>
         /// None
         /// </summary>
         None = 0,
+
         /// <summary>
-        /// List
+        /// Home
         /// </summary>
-        List = 1,
-        /// <summary>
-        /// Insert
-        /// </summary>
-        Insert = 2,
-        /// <summary>
-        /// Edit
-        /// </summary>
-        Edit = 4,
-        /// <summary>
-        /// Delete
-        /// </summary>
-        Delete = 8,
+        Home = 1,
         /// <summary>
         /// Find
         /// </summary>
-        Find = 0x10,
-    }
-
-
-    /// <summary>
-    /// Helper
-    /// </summary>
-    static public class FormStates
-    {
+        Find = 2,
         /// <summary>
-        /// Constant
+        /// List
         /// </summary>
-        static public readonly FormState All = (FormState)Bf.All(typeof(FormState));
+        List = 4,
+        /// <summary>
+        /// Insert
+        /// </summary>
+        Insert = 8,
 
         /// <summary>
-        /// Returns a state set, to be used as FormOption.InvalidSates, where AllowOnly is the only allowed DataFormStates.
+        /// Edit
         /// </summary>
-        static public FormState GetInvalid(FormState AllowOnly)
-        {
-            return (FormState)Bf.Subtract(FormStates.All, AllowOnly);
-        }
+        Edit = 0x10,
     }
 }

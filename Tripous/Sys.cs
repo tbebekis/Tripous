@@ -320,6 +320,24 @@ namespace Tripous
 
         }
 
+        /// <summary>
+        /// Returns true if a specified text is a valid email address
+        /// </summary>
+        static public bool IsValidEmail(string Text)
+        {
+            return Text.IsValidEmail();
+        }
+        /// <summary>
+        /// Returns true if a specified text is a valid mobile (cell) phone number.
+        /// </summary>
+        /// <param name="Text">The phone number</param>
+        /// <param name="ValidLengths">Array with valid lengths the phone number may have, after removing spaces 
+        /// and the + prefix of the international calling code, if there. Defaults to {10, 12}</param>
+        static public bool IsValidMobilePhone(string Text, int[] ValidLengths = null)
+        {
+            return Text.IsValidMobilePhone(ValidLengths);
+        }
+
         /* Paths and Files */
         /// <summary>
         /// Removes a trailing slash mark (e.g. c:\Temp\ ) from a file path.

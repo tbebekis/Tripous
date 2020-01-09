@@ -49,6 +49,13 @@ namespace Tripous
                 return Json.FromJson<T>(ResponseJsonText);
             return default(T);
         }
+        /// <summary>
+        /// Deserializes the response json text as a <see cref="WebPacketResult"/>.
+        /// </summary>
+        public virtual WebPacketResult GetPacketResult()
+        {
+            return Deserialize<WebPacketResult>();
+        }
 
         /* properties */
         /// <summary>
@@ -58,7 +65,7 @@ namespace Tripous
 
         /* response properties */
         /// <summary>
-        /// True on succesful call
+        /// True when the call succeeds network-wise.
         /// </summary>
         public bool IsSuccess { get; set; }
         /// <summary>

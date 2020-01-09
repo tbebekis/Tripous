@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 using Tripous.Data;
 using Tripous.Model;
 
-namespace Tripous.Forms
+namespace Tripous.Forms.Standard
 {
     /// <summary>
     /// Helper
     /// </summary>
     static public class SystemForms
     {
-        static readonly Type SqlListForm = typeof(DataFormSqlBrokerList);
+ 
 
         /// <summary>
         /// Registration method
@@ -25,5 +25,8 @@ namespace Tripous.Forms
             //Register(Type FormClass, string UniqueId, string BrokerName = "", string TextKey = "",  FormState StartState = FormState.List, FormState InvalidStates = FormState.None)
             FormOptions.Register(SqlListForm, SystemCommands.CMD_SYS_COMPANY, SysTables.Company, SystemCommands.CMD_SYS_COMPANY);
         }
+
+
+        static public Type SqlListForm { get; set; } = typeof(Tripous.Forms.Standard.DataFormSqlBrokerList);
     }
 }

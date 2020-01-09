@@ -1,9 +1,4 @@
-﻿/*--------------------------------------------------------------------------------------        
-                           Copyright © 2013 Theodoros Bebekis
-                               teo.bebekis@gmail.com 
---------------------------------------------------------------------------------------*/
-
-using System;
+﻿using System;
 
 
 namespace Tripous.Forms
@@ -11,10 +6,10 @@ namespace Tripous.Forms
 
 
     /// <summary>
-    /// Indicates the mode of a data form.
+    /// Indicates the type of a data form.
     /// </summary>
     [Flags]
-    public enum FormMode
+    public enum FormType
     {
         /// <summary>
         /// None
