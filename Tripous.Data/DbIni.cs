@@ -27,19 +27,19 @@ namespace Tripous.Data
         /// <summary>
         /// Constant
         /// </summary>
-        string TableName = SysTables.Ini;
+        readonly string TableName = SysTables.Ini;
         /// <summary>
         /// Constant
         /// </summary>
-        string EntryField = "EntryKey";
+        const string EntryField = "EntryKey";
         /// <summary>
         /// Constant
         /// </summary>
-        string ValueField = "EntryValue";
+        const string ValueField = "EntryValue";
         /// <summary>
         /// Constant
         /// </summary>
-        string BlobField = "EntryData";
+        const string BlobField = "EntryData";
 
 
         /// <summary>

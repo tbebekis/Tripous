@@ -11,7 +11,7 @@ using System.Transactions;
 
 using Dapper;
 
-namespace Tripous.Data.Dapper
+namespace Tripous.Data
 {
  
     /// <summary>
@@ -501,7 +501,7 @@ namespace Tripous.Data.Dapper
 
                 BeforeGetAll();
 
-                using (var Con = Db.CreateConnection(Descriptor.ConnectionName))
+                using (var Con = Db.OpenConnection(Descriptor.ConnectionName))
                 {
                     var Res = await Con.QueryAsync<T>(Descriptor.SelectSql);
                     Result = Res.ToList();
@@ -538,7 +538,7 @@ namespace Tripous.Data.Dapper
                 var Params = new DynamicParameters();
                 Params.Add(Descriptor.DetailKeyField.FieldName, MasterId);
 
-                using (var Con = Db.CreateConnection(Descriptor.ConnectionName))
+                using (var Con = Db.OpenConnection(Descriptor.ConnectionName))
                 {
                     var Res = await Con.QueryAsync<T>(Descriptor.SelectByMasterIdSql, Params);
                     Result = Res.ToList();
@@ -577,7 +577,7 @@ namespace Tripous.Data.Dapper
                 if (string.IsNullOrWhiteSpace(FilterText))
                     throw new ApplicationException($"{EntityType.Name}. Can not get by filter. Filter is empty.");
 
-                using (var Con = Db.CreateConnection(Descriptor.ConnectionName))
+                using (var Con = Db.OpenConnection(Descriptor.ConnectionName))
                 {
                     StringBuilder SB = new StringBuilder();
                     SB.AppendLine(Descriptor.SelectSql);
@@ -623,7 +623,7 @@ namespace Tripous.Data.Dapper
                 var Params = new DynamicParameters();
                 Params.Add(Descriptor.PrimaryKeyList[0].FieldName, Id);
 
-                using (var Con = Db.CreateConnection(Descriptor.ConnectionName))
+                using (var Con = Db.OpenConnection(Descriptor.ConnectionName))
                 {
                     Result = await Con.QueryFirstOrDefaultAsync<T>(Descriptor.SelectRowSql, Params);
 
@@ -668,7 +668,7 @@ namespace Tripous.Data.Dapper
                     Params.Add(Descriptor.PrimaryKeyList[i].FieldName, Ids[i]);
                 }
 
-                using (var Con = Db.CreateConnection(Descriptor.ConnectionName))
+                using (var Con = Db.OpenConnection(Descriptor.ConnectionName))
                 {
                     Result = await Con.QueryFirstOrDefaultAsync<T>(Descriptor.SelectRowSql, Params);
 
@@ -722,7 +722,7 @@ namespace Tripous.Data.Dapper
                 // Transactions: https://stackoverflow.com/questions/2884863/under-what-circumstances-is-an-sqlconnection-automatically-enlisted-in-an-ambient
                 using (var TansScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {                    
-                    using (var Con = Db.CreateConnection(Descriptor.ConnectionName))
+                    using (var Con = Db.OpenConnection(Descriptor.ConnectionName))
                     {
                         await InsertEntity(Con, Entity, Descriptor);
                     }                     
@@ -763,7 +763,7 @@ namespace Tripous.Data.Dapper
                 // Transactions: https://stackoverflow.com/questions/2884863/under-what-circumstances-is-an-sqlconnection-automatically-enlisted-in-an-ambient                
                 using (var TansScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
-                    using (var Con = Db.CreateConnection(Descriptor.ConnectionName))
+                    using (var Con = Db.OpenConnection(Descriptor.ConnectionName))
                     {
                         await UpdateEntity(Con, Entity, OriginalEntity, Descriptor);
                     }
@@ -795,7 +795,7 @@ namespace Tripous.Data.Dapper
                 // Transactions: https://stackoverflow.com/questions/2884863/under-what-circumstances-is-an-sqlconnection-automatically-enlisted-in-an-ambient                
                 using (var TansScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
-                    using (var Con = Db.CreateConnection(Descriptor.ConnectionName))
+                    using (var Con = Db.OpenConnection(Descriptor.ConnectionName))
                     {
                         await DeleteEntity(Con, Entity, Descriptor);
                     }

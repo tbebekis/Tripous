@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
 
-namespace Tripous.Data.Dapper
+namespace Tripous.Data
 {
     /// <summary>
     /// Describes a database table field

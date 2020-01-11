@@ -32,9 +32,6 @@ namespace Tripous.Data
         public SqlProviderSQLite(DbProviderFactory Factory = null)
             : base(SQLite, Factory)
         {
-
-            if (Factory == null)
-                Factory = SQLiteFactory.Instance;
         }
 
         /* public */

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Tripous.Data.Dapper
+namespace Tripous.Data
 {
 
 

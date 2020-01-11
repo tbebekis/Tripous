@@ -22,30 +22,38 @@ namespace Tripous.Web
     /// </summary>
     static public class WSys
     {
-        /* private */ 
+        /* private */
         static IHttpContextAccessor HttpContextAccessor;
 
 
         /* public - initialization */
         /// <summary>
-        /// Sets the host environment value
+        /// Sets the host environment <see cref="IHostEnvironment"/> value
         /// <para>Call it from inside the <code>Startup</code> constructor.</para>
         /// </summary>
         static public void SetHostEnvironment(IHostEnvironment Value)
         {
-           // HostEnvironment = Value;
+            HostEnvironment = Value;
         }
         /// <summary>
-        /// Sets the service provider.
+        /// Sets the configuration <see cref="IConfiguration"/> value
+        /// <para>Call it from inside the <code>Startup</code> constructor.</para>
+        /// </summary>
+        static public void SetConfiguration(IConfiguration Value)
+        {
+            Configuration = Value;
+        }
+        /// <summary>
+        /// Sets the service provider <see cref="IServiceProvider"/> value.
         /// <para>Call it from inside the <code>Startup.Configure()</code> method as <code>WSys.SetServiceProvider(app.ApplicationServices)</code> </para>
         /// </summary>
         static public void SetServiceProvider(IServiceProvider Value)
         {
             ServiceProvider = Value;
             HttpContextAccessor = ServiceProvider.GetRequiredService<IHttpContextAccessor>();
-            HostEnvironment = ServiceProvider.GetRequiredService<IHostEnvironment>();
+            HostEnvironment = HostEnvironment ?? ServiceProvider.GetRequiredService<IHostEnvironment>();
         }
- 
+
 
 
         /* IServiceCollection */
@@ -65,7 +73,7 @@ namespace Tripous.Web
         /// Replaces one service with another
         /// </summary>
         static public void ReplaceService(IServiceCollection Services, Type Original, Type Replacer, ServiceLifetime LifeTime = ServiceLifetime.Scoped)
-        {            
+        {
             var descriptor = new ServiceDescriptor(Original, Replacer, LifeTime);
             Services.Replace(descriptor);
         }
@@ -83,5 +91,9 @@ namespace Tripous.Web
         /// Returns the HostingEnvironment
         /// </summary>
         static public IHostEnvironment HostEnvironment { get; private set; }
+        /// <summary>
+        /// Returns the Configuration
+        /// </summary>
+        static public IConfiguration Configuration { get; private set; }
     }
 }

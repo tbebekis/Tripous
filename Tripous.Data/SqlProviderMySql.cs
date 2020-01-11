@@ -38,22 +38,8 @@ namespace Tripous.Data
         /// </summary>
         public bool DatabaseExists(string ServerName, string DatabaseName, string UserName, string Password)
         {
-            bool Result = false;
             string CS = string.Format("Server={0}; Database={1}; Uid={2}; Pwd={3}; ", ServerName, DatabaseName, UserName, Password);
-
-            using (DbConnection Con = OpenConnection(CS))
-            {
-                try
-                {
-                    Con.Open();
-                    Result = true;
-                }
-                catch
-                {
-                }
-            }
-
-            return Result;
+            return CanConnect(CS, true);
         }
         /// <summary>
         /// Creates a new database

@@ -43,31 +43,19 @@ namespace Tripous.Data
         /// <summary>
         /// Returns true if this connection info is valid and can connect to a database.
         /// </summary>
-        public bool CanConnect()
+        public bool CanConnect(bool ThrowIfNot = false)
         {
-            try
-            {
-                using (DbConnection Con = Db.CreateConnection(this))
-                {
-                    Con.Open();
-                    return true;
-                }
-            }
-            catch
-            {
-            }
-
-            return false;
+            return GetSqlProvider().CanConnect(ConnectionString, ThrowIfNot);
         }
 
 
         /* properties */
         /// <summary>
-        /// The name of this connection
+        /// The name of the connection. The default connection should be named DEFAULT.
         /// </summary>
         public string Name { get; set; }
         /// <summary>
-        /// The name of the provider, e.g. MsSql, Oracle, SQLite, etc.
+        /// The name of the provider. Valid values: MsSql, Oracle, Firebird, SQLite, MySql and PostgreSQL.
         /// </summary>
         public string Provider { get; set; }
         /// <summary>
@@ -75,12 +63,11 @@ namespace Tripous.Data
         /// </summary>
         public string ConnectionString { get; set; }
         /// <summary>
-        /// Where to create table generators/sequences automatically 
+        /// Whether to create table generators/sequences automatically. For databases that support generators/sequences such as Oracle and Firebird.
         /// </summary>
         public bool AutoCreateGenerators { get; set; }
-
         /// <summary>
-        /// The time in seconds to wait for an SELECT/INSERT/UPDATE/DELETE/CREATE TABLE ect. command to execute.
+        /// The time in seconds to wait for an SELECT/INSERT/UPDATE/DELETE/CREATE TABLE ect. command to execute. Zero means the default timeout.
         /// </summary>
         public int CommandTimeoutSeconds { get; set; }
     }

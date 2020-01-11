@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Tripous.Data.Dapper
+namespace Tripous.Data
 {
 
     

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Tripous.Data.Dapper
+namespace Tripous.Data
 {
     /// <summary>
     /// Marks a non-list property which is a reference to another Entity.

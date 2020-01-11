@@ -11,7 +11,7 @@ using System.Transactions;
 
 using Dapper;
 
-namespace Tripous.Data.Dapper
+namespace Tripous.Data
 {
 
     /// <summary>

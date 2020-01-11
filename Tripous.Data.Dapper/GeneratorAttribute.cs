@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Tripous.Data.Dapper
+namespace Tripous.Data
 {
     /// <summary>
     /// Marks a static method that is going to be used as a generator function.

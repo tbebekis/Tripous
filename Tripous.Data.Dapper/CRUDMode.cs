@@ -5,7 +5,7 @@ using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace Tripous.Data.Dapper
+namespace Tripous.Data
 {
     /// <summary>
     /// Indicates the allowable CRUD operations in a database table

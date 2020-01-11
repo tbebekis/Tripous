@@ -8,7 +8,7 @@ using System.Reflection;
 using Dapper;
 
 
-namespace Tripous.Data.Dapper
+namespace Tripous.Data
 {
     /// <summary>
     /// Describes a database table field

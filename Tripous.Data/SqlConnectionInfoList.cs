@@ -13,10 +13,12 @@ namespace Tripous.Data
     {
 
         /// <summary>
-        /// Constructor
+        /// Constructor.
+        /// <para>NOTE: It loads connections, if the connections file exists.</para>
         /// </summary>
         public SqlConnectionInfoList()
         {
+            Load(); // it'll load connections, if the file exists
         }
 
         /// <summary>

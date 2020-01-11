@@ -162,8 +162,6 @@
     <Compile Include="Extensions\PictureBoxExtensions.cs" />
     <Compile Include="FileBox.cs" />
     <Compile Include="FormOptions.cs" />
-    <Compile Include="IChildForm.cs" />
-    <Compile Include="IFormContainer.cs" />
     <Compile Include="IImageContainer.cs" />
     <Compile Include="MessageBoxDialog.cs">
       <SubType>Form</SubType>
@@ -178,10 +176,10 @@
     <Compile Include="MultiRowPickDialog.designer.cs">
       <DependentUpon>MultiRowPickDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="ParentDockForm.cs">
+    <Compile Include="Tripous.Forms.Standard\ParentDockForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ParentDockForm.Designer.cs">
+    <Compile Include="Tripous.Forms.Standard\ParentDockForm.Designer.cs">
       <DependentUpon>ParentDockForm.cs</DependentUpon>
     </Compile>
     <Compile Include="PopUpButtons.cs" />
@@ -222,14 +220,14 @@
     <Compile Include="TableBoxDialog.designer.cs">
       <DependentUpon>TableBoxDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="ToolForm.cs">
+    <Compile Include="Tripous.Forms.Standard\ToolForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ToolForm.Designer.cs">
+    <Compile Include="Tripous.Forms.Standard\ToolForm.Designer.cs">
       <DependentUpon>ToolForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="ToolFormInfo.cs" />
-    <Compile Include="ToolFormDefaultPosition.cs" />
+    <Compile Include="Tripous.Forms.Standard\ToolFormInfo.cs" />
+    <Compile Include="Tripous.Forms.Standard\ToolFormDefaultPosition.cs" />
     <Compile Include="TypeTypeConverter.cs" />
     <Compile Include="Ui.Consts.cs" />
     <Compile Include="Ui.cs" />
@@ -394,7 +392,7 @@
     <EmbeddedResource Include="TableBoxDialog.resx">
       <DependentUpon>TableBoxDialog.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ToolForm.resx">
+    <EmbeddedResource Include="Tripous.Forms.Standard\ToolForm.resx">
       <DependentUpon>ToolForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ControlRows\CheckBoxControlRow.resx">

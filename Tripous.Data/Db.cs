@@ -71,24 +71,24 @@ namespace Tripous.Data
 
 
         /// <summary>
-        /// Creates and returns the default <see cref="DbConnection"/> connection
+        /// Creates, opens and returns the default <see cref="DbConnection"/> connection
         /// </summary>
-        static public DbConnection CreateDefaultConnection()
+        static public DbConnection OpenDefaultConnection()
         {
-            return CreateConnection(SysConfig.DefaultConnection);
+            return OpenConnection(SysConfig.DefaultConnection);
         }
         /// <summary>
-        /// Creates a connection based on a connection name.
+        /// Creates, opens and returns a connection based on a connection name.
         /// <para>The connection information must exist in the application config under the specified name, or an exception is thrown.</para>
         /// </summary>
-        static public DbConnection CreateConnection(string ConnectionName)
+        static public DbConnection OpenConnection(string ConnectionName)
         {
-            return CreateConnection(GetConnectionInfo(ConnectionName));
+            return OpenConnection(GetConnectionInfo(ConnectionName));
         }
         /// <summary>
-        /// Creates a database connection based on a connection info
+        /// Creates, opens and returns a database connection based on a connection info
         /// </summary>
-        static public DbConnection CreateConnection(SqlConnectionInfo ConnectionInfo)
+        static public DbConnection OpenConnection(SqlConnectionInfo ConnectionInfo)
         {
            return ConnectionInfo.GetSqlProvider().OpenConnection(ConnectionInfo.ConnectionString);
         }

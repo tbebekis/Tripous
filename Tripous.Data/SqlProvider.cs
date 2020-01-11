@@ -132,36 +132,6 @@ namespace Tripous.Data
         /// </summary>
         static protected char[] badFieldCharactes = new char[] { ' ', '(', ')', '%', '.', '!' };
 
-
-
-        /* protected */
-        /// <summary>
-        /// Returns true if C is a name delimiter.
-        /// </summary>
-        protected bool IsNameDelimiter(char C)
-        {
-            return (C == ' ') || (C == ',') || (C == ';') || (C == ')') || (C == '\n') || (C == '\r');
-        }
-        /// <summary>
-        /// Returns true if C is a literal delimiter.
-        /// </summary>
-        protected bool IsLiteral(char C)
-        {
-            return (C == '\'') || (C == '"') || (C == '`');
-        }
-
-        /* construction */
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        /// <param name="Name">The name of the provider, e.g. MsSql, Oracle, SQLite, etc.</param>
-        /// <param name="Factory">The provider factory</param>       
-        public SqlProvider(string Name,  DbProviderFactory Factory = null)
-        {
-            this.Name = Name;
-            this.Factory = Factory;
-        }
-
         /// <summary>
         /// NOTE: .Net Standard (and .Net Core) does not provide a DbProviderFactories class, used in loading data provider factories.
         /// <para>This method provides a solution to the problem by loading an assembly and a factory type dynamically.</para>
@@ -195,10 +165,44 @@ namespace Tripous.Data
             return Result as DbProviderFactory;
 
         }
+        /// <summary>
+        /// Returns true if C is a name delimiter.
+        /// </summary>
+        protected bool IsNameDelimiter(char C)
+        {
+            return (C == ' ') || (C == ',') || (C == ';') || (C == ')') || (C == '\n') || (C == '\r');
+        }
+        /// <summary>
+        /// Returns true if C is a literal delimiter.
+        /// </summary>
+        protected bool IsLiteral(char C)
+        {
+            return (C == '\'') || (C == '"') || (C == '`');
+        }
+
+        /* construction */
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="Name">The name of the provider, e.g. MsSql, Oracle, SQLite, etc.</param>
+        /// <param name="Factory">The provider factory</param>       
+        public SqlProvider(string Name,  DbProviderFactory Factory = null)
+        {
+            this.Name = Name;
+            this.Factory = Factory;
+        }
+
+        /// <summary>
+        /// Returns a string representation of this instance
+        /// </summary>
+        public override string ToString()
+        {
+            return Name;
+        }
 
         /* DbProviderFactory related */
         /// <summary>
-        /// Creates and returns a DbConnection initialized with ConnectionString.
+        /// Creates, opens and returns a DbConnection initialized with ConnectionString.
         /// <para>WARNING: It opens the connection too.</para>
         /// </summary>
         public virtual DbConnection OpenConnection(string ConnectionString)
@@ -238,13 +242,34 @@ namespace Tripous.Data
         }
 
         /// <summary>
+        /// Returns true if this connection info is valid and can connect to a database.
+        /// </summary>
+        public virtual bool CanConnect(string ConnectionString, bool ThrowIfNot = false)
+        {
+            try
+            {
+                using (DbConnection Con = OpenConnection(ConnectionString))
+                {
+                    Con.Close();
+                }
+
+                return true;
+            }
+            catch
+            {
+                if (ThrowIfNot)
+                    throw;
+            }
+
+            return false;
+        }
+        /// <summary>
         /// Ensures that a connection can be done by opening and closing the connection.
         /// </summary>
         public virtual void EnsureConnection(string ConnectionString)
         {
             using (DbConnection Con = OpenConnection(ConnectionString))
             {
-                Con.Open();
                 Con.Close();
             }
         }
@@ -298,8 +323,6 @@ namespace Tripous.Data
 
             using (DbConnection Con = OpenConnection(ConnectionString))
             {
-                Con.Open();
-
                 using (DbCommand Cmd = Con.CreateCommand())
                 {
                     SetupCommand(Cmd, SqlText, Params);
@@ -427,8 +450,6 @@ namespace Tripous.Data
 
             using (DbConnection Con = OpenConnection(ConnectionString))
             {
-                Con.Open();
-
                 using (DbCommand Cmd = Con.CreateCommand())
                 {
                     SetupCommand(Cmd, SqlText, Params);

@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Data;
 using System.Data.Common;
 
-namespace Tripous.Data.Dapper
+namespace Tripous.Data
 {
 
 
