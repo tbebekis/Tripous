@@ -112,6 +112,13 @@ namespace Tripous
         {
             this.Client = Client ?? new HttpClient();
         }
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public HttpClientBase(string BaseUrl)
+            : this(new HttpClient() { BaseAddress = new Uri(BaseUrl) })
+        {
+        }
 
         /* public */
         /// <summary>
