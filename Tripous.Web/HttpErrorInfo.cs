@@ -18,7 +18,7 @@ namespace Tripous.Web
     /// <summary>
     /// Error information container
     /// </summary>
-    public class WebErrorInfo
+    public class HttpErrorInfo
     {
         /* private */
         int GetHttpStatusCode(Exception Ex, HttpContext Context)
@@ -78,13 +78,13 @@ namespace Tripous.Web
         /// <summary>
         /// Constructor
         /// </summary>
-        public WebErrorInfo()
+        public HttpErrorInfo()
         {
         }
         /// <summary>
         /// Constructor
         /// </summary>
-        public WebErrorInfo(HttpContext Context)
+        public HttpErrorInfo(HttpContext Context)
         {
             IExceptionHandlerPathFeature Feature = Context.Features.Get<IExceptionHandlerPathFeature>();
             this.Exception = Feature.Error;
@@ -94,7 +94,7 @@ namespace Tripous.Web
         /// <summary>
         /// Constructor
         /// </summary>
-        public WebErrorInfo(Exception Ex, HttpContext Context)
+        public HttpErrorInfo(Exception Ex, HttpContext Context)
         {
             this.Exception = Ex;
 

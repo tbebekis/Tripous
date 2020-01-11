@@ -10,8 +10,10 @@ using System.Net.Http.Headers;
 namespace Tripous
 {
     /// <summary>
-    /// A base "typed" http client. A typed client is a class that accepts a HttpClient and uses it to call a HTTP service.
-    /// <para>To create the client for the constructor of this class, you may siply use the HttpClient constructor
+    /// A base "typed" <see cref="HttpClient"/>.
+    /// <para>A typed <see cref="HttpClient"/> is a class that accepts a <see cref="HttpClient"/> instance in its constructor, 
+    /// and uses that instance in order to call a HTTP service.</para>
+    /// <para>To create the <see cref="HttpClient"/> instance for the constructor of this class, you may simply use the <see cref="HttpClient"/> constructor
     /// or use the IHttpClientFactory (requires the Microsoft.Extensions.Http NuGet package). </para>
     /// <para>Links: 
     /// <list type="bullet">
@@ -21,7 +23,7 @@ namespace Tripous
     /// </list>
     /// </para>
     /// </summary>
-    public abstract class WebApiHttpClientBase<T>  where T: WebApiHttpClientResult
+    public abstract class HttpClientBase<T>  where T: HttpClientResult
     {
         /* protected */
         /// <summary>
@@ -86,7 +88,7 @@ namespace Tripous
         /* construction */
         /// <summary>
         /// Constructor
-        /// <para>To create the client you may siply use the HttpClient constructor
+        /// <para>To create the <see cref="HttpClient"/> instance for the constructor of this class, you may simply use the <see cref="HttpClient"/> constructor
         /// or use the IHttpClientFactory (requires the Microsoft.Extensions.Http NuGet package). </para>
         /// <para>For an Asp.Net Core example of IHttpClientFactory/<see cref="HttpClient"/> pair usage see  </para>
         /// <list type="bullet">
@@ -106,9 +108,9 @@ namespace Tripous
         /// </list>
         /// </para>
         /// </summary>
-        public WebApiHttpClientBase(HttpClient Client)
+        public HttpClientBase(HttpClient Client = null)
         {
-            this.Client = Client;
+            this.Client = Client ?? new HttpClient();
         }
 
         /* public */

@@ -45,7 +45,7 @@ namespace DevApp.Web.Controllers
             for (int i = 0; i < 5; i++)
                 JItems.Add(i);
 
-            WebPacketResult Result = new WebPacketResult();
+            HttpActionResult Result = new HttpActionResult();
             Result.SerializePacket(JPacket);
             Result.IsSuccess = true;
 
@@ -55,7 +55,7 @@ namespace DevApp.Web.Controllers
         [HttpGet] 
         public JsonResult Culture()
         { 
-            WebPacketResult Result = new WebPacketResult();
+            HttpActionResult Result = new HttpActionResult();
             Result.Packet = Session.LanguageCode;
             Result.IsSuccess = true;
 
@@ -64,7 +64,7 @@ namespace DevApp.Web.Controllers
         [HttpPost]
         public JsonResult Culture(string LanguageCode)
         {
-            WebPacketResult SimpleResult = new WebPacketResult();
+            HttpActionResult SimpleResult = new HttpActionResult();
             Session.LanguageCode = LanguageCode;
             SimpleResult.IsSuccess = true;
             return this.Json(SimpleResult);
@@ -172,7 +172,7 @@ namespace DevApp.Web.Controllers
         {
             //return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
 
-            WebErrorInfo EI = new WebErrorInfo(this.HttpContext);
+            HttpErrorInfo EI = new HttpErrorInfo(this.HttpContext);
             Sys.LogError(EI.ToString());
             return View(EI);
         }

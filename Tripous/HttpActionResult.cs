@@ -7,14 +7,14 @@ namespace Tripous
     /// <summary>
     /// The action result used with ajax calls
     /// </summary>
-    public class WebPacketResult
+    public class HttpActionResult
     {
 
         /* construction */
         /// <summary>
         /// Constructor
         /// </summary>
-        public WebPacketResult()
+        public HttpActionResult()
         {
         }
 

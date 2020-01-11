@@ -5,20 +5,23 @@ using System.Threading.Tasks;
 
 using System.Net;
 using System.Net.Http;
- 
+
+using Newtonsoft.Json;
 
 namespace Tripous
 {
     /// <summary>
     /// Represents the response of a call to the WebApi
     /// </summary>
-    public class WebApiHttpClientResult : EventArgs
+    public class HttpClientResult : EventArgs
     {
+        HttpActionResult fActionResult;
+
         /* construction */
         /// <summary>
         /// Constructor
         /// </summary>
-        public WebApiHttpClientResult(string ActionUrl)
+        public HttpClientResult(string ActionUrl)
         {
             this.ActionUrl = ActionUrl;
         }
@@ -49,13 +52,6 @@ namespace Tripous
                 return Json.FromJson<T>(ResponseJsonText);
             return default(T);
         }
-        /// <summary>
-        /// Deserializes the response json text as a <see cref="WebPacketResult"/>.
-        /// </summary>
-        public virtual WebPacketResult GetPacketResult()
-        {
-            return Deserialize<WebPacketResult>();
-        }
 
         /* properties */
         /// <summary>
@@ -80,5 +76,11 @@ namespace Tripous
         /// The Packet result of a controller action.
         /// </summary>
         public string ResponseJsonText { get; set; }
+        /// <summary>
+        /// Deserializes and returns the response json text as a <see cref="HttpActionResult"/>.
+        /// </summary>
+        [JsonIgnore]
+        public HttpActionResult ActionResult { get { return fActionResult ?? (fActionResult = Deserialize<HttpActionResult>()); } }
+ 
     }
 }
