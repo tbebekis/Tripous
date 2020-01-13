@@ -289,32 +289,33 @@ namespace Tripous
         /// </summary>
         static public bool IsValidAFM(string AFM)
         {
-            if (AFM.Length != 9)
-                return false;
+            if (!string.IsNullOrWhiteSpace(AFM) && AFM.Length == 9 && AFM.All(c => char.IsNumber(c)))
+            {
+                //for (int i = 0; i < 9; i++)
+                //    if (!char.IsNumber(AFM, i))
+                //        return false;
 
-            for (int i = 0; i < 9; i++)
-                if (!char.IsNumber(AFM, i))
-                    return false;
-
-            // 1
-            int Sum = (256 * Convert.ToInt32(AFM[0].ToString()))
-                    + (128 * Convert.ToInt32(AFM[1].ToString()))
-                    + (64 * Convert.ToInt32(AFM[2].ToString()))
-                    + (32 * Convert.ToInt32(AFM[3].ToString()))
-                    + (16 * Convert.ToInt32(AFM[4].ToString()))
-                    + (8 * Convert.ToInt32(AFM[5].ToString()))
-                    + (4 * Convert.ToInt32(AFM[6].ToString()))
-                    + (2 * Convert.ToInt32(AFM[7].ToString()));
+                // 1
+                int Sum = (256 * Convert.ToInt32(AFM[0].ToString()))
+                        + (128 * Convert.ToInt32(AFM[1].ToString()))
+                        + (64 * Convert.ToInt32(AFM[2].ToString()))
+                        + (32 * Convert.ToInt32(AFM[3].ToString()))
+                        + (16 * Convert.ToInt32(AFM[4].ToString()))
+                        + (8 * Convert.ToInt32(AFM[5].ToString()))
+                        + (4 * Convert.ToInt32(AFM[6].ToString()))
+                        + (2 * Convert.ToInt32(AFM[7].ToString()));
 
 
-            // 2
-            Sum = Sum % 11;
+                // 2
+                Sum = Sum % 11;
 
-            // 3
-            if (Sum == 10)
-                return Convert.ToInt32(AFM[8].ToString()) == 0;
-            else if ((Sum >= 0) && (Sum <= 9))
-                return Convert.ToInt32(AFM[8].ToString()) == Sum;
+                // 3
+                if (Sum == 10)
+                    return Convert.ToInt32(AFM[8].ToString()) == 0;
+                else if ((Sum >= 0) && (Sum <= 9))
+                    return Convert.ToInt32(AFM[8].ToString()) == Sum;
+            }
+
 
             return false;
 
