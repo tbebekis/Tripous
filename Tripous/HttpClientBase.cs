@@ -10,6 +10,51 @@ using System.Net.Http.Headers;
 namespace Tripous
 {
     /// <summary>
+    /// Represents a "typed" http client. Covers the <see cref="HttpClientBase{T}" /> class.
+    /// </summary>
+    public interface IHttpClientBase<T> where T : HttpClientResult
+    {
+        /// <summary>
+        /// Executes a GET Action to Api
+        /// </summary>
+        Task<T> GetAsync(string ActionUrl);
+        /// <summary>
+        /// Executes a POST Action to Api
+        /// </summary>
+        Task<T> PostFormAsync(string ActionUrl, Dictionary<string, string> FormData);
+        /// <summary>
+        /// Executes a POST Action to Api
+        /// </summary>
+        Task<T> PostAsync(string ActionUrl, object Packet);
+        /// <summary>
+        /// Executes a PUT Action to Api
+        /// </summary>
+        Task<T> PutAsync(string ActionUrl, object Packet);
+        /// <summary>
+        /// Executes a DELETE Action to Api
+        /// </summary>
+        Task<T> DeleteAsync(string ActionUrl);
+
+        /* properties */
+        /// <summary>
+        /// The access token returned by Api on authentication
+        /// </summary>
+        string AccessToken { get; }
+        /// <summary>
+        /// True when the client is authenticated and the access token is not null or empty.
+        /// </summary>
+        bool IsAuthenticated { get; }
+
+        /* events */
+        /// <summary>
+        /// Occurs on Api errors
+        /// </summary>
+        event EventHandler<T> Error;
+    }
+
+
+
+    /// <summary>
     /// A base "typed" <see cref="HttpClient"/>.
     /// <para>A typed <see cref="HttpClient"/> is a class that accepts a <see cref="HttpClient"/> instance in its constructor, 
     /// and uses that instance in order to call a HTTP service.</para>

@@ -5,7 +5,7 @@ using System.Text;
 namespace Tripous
 {
     /// <summary>
-    /// The action result used with ajax calls
+    /// To be used by controller action methods returning json data. 
     /// </summary>
     public class HttpActionResult
     {
