@@ -28,11 +28,11 @@ namespace Tripous.Logging
             this.EventId = !string.IsNullOrWhiteSpace(EventId) ? EventId : "0";
             this.Level = Level;
             this.Exception = Exception;
-            this.TextTemplate = Text;
+            this.TextTemplate = !string.IsNullOrWhiteSpace(Text) ? Text : string.Empty;
             this.Properties = Logger.FormatParams(ref Text, Params);
             if (this.Properties == null)
                 this.Properties = new Dictionary<string, object>();
-            this.Text = Text;
+            this.Text = !string.IsNullOrWhiteSpace(Text) ? Text : string.Empty;
             this.ExceptionData = Exception == null ? string.Empty : ExceptionEx.GetExceptionText(Exception);
         }
 
@@ -66,11 +66,7 @@ namespace Tripous.Logging
         /// </summary>
         public void SaveToFile(string Folder = "")
         {
-            if (string.IsNullOrWhiteSpace(Folder))
-            {
-                Folder = typeof(Sys).Assembly.ManifestModule.FullyQualifiedName;
-                Folder = Path.GetDirectoryName(Folder);
-            }
+            Folder = !string.IsNullOrWhiteSpace(Folder) ? Folder : Logger.LogFolder;
 
             if (!Directory.Exists(Folder))
                 Directory.CreateDirectory(Folder);

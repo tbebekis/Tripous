@@ -57,7 +57,9 @@ namespace Tripous.Logging
         /// </summary>
         void BeginFile()
         {
-            Directory.CreateDirectory(Folder);
+            if (!Directory.Exists(Folder))
+                Directory.CreateDirectory(Folder);
+
             FilePath = Path.Combine(Folder, "LOG_" + DateTime.UtcNow.ToFileName(true) + ".log");
 
             StringBuilder SB = new StringBuilder();
@@ -80,7 +82,7 @@ namespace Tripous.Logging
         /// </summary>
         public LogFileListener(string Folder = "", int MaxSizeInMB = 5)
         {
-            // prepare the lengs table
+            // prepare the lengths table
             Lengths["TimeStamp"] = 24;
             Lengths["Host"] = 24;
             Lengths["User"] = 24;
@@ -89,7 +91,7 @@ namespace Tripous.Logging
             Lengths["Source"] = 64;
             Lengths["Scope"] = 32;
 
-            this.Folder = string.IsNullOrWhiteSpace(Folder) ? Folder = System.IO.Path.Combine(SysConfig.AppRootDataFolder, "Logs") : Folder;
+            this.Folder = !string.IsNullOrWhiteSpace(Folder) ? Folder : Logger.LogFolder;
             this.MaxSizeInMB = MaxSizeInMB < 1 ? 5 : MaxSizeInMB;
 
             // create the first file

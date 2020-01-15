@@ -39,6 +39,7 @@ namespace Tripous.Logging
         static int fActive = 0;
         static LogLevel fLevel = LogLevel.Info;
         static List<ILogListener> listeners = new List<ILogListener>();
+        static string fLogFolder;
 
         static bool CanCallListener(ILogListener Listener)
         {
@@ -73,9 +74,16 @@ namespace Tripous.Logging
                             {
                                 Item.ProcessLog(info);
                             }
-                            catch  
+#if DEBUG
+                            catch (Exception ex)
+                            {
+                                System.Diagnostics.Debug.WriteLine(ex.Message);
+                            }
+#else
+                            catch
                             {
                             }
+#endif
                         },                            
                         Info);
                          
@@ -450,6 +458,30 @@ namespace Tripous.Logging
         /// <para>Defaults to Info.</para>
         /// </summary>
         static public LogLevel Level { get { lock (syncLock) return fLevel; } set { lock (syncLock) fLevel = value; } }
+        /// <summary>
+        /// Returns the path to the folder where file logs are saved
+        /// </summary>
+        static public string LogFolder
+        {
+            get
+            {
+                lock (syncLock)
+                {
+                    if (string.IsNullOrWhiteSpace(fLogFolder))
+                    {
+                        fLogFolder = Path.Combine(SysConfig.AppRootDataFolder, "Logs");
+                    }
+
+                    if (!Directory.Exists(fLogFolder))
+                        Directory.CreateDirectory(fLogFolder);
+
+                    return fLogFolder;
+                }
+
+            }
+            set { fLogFolder = value; }
+
+        }
     }
 
 
