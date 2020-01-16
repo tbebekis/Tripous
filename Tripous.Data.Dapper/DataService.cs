@@ -20,6 +20,7 @@ namespace Tripous.Data
     /// </summary>
     public class DataService<T> where T : DataEntity
     {
+        SqlStore fStore;
 
         /* protected */
         /// <summary>
@@ -826,6 +827,18 @@ namespace Tripous.Data
         }
 
 
-
+        /* properties */
+        /// <summary>
+        /// The data store of this service
+        /// </summary>
+        public virtual SqlStore Store
+        {
+            get
+            {
+                if (fStore == null)
+                    fStore = SqlStores.CreateSqlStore(Descriptor.ConnectionName);
+                return fStore;
+            }
+        }
     }
 }
