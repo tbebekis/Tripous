@@ -5,6 +5,7 @@
 using System;
 using System.Data;
 using System.Collections;
+using System.Linq;
 using System.Collections.Generic;
 using System.IO;
 
@@ -313,6 +314,32 @@ namespace Tripous
             DataTable Dest = new DataTable();
             CopyExactState(Source, Dest, true);
             return Dest;
+        }
+
+        /// <summary>
+        /// Returns a DataTable that contains copies of the DataRow objects, given an input IEnumerable of DataRow.
+        /// <para>.NetStandard 2.1 contains the extension method CopyToDataTable() with the same functionality.</para>
+        /// </summary>
+        static public DataTable ToTable(this IEnumerable<DataRow> Rows)
+        {
+            if (Rows != null && Rows.Count() > 0)
+            {
+                DataTable Table = null;
+                DataRow DestRow;
+                foreach (DataRow Row in Rows)
+                {
+                    if (Table == null)
+                    {
+                        Table = Row.Table.CopyStructure();
+                    }
+
+                    DestRow = Table.NewRow();
+                    Row.CopyTo(DestRow);
+                    Table.Rows.Add(DestRow);
+                }
+            }
+
+            return new DataTable();
         }
 
         /// <summary>
