@@ -4,6 +4,7 @@
         <TargetFramework>netcoreapp3.0</TargetFramework>
         <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
         <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
+        <SuppressNETCoreSdkPreviewMessage>true</SuppressNETCoreSdkPreviewMessage>
     </PropertyGroup>
 
     <ItemGroup>

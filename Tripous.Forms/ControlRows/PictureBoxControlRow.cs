@@ -35,14 +35,14 @@ namespace Tripous.Forms
             }
         }
         /// <summary>
-        /// Returns the value of the <see cref="Value"/> property
+        /// Returns the value of the <see cref="UiControlRow.Value"/> property
         /// </summary>
         protected override object GetValue()
         {
             return null;
         }
         /// <summary>
-        /// Sets the value of the <see cref="Value"/> property
+        /// Sets the value of the <see cref="UiControlRow.Value"/> property
         /// </summary>
         protected override void SetValue(object V)
         {

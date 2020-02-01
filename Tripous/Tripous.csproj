@@ -4,10 +4,17 @@
         <TargetFramework>netstandard2.0</TargetFramework>
         <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
         <AssemblyName>Tripous3</AssemblyName>
+        <SuppressNETCoreSdkPreviewMessage>true</SuppressNETCoreSdkPreviewMessage>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-        <DocumentationFile>bin\Debug\Tripous3.xml</DocumentationFile>
+        <DocumentationFile>..\bin\Debug\Tripous3.xml</DocumentationFile>
+        <OutputPath>..\bin\Debug\</OutputPath>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+      <OutputPath>..\bin\Release</OutputPath>
+      <DocumentationFile></DocumentationFile>
     </PropertyGroup> 
 
     <ItemGroup>

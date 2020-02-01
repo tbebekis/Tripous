@@ -10,6 +10,9 @@ using System.Windows.Forms;
 
 namespace Tripous.Forms
 {
+
+#pragma warning disable CS1591
+
     public partial class DataForm : BaseForm
     {
         /* protected */

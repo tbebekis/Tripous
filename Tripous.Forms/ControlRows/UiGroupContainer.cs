@@ -211,7 +211,9 @@ namespace Tripous.Forms
             }
         }
 
-
+        /// <summary>
+        /// Override
+        /// </summary>
         protected override Control.ControlCollection CreateControlsInstance()
         {
             return new UiGroupContainerControlCollection(this);

@@ -272,11 +272,7 @@ namespace Tripous.Forms
         [Browsable(false)]
         public Control Control { get; protected set; }
  
-        /// <summary>
-        /// Hides a property from PropertyGrid
-        /// </summary>
-        //[Browsable(false)]
-        //new public AutoSizeMode AutoSizeMode { get => base.AutoSizeMode; set => base.AutoSizeMode = value; }
+ 
 
         /// <summary>
         /// Indicates the cheked state of the control

@@ -430,29 +430,29 @@ namespace Tripous.Forms
         {
             ShowDocked(new FormOptions(FormClass, TextKey), AfterCreateFunc);
         }
- 
-        
+
+
 
         /* properties */
-        [Browsable(false), ReadOnly(true), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         /// <summary>
         /// True when initialized
         /// </summary>
+        [Browsable(false), ReadOnly(true), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]        
         public bool Initialized { get; private set; }
-        [Browsable(false), ReadOnly(true), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         /// <summary>
         /// The form options
         /// </summary>
+        [Browsable(false), ReadOnly(true), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]       
         public virtual FormOptions Options { get; protected set; }
-        [Browsable(false), ReadOnly(true), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         /// <summary>
         /// The parent container form, which is a <see cref="DockContent"/> form.
         /// </summary>
+        [Browsable(false), ReadOnly(true), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]        
         public ParentDockForm DockForm { get; private set; }
-        [Browsable(false), ReadOnly(true), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         /// <summary>
         /// True when this is the main form.
         /// </summary>
+        [Browsable(false), ReadOnly(true), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]        
         public bool IsMainForm { get { return Ui.MainForm == this; } }
 
         /// <summary>

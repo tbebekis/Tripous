@@ -4,10 +4,16 @@
         <TargetFramework>netcoreapp3.0</TargetFramework>
         <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
         <OutputType>Library</OutputType>
+        <SuppressNETCoreSdkPreviewMessage>true</SuppressNETCoreSdkPreviewMessage>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-        <DocumentationFile>bin\Debug\Tripous.Web.xml</DocumentationFile>
+        <DocumentationFile>..\bin\Debug\Tripous.Web.xml</DocumentationFile>
+        <OutputPath>..\bin\Debug\</OutputPath>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+      <OutputPath>..\bin\Release</OutputPath>
     </PropertyGroup>
 
 

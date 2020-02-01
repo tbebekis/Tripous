@@ -4,6 +4,7 @@
         <OutputType>WinExe</OutputType>
         <TargetFramework>netcoreapp2.2</TargetFramework>
         <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+        <SuppressNETCoreSdkPreviewMessage>true</SuppressNETCoreSdkPreviewMessage>
     </PropertyGroup> 
  
     <ItemGroup>

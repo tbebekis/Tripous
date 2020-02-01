@@ -155,7 +155,9 @@ namespace Tripous.Forms
             Execute(SourceRow, VisibleFields);
         }
 
-
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public TableBoxDialog()
         {
             InitializeComponent();

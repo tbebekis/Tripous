@@ -343,11 +343,17 @@ namespace Tripous.Forms
         }
 
         /* overrides */
+        /// <summary>
+        /// Override
+        /// </summary>
         protected override void OnParentChanged(EventArgs e)
         {
             base.OnParentChanged(e);
             OnLayoutColumns();
         }
+        /// <summary>
+        /// Override
+        /// </summary>
         protected override void OnLayout(LayoutEventArgs e)
         {
             base.OnLayout(e);
@@ -362,25 +368,39 @@ namespace Tripous.Forms
 
             OnLayoutColumns();
         }
+        /// <summary>
+        /// Override
+        /// </summary>
         protected override void OnControlAdded(ControlEventArgs e)
         {
             base.OnControlAdded(e);
             OnLayoutColumns();
         }
+        /// <summary>
+        /// Override
+        /// </summary>
         protected override void OnControlRemoved(ControlEventArgs e)
         {
             base.OnControlRemoved(e);
             OnLayoutColumns();
         }
+        /// <summary>
+        /// Override
+        /// </summary>
         protected override Control.ControlCollection CreateControlsInstance()
         {
             return new UiGroupControlCollection(this);
         }
-
+        /// <summary>
+        /// Override
+        /// </summary>
         protected override Size DefaultSize { get { return new Size(500, DefaultHeight); } }
 
 
         /* construction */
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public UiGroup()
         {
             this.Columns = new UiColumnCollection(this);
@@ -483,36 +503,57 @@ namespace Tripous.Forms
         [ Description("The collection of items."), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)] // 
         public UiColumnCollection Columns { get; }
 
+        /// <summary>
+        /// The caption title
+        /// </summary>
         [DefaultValue("Caption")]
         public string Caption
         {
             get { return lblCaption.Text; }
             set { lblCaption.Text = value; }
         }
+        /// <summary>
+        /// When true the title is visible
+        /// </summary>
         [DefaultValue(true)]
         public bool TitleVisible
         {
             get { return pnlTitle.Visible; }
             set { pnlTitle.Visible = value; }
         }
+        /// <summary>
+        /// Title font
+        /// </summary>
         public Font TitleFont
         {
             get { return lblCaption.Font; }
             set { lblCaption.Font = value; }
         }
+        /// <summary>
+        /// Title font color
+        /// </summary>
         public Color TitleFontColor
         {
             get { return lblCaption.ForeColor; }
             set { lblCaption.ForeColor = value; }
         }
+        /// <summary>
+        /// Title background color
+        /// </summary>
         public Color TitleBackColor
         {
             get { return lblCaption.BackColor; }
             set { lblCaption.BackColor = value; }
         }
 
+        /// <summary>
+        /// The current screen mod
+        /// </summary>
         [Browsable(false), ReadOnly(true), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public ScreenMode ScreenMode { get; private set; }
+        /// <summary>
+        /// When true it automatically places title text on top of controls
+        /// </summary>
         [DefaultValue(false)]
         public bool AutoTextOnTop
         {
@@ -526,7 +567,9 @@ namespace Tripous.Forms
                 }
             }
         }
-        
+        /// <summary>
+        /// Override
+        /// </summary>
         [Browsable(false), ReadOnly(true), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public override AnchorStyles Anchor
         {

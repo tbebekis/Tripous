@@ -27,6 +27,9 @@ namespace Tripous.Forms.Standard
         }
 
 
+        /// <summary>
+        /// The type of the list form
+        /// </summary>
         static public Type SqlListForm { get; set; } = typeof(Tripous.Forms.Standard.DataFormSqlBrokerList);
     }
 }

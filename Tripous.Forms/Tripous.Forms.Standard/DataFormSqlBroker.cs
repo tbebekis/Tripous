@@ -13,6 +13,8 @@ using Tripous.Model;
 
 namespace Tripous.Forms.Standard
 {
+#pragma warning disable CS1591
+
     /// <summary>
     /// A data form that uses an <see cref="SqlBroker"/>
     /// </summary>

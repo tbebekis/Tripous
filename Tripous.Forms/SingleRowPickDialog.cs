@@ -156,6 +156,9 @@ namespace Tripous.Forms
         }
 
         /* overrides */
+        /// <summary>
+        /// Override
+        /// </summary>
         protected override void OnShown(EventArgs e)
         {
             if (!DesignMode)

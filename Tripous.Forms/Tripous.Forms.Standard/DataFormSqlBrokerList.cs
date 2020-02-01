@@ -12,7 +12,7 @@ namespace Tripous.Forms.Standard
 {
 
     /// <summary>
-    /// A list data form that uses an <see cref="SqlBroker"/>
+    /// A list data form that uses an <see cref="Tripous.Model.SqlBroker"/>
     /// </summary>
     public partial class DataFormSqlBrokerList : DataFormSqlBroker
     {

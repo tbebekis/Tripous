@@ -30,9 +30,21 @@ namespace Tripous.Forms
     [Designer(typeof(UiControlRowControlDesigner))]
     public partial class UiControlRow : UserControl, IUiControlRow
     {
+        /// <summary>
+        /// Constant
+        /// </summary>
         protected const int TextPanelDefaultHeight = 28;
+        /// <summary>
+        /// Constant
+        /// </summary>
         protected const int ControlPanelMultilineDefaultHeight = 163;
+        /// <summary>
+        /// Constant
+        /// </summary>
         protected const int HeightPadding = 3;
+        /// <summary>
+        /// Constant
+        /// </summary>
         protected const int WidthPadding = 6;
 
         //bool Layouting;
@@ -57,7 +69,7 @@ namespace Tripous.Forms
                 pnlText.Width = Convert.ToInt32((Width / 100) * Split);
         }
         /// <summary>
-        /// Updates the height after a change to <see cref="Stacked"/> property
+        /// Updates the height of the control
         /// </summary>
         protected virtual void LayoutControls()
         {

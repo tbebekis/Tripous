@@ -16,14 +16,14 @@ namespace Tripous.Forms
     public partial class TextBoxControlRow : UiControlRow
     {
         /// <summary>
-        /// Returns the value of the <see cref="Value"/> property
+        /// Returns the value of the <see cref="UiControlRow.Value"/> property
         /// </summary>
         protected override object GetValue()
         {
             return edtText.Text;
         }
         /// <summary>
-        /// Sets the value of the <see cref="Value"/> property
+        /// Sets the value of the <see cref="UiControlRow.Value"/> property
         /// </summary>
         protected override void SetValue(object V)
         {

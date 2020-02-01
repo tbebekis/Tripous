@@ -16,14 +16,14 @@ namespace Tripous.Forms
     public partial class ComboBoxControlRow : UiControlRow, IUiLookUpControlRow
     {
         /// <summary>
-        /// Returns the value of the <see cref="Value"/> property
+        /// Returns the value of the <see cref="UiControlRow.Value"/> property
         /// </summary>
         protected override object GetValue()
         {
             return ListControl.Text;
         }
         /// <summary>
-        /// Sets the value of the <see cref="Value"/> property
+        /// Sets the value of the <see cref="UiControlRow.Value"/> property
         /// </summary>
         protected override void SetValue(object V)
         {
@@ -114,12 +114,18 @@ namespace Tripous.Forms
         /// </summary>
         [Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public ComboBox Box { get { return ListControl; } }
+        /// <summary>
+        /// The selected item
+        /// </summary>
         [Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public object SelectedItem
         {
             get { return ListControl.SelectedItem; }
             set { ListControl.SelectedItem = value; }
         }
+        /// <summary>
+        /// The index of selected item
+        /// </summary>
         [Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public int SelectedIndex
         {

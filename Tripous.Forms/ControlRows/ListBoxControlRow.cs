@@ -22,14 +22,14 @@ namespace Tripous.Forms
         protected override bool IsMultiLine { get { return true; } }
 
         /// <summary>
-        /// Returns the value of the <see cref="Value"/> property
+        /// Returns the value of the <see cref="UiControlRow.Value"/> property
         /// </summary>
         protected override object GetValue()
         {
             return ListControl.SelectedItem;
         }
         /// <summary>
-        /// Sets the value of the <see cref="Value"/> property
+        /// Sets the value of the <see cref="UiControlRow.Value"/> property
         /// </summary>
         protected override void SetValue(object V)
         {

@@ -82,8 +82,17 @@
 
         #endregion
 
+        /// <summary>
+        /// Field
+        /// </summary>
         protected System.Windows.Forms.Panel pnlText;
+        /// <summary>
+        /// Field
+        /// </summary>
         protected System.Windows.Forms.Label lblText;
+        /// <summary>
+        /// Field
+        /// </summary>
         protected System.Windows.Forms.Panel pnlControl;
     }
 }
