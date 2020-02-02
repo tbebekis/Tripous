@@ -1,63 +1,71 @@
-/*
-            from            to
-XSmall         0             767
-Small        768             991
-Medium       992            1199
-Large       1200           
-*/
+@import "../tp/css/tp-Variables.css";
+
+
 html {
-  font-family: 'Segoe UI', Tahoma, Verdana, Arial, sans-serif;
-  font-size: 13px;
+	/* 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+	 Verdana, Geneva, Arial, Helvetica, sans-serif; Verdana, Arial, sans-serif; */
+    font-family: 'Segoe UI', Tahoma, Verdana, Arial, sans-serif; 
+    font-size: 13px;
 }
+
 body {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  background-color: WhiteSmoke;
-  line-height: 1.8;
-  zoom: 1;
-  margin: 0 0;
-  padding: 20px;
-  -webkit-font-smoothing: antialiased;
-  -webkit-tap-highlight-color: transparent;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: WhiteSmoke;
+    line-height: var(--LineHeight);
+    zoom: 1;
+    margin: 0 0;
+    padding: 20px;
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
 }
+
+
 .tp-Page {
-  padding: 20px;
-  outline: none;
+    padding: 20px;
+    outline: none;
 }
+
 input,
 select,
 textarea,
 button {
-  outline: none;
+    outline: none;
 }
+
 input:focus,
 select:focus,
 textarea:focus {
-  outline: thin dotted;
+    outline: thin dotted;
 }
+
 input[type=checkbox]:focus,
 input[type=radio]:focus {
-  outline: none;
+    outline: none;
 }
+
 button:focus {
-  outline: thin dotted;
+    outline: thin dotted;
 }
+
 input,
 select,
 textarea,
 button,
 label,
 legend {
-  font: inherit;
+    font: inherit;
 }
+
 .tp-DataView {
-  display: flex;
-  flex-direction: column;
-  height: 600px;
-  background-color: white;
+    display: flex;
+    flex-direction: column;
+    height: 600px;
+    background-color: var(--BackColor);
 }
+
 .tp-DataView > .tp-PanelList {
-  flex-grow: 1;
+    flex-grow: 1;
 }
