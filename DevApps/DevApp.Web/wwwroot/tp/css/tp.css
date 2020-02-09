@@ -462,7 +462,7 @@ max-width 	Rules applied for any browser width less than the value defined in th
 .tp-RequiredMark {
     color: red;
     font-weight: bolder;
-    padding: 0 2px;
+    padding: 0 4px 0 0;
 }
 
 .tp-CtrlRow,
@@ -474,8 +474,7 @@ max-width 	Rules applied for any browser width less than the value defined in th
 }
 
 .tp-CheckBoxRow {
-    align-items: center;
-    height: 29px;
+    align-items: center;     
 }
 
 .tp-CheckBoxRow > label {

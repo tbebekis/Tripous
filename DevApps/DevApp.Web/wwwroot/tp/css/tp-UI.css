@@ -792,12 +792,12 @@ input.tp-TextBox {
 /*---------------------------------------------------------------------------------------
  textarea - tp-Memo
 ---------------------------------------------------------------------------------------*/
- 
+
 textarea.tp-Memo {
     position: relative;
     border: var(--Border);
     padding: var(--TextPadding);
-    white-space: pre;
+    /* white-space: pre; disable this because we want just the vertical scroll bar*/
     overflow: auto;
     resize: none;
     padding: 4px;
@@ -811,6 +811,7 @@ textarea.tp-Memo {
 label.tp-CheckBox {
     display: inline-flex;
     outline: none;
+    height: auto;
 }
 
 label.tp-CheckBox input[type=checkbox] {
