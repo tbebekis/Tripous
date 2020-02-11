@@ -818,6 +818,53 @@ label.tp-CheckBox input[type=checkbox] {
     margin: 0 4px;
 }
 
+
+/*---------------------------------------------------------------------------------------
+number box - tp-NumberBox
+---------------------------------------------------------------------------------------*/
+
+.tp-NumberBox {
+    position: relative;
+    display: flex;
+}
+
+.tp-NumberBox > .tp-Text {
+    flex-grow: 1;
+    order: 1;
+    border: var(--Border);
+}
+
+.tp-NumberBox > .tp-Plus,
+.tp-NumberBox > .tp-Minus {
+    display: flex;
+    justify-content: center;
+    width: 2.2em;
+    font-weight: bold;
+    cursor: pointer;
+    user-select: none;
+    order: 2;
+    border: var(--Border);
+    border-left: none;
+}
+
+.tp-NumberBox input[type=number] {
+    -moz-appearance: textfield;
+    margin: 0;
+    text-align: right;
+}
+
+.tp-NumberBox input[type=number]::-webkit-inner-spin-button,
+.tp-NumberBox input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.tp-NumberBox.tp-MinusFirst > .tp-Minus {
+    order: 0;
+    border: var(--Border);
+    border-right: none;
+}
+
 /*---------------------------------------------------------------------------------------
  list control (base of combo-boxes and list-boxes)
 ---------------------------------------------------------------------------------------*/

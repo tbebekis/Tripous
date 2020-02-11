@@ -81,6 +81,13 @@ namespace DevApp.Web.Controllers
         {
             return View();
         }
+        /// <summary>
+        /// Test
+        /// </summary>
+        public IActionResult NumberBox()
+        {
+            return View();
+        }
 
         /// <summary>
         /// Test
@@ -125,6 +132,13 @@ namespace DevApp.Web.Controllers
         {
             return View();
         }
+        /// <summary>
+        /// Test
+        /// </summary>
+        public IActionResult HtmlNumberBox()
+        {
+            return View();
+        }
 
         /// <summary>
         /// Test
@@ -161,13 +175,7 @@ namespace DevApp.Web.Controllers
         {
             return View();
         }
-        /// <summary>
-        /// Test
-        /// </summary>
-        public IActionResult NumberBox()
-        {
-            return View();
-        }
+
         /// <summary>
         /// Test
         /// </summary>

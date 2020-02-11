@@ -89,13 +89,13 @@ html {
   Responsive
 ---------------------------------------------------------------------------------------*/
 
-/* a row that wraps its children */  
-.tp-Row {                       
+/* a row that wraps its children */
+.tp-Row {
     position: relative;
     display: flex;
-    /* margin: 0 -8px; */
-    padding-bottom: 8px;          
+    padding-bottom: 8px;
     flex-wrap: wrap;
+    /* margin: 0 -8px; */
 }
 
 /* children vertical alignment */  
@@ -537,8 +537,9 @@ max-width 	Rules applied for any browser width less than the value defined in th
 }
 
 /*---------------------------------------------------------------------------------------
-// tp-Ctrls - controls the width of the control in the whole container, i.e. a main wrapper div, along with sc, mc or lc classes.
-//
+// tp-Ctrls - along with sc, mc or lc classes, it controls the width of the control in the whole container,
+//  i.e. a main wrapper div, a tp-Col div, a tp-Row div, or even the body element.
+// 
 // sc   = small  control, i.e. control width in small screen
 // mc   = medium control, i.e. control width in medium screen
 // lc   = large  control, i.e. control width in large screen

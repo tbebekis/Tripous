@@ -55,6 +55,9 @@ tp.Classes = {
     Toggle: 'tp-Toggle',
     Handle: 'tp-Handle',
 
+    Plus: 'tp-Plus',
+    Minus: 'tp-Minus',
+
     Min: 'tp-Min',
     Max: 'tp-Max',
 
@@ -248,6 +251,7 @@ tp.Classes = {
     CheckBox: 'tp-CheckBox',
     RadioGroup: 'tp-RadioGroup',
     DateBox: 'tp-DateBox',
+    NumberBox: 'tp-NumberBox',
 
     ListControl: 'tp-ListControl',
     ComboBox: 'tp-ComboBox',
@@ -255,8 +259,7 @@ tp.Classes = {
 
     CheckListBox: 'tp-CheckListBox',
     CheckComboBox: 'tp-CheckComboBox',
-
-    NumberBox: 'tp-NumberBox',
+ 
     ProgressBar: 'tp-ProgressBar',
 
     ValueSlider: 'tp-ValueSlider',
@@ -7862,6 +7865,242 @@ tp.CheckBox = class extends tp.Control {
 };
 //#endregion
 
+//#region tp.NumberBox 
+
+/**
+A custom number box control. Provides minus and plus buttons. Contains a styled input type="number" element. <br />
+NOTE: adding the css class tp-MinusFirst places the minus sign first, that is at the left of the number input control <br />
+NOTE2: decimal places are set by setting the decimal places of the value of the Step property
+@see {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/number|mdn}
+Example markup:
+<pre>
+    <div id="Box" class="tp-MinusFirst" data-setup="{ Width: 200, Min: 0, Max: 200, Value: 100, Step: '0.500'  }"></div>
+</pre>
+Example of the produced markup.
+<pre>
+    <div id="Box" class="tp-MinusFirst tp-NumberBox tp-Object" tabindex="0" style="width: 200px;">
+	    <input type="number" class="tp-Text" min="0" max="200" step="0.500">
+	    <div class="tp-Minus">▾</div>
+	    <div class="tp-Plus">▴</div>
+    </div>
+</pre>
+*/
+tp.NumberBox = class extends tp.Control {
+
+    /**
+    Constructor <br />
+    Example markup:
+    <pre>
+         <div>
+            <div id="Box" data-setup="{ Min: 0, Max: 200, Value: 100, Step: 0.5 }"></div>
+        </div>
+    </pre>
+    @param {string|HTMLElement} [ElementOrSelector] - Optional.
+    @param {Object} [CreateParams] - Optional.
+    */
+    constructor(ElementOrSelector, CreateParams) {
+        super(ElementOrSelector, CreateParams);
+    }
+
+    /* properties */
+    /**
+    Gets or sets the minimum value of the control. <br />
+    @type {number}
+    */
+    get Min() {
+        return this.fTextBox instanceof HTMLInputElement ? (tp.IsBlank(this.fTextBox.min) ? null : Number(this.fTextBox.min)) : 0;
+    }
+    set Min(v) {
+        if (this.fTextBox instanceof HTMLInputElement)
+            this.fTextBox.min = tp.IsEmpty(v) ? '' : v.toString();
+    }
+    /**
+    Gets or sets the maximum value of the control. <br />
+    @type {number}
+    */
+    get Max() {
+        return this.fTextBox instanceof HTMLInputElement ? (tp.IsBlank(this.fTextBox.max) ? null : Number(this.fTextBox.max)) : 0;
+    }
+    set Max(v) {
+        if (this.fTextBox instanceof HTMLInputElement)
+            this.fTextBox.max = tp.IsEmpty(v) ? '' : v.toString();
+    }
+    /**
+    Gets or sets the step of a value change. <br />
+    CAUTION: Set it as string in order to infer the decimal places to be used when formatting the value.
+    NOTE: One issue with number inputs is that their step size is 1 by default — if you try to enter a number with a decimal, such as "1.0",
+    it will be considered invalid. If you want to enter a value that requires decimals, you'll need to reflect this in the step value
+    (e.g. step="0.01" to allow decimals to two decimal places). Here's a simple example:
+    @see {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/number|mdn}
+    @type {string}
+    */
+    get Step() {
+        return this.fTextBox instanceof HTMLInputElement && !isNaN(this.fTextBox.step) ? this.fTextBox.step : 1;
+    }
+    set Step(v) {
+        if (this.fTextBox instanceof HTMLInputElement)
+            this.fTextBox.step = v.toString();
+    }
+
+    /**
+    Gets or sets the value of the control.  
+    @type {number}
+    */
+    get Value() {
+        if (this.fTextBox instanceof HTMLInputElement) {
+            return tp.IsBlank(this.fTextBox.value) ? null : Number(this.fTextBox.value);
+        }
+        return null;
+    }
+    set Value(v) {
+        if (this.fTextBox instanceof HTMLInputElement) {
+            this.fTextBox.value = tp.IsEmpty(v) ? '' : v.toString();
+            this.OnValueChanged();
+        }
+    }
+
+    /* overrides */
+    /**
+    Initializes the 'static' and 'read-only' class fields
+    @protected
+    @override
+    */
+    InitClass() {
+        super.InitClass();
+
+        this.tpClass = tp.NumberBox;
+
+        this.fDefaultCssClasses = tp.Classes.NumberBox;
+
+        // data-bind
+        this.fDataValueProperty = 'Value';
+    }
+    /**
+    Initializes fields and properties just before applying the create params.
+    @protected
+    @override
+    */
+    InitializeFields() {
+        super.InitializeFields();
+
+        // input type="number"
+        this.fTextBox = tp.AppendElement(this.Handle, 'input');
+        this.fTextBox.type = 'number';
+        this.fTextBox.className = tp.Classes.Text;
+        this.fTextBox.min = !tp.IsBlank(this.fTextBox.min) ? this.fTextBox.min : '';
+        this.fTextBox.max = !tp.IsBlank(this.fTextBox.max) ? this.fTextBox.max : '';
+        this.fTextBox.value = !tp.IsBlank(this.fTextBox.value) ? this.fTextBox.value : '0';
+        this.fTextBox.step = !tp.IsBlank(this.fTextBox.step) ? this.fTextBox.step : '0.1';
+
+        this.fMinus = tp.AppendElement(this.Handle, 'div');
+        this.fMinus.className = tp.Classes.Minus;
+        this.fMinus.innerHTML = tp.NumberBox.MinusSymbol;
+
+        this.fPlus = tp.AppendElement(this.Handle, 'div');
+        this.fPlus.className = tp.Classes.Plus;
+        this.fPlus.innerHTML = tp.NumberBox.PlusSymbol;
+
+        this.fPlus.addEventListener("click", () => { this.StepUp(); this.OnValueChanged(); });
+        this.fMinus.addEventListener("click", () => { this.StepDown(); this.OnValueChanged(); });
+
+        // NOTE: the change event is not triggered by the stepUp() and stepDown() methods.
+        this.fTextBox.addEventListener("change", () => { this.OnValueChanged(); });
+    }
+    /**
+    Binds the control to its DataSource. It is called after the DataSource property is assigned.
+    @protected
+    @override
+    */
+    Bind() {
+        super.Bind();
+        this.ReadDataValue();
+    }
+
+    /** Increases the value by the defined step */
+    StepUp() {
+        this.fTextBox.stepUp();
+    }
+    /** Decreases the value by the defined step */
+    StepDown() {
+        this.fTextBox.stepDown();
+    }
+
+    /** Formats the value according to decimals in the step property 
+     @private
+     */
+    FormatValue() {
+        this.Formatting = true;
+        try {
+            let Parts = this.Step.toString().split(".");
+            let Decimals = Parts.length === 2 ? Parts[1].length : 0;
+            if (Decimals > 0 && !tp.IsBlank(this.fTextBox.value)) {
+                let v = parseFloat(this.fTextBox.value).toFixed(Decimals);
+                this.fTextBox.value = v;
+            }
+        } catch (e) {
+            //
+        } finally {
+            this.Formatting = false;
+        }
+    }
+
+    /* notifications */
+    /**
+    Notification. Called by CreateHandle() after all creation and initialization processing is done, that is AFTER handle creation, AFTER field initialization
+    and AFTER options (CreateParams) processing 
+    - Handle creation
+    - Field initialization
+    - Option processing
+    - Completed notification
+    @protected
+    @override
+    */
+    OnInitializationCompleted() {
+        super.OnInitializationCompleted();
+        this.FormatValue();
+    }
+
+    /* Event triggers */
+    /**
+    Called on any value change
+    */
+    OnValueChanged() {
+        if (!this.Formatting) {
+            this.FormatValue();
+            this.Trigger('ValueChanged', {});
+        }
+    }
+};
+
+
+/** This is the real input type="number" element
+* @protected
+* @type {HTMLInputElement}
+*/
+tp.NumberBox.prototype.fTextBox;
+/** The div with the minus sign
+* @protected
+* @type {HTMLDivElement}
+*/
+tp.NumberBox.prototype.fMinus;
+/** The div with the plus sign
+* @protected
+* @type {HTMLDivElement}
+*/
+tp.NumberBox.prototype.fPlus;
+/** Field. The expand symbol.
+ * @static
+ * @type {string}
+ */
+tp.NumberBox.PlusSymbol = '▴';      // ➕ + ▲ ▴
+/** Field. The collapse symbol.
+ * @static
+ * @type {string}
+ */
+tp.NumberBox.MinusSymbol = '▾';    // ➖ - ▼ ▾  
+//#endregion
+
+
 
 //#region  tp.ListControl
 /**
@@ -11339,6 +11578,186 @@ tp.HtmlListBox = class extends tp.HtmlListControl {
 };
 //#endregion
 
+//#region tp.HtmlNumberBox
+/**
+A number box control built on top of a input type="number" element.
+@see {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/number|mdn}
+Example markup:
+<pre>
+    <input type="number" id="HtmlNumberBox"  step="0.100" , value='50' />
+</pre>
+*/
+tp.HtmlNumberBox = class extends tp.InputControl {
+    /**
+    Constructor <br />
+    Example markup:
+    <pre>
+        <input type="number" id="HtmlNumberBox"  step="0.1" , value='50' />
+    </pre>
+    @param {string|HTMLElement} [ElementOrSelector] - Optional.
+    @param {Object} [CreateParams] - Optional.
+    */
+    constructor(ElementOrSelector, CreateParams) {
+        super(ElementOrSelector, CreateParams);
+    }
+
+    /* properties */
+    /**
+    Gets or sets the minimum value of the control. <br />
+    @type {number}
+    */
+    get Min() {
+        return this.Handle instanceof HTMLInputElement ? (tp.IsBlank(this.Handle.min) ? null : Number(this.Handle.min)) : 0;
+    }
+    set Min(v) {
+        if (this.Handle instanceof HTMLInputElement)
+            this.Handle.min = tp.IsEmpty(v) ? '' : v.toString();
+    }
+    /**
+    Gets or sets the maximum value of the control. <br />
+    @type {number}
+    */
+    get Max() {
+        return this.Handle instanceof HTMLInputElement ? (tp.IsBlank(this.Handle.max) ? null : Number(this.Handle.max)) : 0;
+    }
+    set Max(v) {
+        if (this.Handle instanceof HTMLInputElement)
+            this.Handle.max = tp.IsEmpty(v) ? '' : v.toString();
+    }
+    /**
+    Gets or sets the step of a value change. <br />
+    CAUTION: Set it as string in order to infer the decimal places to be used when formatting the value.
+    NOTE: One issue with number inputs is that their step size is 1 by default — if you try to enter a number with a decimal, such as "1.0",
+    it will be considered invalid. If you want to enter a value that requires decimals, you'll need to reflect this in the step value
+    (e.g. step="0.01" to allow decimals to two decimal places). Here's a simple example:
+    @see {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/number|mdn}
+    @type {string}
+    */
+    get Step() {
+        return this.Handle instanceof HTMLInputElement && !isNaN(this.Handle.step) ? this.Handle.step : 1;
+    }
+    set Step(v) {
+        if (this.Handle instanceof HTMLInputElement)
+            this.Handle.step = v.toString();
+    }
+
+
+    /**
+    Gets or sets the value of the control.  
+    @type {number}
+    */
+    get Value() {
+        if (this.Handle instanceof HTMLInputElement) {
+            return tp.IsBlank(this.Handle.value) ? null : Number(this.Handle.value);
+        }
+        return null;
+    }
+    set Value(v) {
+        if (this.Handle instanceof HTMLInputElement) {
+            this.Handle.value = tp.IsEmpty(v) ? '' : v.toString();
+            this.OnValueChanged();
+        }
+    }
+
+    /** Formats the value according to decimals in the step property 
+     @private
+     */
+    FormatValue() {
+        this.Formatting = true;
+        try {
+            let Parts = this.Step.toString().split(".");
+            let Decimals = Parts.length === 2 ? Parts[1].length : 0;
+            if (Decimals > 0 && !tp.IsBlank(this.Handle.value)) {
+                let v = parseFloat(this.Handle.value).toFixed(Decimals);
+                this.Handle.value = v;
+            }
+        } catch (e) {
+            //
+        } finally {
+            this.Formatting = false;
+        }
+    }
+
+
+
+    /* overrides */
+
+    /* notifications */
+    /**
+    Notification. Called by CreateHandle() after all creation and initialization processing is done, that is AFTER handle creation, AFTER field initialization
+    and AFTER options (CreateParams) processing 
+    - Handle creation
+    - Field initialization
+    - Option processing
+    - Completed notification
+    @protected
+    @override
+    */
+    OnInitializationCompleted() {
+        super.OnInitializationCompleted();
+        this.FormatValue();
+    }
+
+    /**
+    Initializes the 'static' and 'read-only' class fields
+    @protected
+    @override
+    */
+    InitClass() {
+        super.InitClass();
+
+        this.tpClass = 'tp.HtmlNumberBox';
+        this.fElementSubType = 'number';
+        this.fDefaultCssClasses = tp.Classes.HtmlNumberBox;
+
+        // data-bind
+        this.fDataValueProperty = 'Value';
+    }
+    /**
+    Initializes fields and properties just before applying the create params.
+    @protected
+    @override
+    */
+    InitializeFields() {
+        super.InitializeFields();
+
+        if (this.Handle instanceof HTMLInputElement) {
+            this.Handle.min = !tp.IsBlank(this.Handle.min) ? this.Handle.min : '';
+            this.Handle.max = !tp.IsBlank(this.Handle.max) ? this.Handle.max : '';
+            this.Handle.value = !tp.IsBlank(this.Handle.value) ? this.Handle.value : '0';
+            this.Handle.step = !tp.IsBlank(this.Handle.step) ? this.Handle.step : '0.1';
+        }
+    }
+    /**
+    Binds the control to its DataSource. It is called after the DataSource property is assigned.
+    @protected
+    @override
+    */
+    Bind() {
+        super.Bind();
+        this.ReadDataValue();
+    }
+
+    /* Event triggers */
+    /**
+    Called on any value change
+    @override
+    */
+    OnValueChanged() {
+        if (!this.Formatting) {
+            this.FormatValue();
+            this.Trigger('ValueChanged', {});
+        }  
+    }
+};
+
+/** Field
+ * @protected
+ * @type {any[]}
+ */
+tp.HtmlNumberBox.prototype.fValueList;
+
+//#endregion
 
 
 //#region  tp.Calendar
@@ -12962,137 +13381,6 @@ tp.ValueSlider = class extends tp.InputControl {
  */
 tp.ValueSlider.prototype.fValueList;
 
-
-//#region  
-/**
-A number box control.
-@see {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/number|mdn}
-Example markup:
-<pre>
-<input type="number" id="NumberBox"  step="0.1" , value='50' />
-</pre>
-*/
-tp.NumberBox = class extends tp.InputControl {
-    /**
-    Constructor <br />
-    Example markup:
-    <pre>
-        <input type="number" id="NumberBox"  step="0.1" , value='50' />
-    </pre>
-    @param {string|HTMLElement} [ElementOrSelector] - Optional.
-    @param {Object} [CreateParams] - Optional.
-    */
-    constructor(ElementOrSelector, CreateParams) {
-        super(ElementOrSelector, CreateParams);
-    }
-
- 
-
-    /* properties */
-    /**
-    Gets or sets the minimum value of the control. <br />
-    @type {number}
-    */
-    get Min() {
-        return this.Handle instanceof HTMLInputElement ? (tp.IsBlank(this.Handle.min) ? null : Number(this.Handle.min)) : 0;
-    }
-    set Min(v) {
-        if (this.Handle instanceof HTMLInputElement)
-            this.Handle.min = tp.IsEmpty(v) ? '' : v.toString();
-    }
-    /**
-    Gets or sets the maximum value of the control. <br />
-    @type {number}
-    */
-    get Max() {
-        return this.Handle instanceof HTMLInputElement ? (tp.IsBlank(this.Handle.max) ? null : Number(this.Handle.max)) : 0;
-    }
-    set Max(v) {
-        if (this.Handle instanceof HTMLInputElement)
-            this.Handle.max = tp.IsEmpty(v) ? '' : v.toString();
-    }
-    /**
-    Gets or sets the step of a value change. <br />
-    NOTE: One issue with number inputs is that their step size is 1 by default — if you try to enter a number with a decimal, such as "1.0",
-    it will be considered invalid. If you want to enter a value that requires decimals, you'll need to reflect this in the step value
-    (e.g. step="0.01" to allow decimals to two decimal places). Here's a simple example:
-    @see {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/number|mdn}
-    @type {number}
-    */
-    get Step() {
-        return this.Handle instanceof HTMLInputElement ? Number(this.Handle.step) : 1;
-    }
-    set Step(v) {
-        if (this.Handle instanceof HTMLInputElement)
-            this.Handle.step = v.toString();
-    }
-    /**
-    Gets or sets the value of the control.  
-    @type {number}
-    */
-    get Value() {
-        if (this.Handle instanceof HTMLInputElement) {
-            return tp.IsBlank(this.Handle.value) ? null : Number(this.Handle.value);
-        }
-        return null;
-    }
-    set Value(v) {
-        if (this.Handle instanceof HTMLInputElement) {
-            this.Handle.value = tp.IsEmpty(v) ? '' : v.toString();
-            this.OnValueChanged();
-        }
-    }
-
-    /* overrides */
-    /**
-    Initializes the 'static' and 'read-only' class fields
-    @protected
-    @override
-    */
-    InitClass() {
-        super.InitClass();
-
-        this.tpClass = 'tp.NumberBox';
-        this.fElementSubType = 'number';
-        this.fDefaultCssClasses = tp.Classes.NumberBox;
-
-        // data-bind
-        this.fDataValueProperty = 'Value';
-    }
-    /**
-    Initializes fields and properties just before applying the create params.
-    @protected
-    @override
-    */
-    InitializeFields() {
-        super.InitializeFields();
-
-        if (this.Handle instanceof HTMLInputElement) {
-            this.Handle.min = !tp.IsBlank(this.Handle.min) ? this.Handle.min : '';
-            this.Handle.max = !tp.IsBlank(this.Handle.max) ? this.Handle.max : '';
-            this.Handle.value = !tp.IsBlank(this.Handle.value) ? this.Handle.value : '0';
-            this.Handle.step = !tp.IsBlank(this.Handle.step) ? this.Handle.step : '0.1';
-        }
-    }
-    /**
-    Binds the control to its DataSource. It is called after the DataSource property is assigned.
-    @protected
-    @override
-    */
-    Bind() {
-        super.Bind();
-        this.ReadDataValue();
-    }
-
-};
-
-//#endregion
-/** Field
- * @protected
- * @type {any[]}
- */
-tp.NumberBox.prototype.fValueList;
-
 //#endregion
 
 //#region tp.ProgressBar
@@ -13167,8 +13455,6 @@ tp.ProgressBar = class extends tp.tpElement {
     }
 };
 //#endregion
-
-
 
 //#region  tp.TreeNode
 /**
@@ -18656,7 +18942,7 @@ tp.Ui = class {
                 divText = tp.Div(el);
                 divText.className = tp.Classes.CText;
 
-                spanText = tp.Span(divText);
+                spanText = tp.Div(divText);
                 if (('Text' in CP) && !tp.IsBlank(CP.Text)) {
                     spanText.innerHTML = CP.Text;
                 }
@@ -18950,6 +19236,7 @@ tp.Ui.Types = {
     TextBox: tp.TextBox,
     Memo: tp.Memo,
     CheckBox: tp.CheckBox,
+    NumberBox: tp.NumberBox,
 
     ComboBox: tp.ComboBox,
     ListBox: tp.ListBox,
@@ -18957,6 +19244,7 @@ tp.Ui.Types = {
     CheckListBox: tp.CheckListBox,
     HtmlComboBox: tp.HtmlComboBox,
     HtmlListBox: tp.HtmlListBox,
+    HtmlNumberBox: tp.HtmlNumberBox,
 
     Calendar: tp.Calendar,
     DateBox: tp.DateBox,
@@ -18965,8 +19253,7 @@ tp.Ui.Types = {
     LocatorBox: tp.LocatorBox,
 
     RadioGroup: tp.RadioGroup,
-    ValueSlider: tp.ValueSlider,
-    NumberBox: tp.NumberBox,
+    ValueSlider: tp.ValueSlider,    
     ProgressBar: tp.ProgressBar,
     TreeView: tp.TreeView
 

@@ -10,14 +10,14 @@
 
 <div>
 
- 
+    @* NOTE: adding the css class tp-MinusFirst places the minus sign first, that is at the left of the number input control 
+       NOTE2: decimal places are set by setting the decimal places of the value of the Step property 
+        *@
     <div>
-        <input type="number" id="NumberBox"  step="0.1" , value='50' />
+        <div id="Box" class="tp-MinusFirst" data-setup="{ Width: 200, Min: 0, Max: 200, Value: 100, Step: '0.500'  }"></div>
     </div>
-    <br />
- 
- 
-    
+
+
 </div>
 
  
@@ -25,11 +25,8 @@
 <script>    
     var ctrl;
  
-    tp.Ready(function () {
- 
-        ctrl = new tp.NumberBox('#NumberBox');
- 
- 
+    tp.Ready(function () { 
+        ctrl = new tp.NumberBox('#Box');
     })
 
  

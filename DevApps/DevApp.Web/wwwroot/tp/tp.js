@@ -7176,7 +7176,8 @@ tp.SysConfig.VariablesPrefix = ':@';
 tp.SysConfig.LocatorShowDropDownRowCountLimit = 200;
 tp.SysConfig.UseServerStringResources = false;
 tp.SysConfig.DefaultConnection = "DEFAULT";
- 
+
+// let lang = (navigator.languages != undefined) ? navigator.languages[0] : navigator.language;
 
 (function () {
     var n = 1.1;
@@ -7195,6 +7196,9 @@ tp.SysConfig.DefaultConnection = "DEFAULT";
         tp.DateSeparator = '-';
     }
 
+
+    
+ 
 })();
 
 
