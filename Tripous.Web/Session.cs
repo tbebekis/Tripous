@@ -119,40 +119,33 @@ namespace Tripous.Web
         /// </summary>
         static public IDictionary<object, object> Request { get { return WSys.HttpContext.Items; } }
 
-        /// <summary>
-        /// Gets or sets the language code, e.g en-US, el-GR, etc.
-        /// <para>Sets the session current culture too.</para>
-        /// </summary>
-        static public string LanguageCode
-        {
-            get
-            {
-                CultureInfo CI = Culture;
-                return CI != null ? CI.Name : CultureInfo.CurrentCulture.Name;
-            }
-            set
-            {
-                CultureInfo CI = new CultureInfo(value);
-                Culture = CI;
-            }
-        }
-        /// <summary>
-        /// Gets or sets the session culture.
-        /// </summary>
-        static public CultureInfo Culture
-        {
-            get
-            {
-                CultureInfo Result = Get<CultureInfo>("Culture", null);
-                return Result != null ? Result : CultureInfo.CurrentCulture;
-            }
-            set
-            {
-                CultureInfo.CurrentCulture = value;
-                CultureInfo.CurrentUICulture = value;
-                Set<CultureInfo>("Culture", value);
-            }
-        }
 
+        /// <summary>
+        /// Gets or sets the current language of the session.
+        /// <para>Represents a language this application supports, i.e. provides localized resources for.</para>
+        /// </summary>
+        static public LanguageItem Language
+        {
+            get
+            {
+                LanguageItem Result = Get<LanguageItem>("Language", null);
+                return Result != null ? Result : Languages.DefaultLanguage;
+            }
+            set
+            {
+                LanguageItem Lang = Languages.DefaultLanguage;
+
+                if (value != null)
+                {
+                    Set<LanguageItem>("Language", value);
+                    Lang = value;
+                }
+
+                CultureInfo.CurrentCulture = Lang.Culture;
+                CultureInfo.CurrentUICulture = Lang.Culture;
+
+            }
+        }
+ 
     }
 }

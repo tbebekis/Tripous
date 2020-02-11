@@ -7129,10 +7129,40 @@ tp.Doc = window.frameElement ? window.top.document : window.document;
 tp.ActiveElement = null;
 tp.Property('ActiveElement', tp, () => tp.Doc.activeElement);
 
+tp.CultureChanged = function () {
+    var n = 1.1;
+    tp.DecimalSeparator = n.toLocaleString(tp.fCultureCode).substring(1, 2);
+
+    n = 1000;
+    tp.ThousandSeparator = n.toLocaleString(tp.fCultureCode).substring(1, 2);
+
+    var D = new Date();
+    var S = D.toLocaleDateString(tp.fCultureCode);
+    if (S.indexOf('/') !== -1) {
+        tp.DateSeparator = '/';
+    } else if (S.indexOf('.') !== -1) {
+        tp.DateSeparator = '.';
+    } else {
+        tp.DateSeparator = '-';
+    }
+};
+
+/** The current culture, i.e. locale */
+tp.Property('CultureCode', tp,
+    () => {
+        return tp.fCultureCode;
+    },
+    (v) => {
+        if (v && v !== tp.fCultureCode) {
+            tp.fCultureCode = v;
+            tp.CultureChanged();
+        }
+    });
+ 
 /** The current decimal separator */
-tp.DecimalSeparator = '-';
+tp.DecimalSeparator = '.';
 /** The current thousand separator */
-tp.ThousandSeparator = '.';
+tp.ThousandSeparator = ',';
 /** The current date separator  */
 tp.DateSeparator = '/';
 
@@ -7177,29 +7207,7 @@ tp.SysConfig.LocatorShowDropDownRowCountLimit = 200;
 tp.SysConfig.UseServerStringResources = false;
 tp.SysConfig.DefaultConnection = "DEFAULT";
 
-// let lang = (navigator.languages != undefined) ? navigator.languages[0] : navigator.language;
 
-(function () {
-    var n = 1.1;
-    tp.DecimalSeparator = n.toLocaleString().substring(1, 2);
-
-    n = 1000;
-    tp.ThousandSeparator = n.toLocaleString().substring(1, 2);
-
-    var D = new Date();
-    var S = D.toLocaleDateString();
-    if (S.indexOf('/') !== -1) {
-        tp.DateSeparator = '/';
-    } else if (S.indexOf('.') !== -1) {
-        tp.DateSeparator = '.';
-    } else {
-        tp.DateSeparator = '-';
-    }
-
-
-    
- 
-})();
 
 
 //#endregion
@@ -9902,30 +9910,32 @@ tp.NameValueStringList = class {
 tp.NameValueStringList.prototype.fItems = []; // string[]
 //#endregion
 
-
+ 
 //---------------------------------------------------------------------------------------
 // string resources
 //---------------------------------------------------------------------------------------
 
-//#region tp.ResLang
+//#region tp.Language
 /**
 A class for storing string resources of a certain language
 */
-tp.ResLang = class {
+tp.Language = class {
 
     /**
     Constructor
-    @param {string} Code - The code of the language
     @param {string} Name - The name of the language
+    @param {string} Code - The code of the language. Must be the two letter code of the language, e.g en, el, it, fr, etc.
+    @param {string} CultureCode -  The culture code associated to this language, e.g.  e.g en-US, el-GR, etc.
     */
-    constructor(Code, Name) {
-        this.fCode = Code;
+    constructor(Name, Code, CultureCode) {
         this.fName = Name;
+        this.fCode = Code;
+        this.fCultureCode = CultureCode;
         this.fItems = new tp.Dictionary();
     }
 
 /* private */
-    /** Field. The code of the language
+    /** Field. The two letter code of the language, e.g en, el, it, fr, etc.
      * @private
      * @type {string}
      */
@@ -9935,6 +9945,11 @@ tp.ResLang = class {
      * @type {string}
      */
     fName = '';
+    /** Field. The culture code associated to this language, e.g.  e.g en-US, el-GR, etc.
+     * @private
+     * @type {string}
+     */
+    fCultureCode = '';
     /** Field. A string/string dictionary
      * @private
      * @type {tp.Dictionary}
@@ -9943,7 +9958,7 @@ tp.ResLang = class {
 
     /* properties */
     /**
-    The code of the language
+    The code of the language. The two letter code of the language, e.g en, el, it, fr, etc.
     @type {string}
     */
     get Code() { return this.fCode; }
@@ -9953,7 +9968,12 @@ tp.ResLang = class {
     */
     get Name() { return this.fName; }
     /**
-    The string/string dictionary with the resources of the language
+    The culture code associated to this language, e.g.  e.g en-US, el-GR, etc.
+     @type {string}
+    */
+    get CultureCode() { return this.fCultureCode; }
+    /**
+    The resource string. A string/string  dictionary with the resources of the language
     @type {tp.Dictionary}
     */
     get Items()  { return this.fItems; }
@@ -9980,19 +10000,19 @@ tp.ResLang = class {
 };
 //#endregion
 
-tp.Urls.Culture = '/App/Culture';
+tp.Urls.Language = '/App/Language';
 
 //#region tp.Languages
 /**
-A static helper class with a list of languages (ResLang), where each language is a list of string resources of that certain language
+A static helper class with a list of languages (Language), where each language is a list of string resources of that certain language
 @static
 */
 tp.Languages = class { 
  
     /**
-    Finds and returns a {@link tp.ResLang} language by its code, if any, else null
+    Finds and returns a {@link tp.Language} language by its code, if any, else null
     @param {string} Code - The code of the language
-    @returns {tp.ResLang} Returns a {@link tp.ResLang} language
+    @returns {tp.Language} Returns a {@link tp.Language} language
     */
     static Find(Code) {
         return tp.FirstOrDefault(tp.Languages.fLanguages, function (item) {
@@ -10000,23 +10020,25 @@ tp.Languages = class {
         });
     }
     /**
-    Returns true if a {@link tp.ResLang} language exists, by its code
+    Returns true if a {@link tp.Language} language exists, by its code
     @param {string} Code - The code of the language
-    @returns {boolean} Returns true if a {@link tp.ResLang}  language exists, by its code
+    @returns {boolean} Returns true if a {@link tp.Language}  language exists, by its code
     */
     static Exists(Code) {
         return tp.Languages.Find(Code) !== null;
     }
     /**
-    Adds and returns a new {@link tp.ResLang} language.
-    @param {string} Code - The code of the language
+    Adds and returns a new {@link tp.Language} language.
+   
     @param {string} Name - The name of the language
-    @returns {tp.ResLang} Returns a new {@link tp.ResLang} language.
+    @param {string} Code - The two letter code of the language, e.g en, el, it, fr, etc.
+    @param {string} CultureCode - The culture code associated to this language, e.g.  e.g en-US, el-GR, etc.
+    @returns {tp.Language} Returns a new {@link tp.Language} language.
     */
-    static Add(Code, Name) {
+    static Add(Name, Code, CultureCode) {
         var Result = tp.Languages.Find(Code);
         if (tp.IsEmpty(Result)) {
-            Result = new tp.ResLang(Code, Name);
+            Result = new tp.Language(Name, Code, CultureCode);
             tp.Languages.fLanguages.push(Result);
         }
         return Result;
@@ -10033,7 +10055,7 @@ tp.Languages = class {
                 let Data = {
                     LanguageCode: v
                 };
-                tp.Ajax.PostAsync(tp.Urls.Culture, Data, (Args) => {
+                tp.Ajax.PostAsync(tp.Urls.Language, Data, (Args) => {
                     // nothing to do
                 });
             }
@@ -10045,31 +10067,26 @@ tp.Languages = class {
 /**
 The list of resource languages.
 @private
-@type {tp.ResLang[]}
+@type {tp.Language[]}
 */
-tp.Languages.fLanguages; // tp.ResLang[];
+tp.Languages.fLanguages; // tp.Language[];
 /** 
 The current language.
-@type {tp.ResLang}
+@type {tp.Language}
 */
 tp.Languages.fCurrent;
 /** 
 The english language.
-@type {tp.ResLang}
+@type {tp.Language}
 */
 tp.Languages.En;
 /** 
 The greek language.
-@type {tp.ResLang}
+@type {tp.Language}
 */
 tp.Languages.Gr;
 
-(function () {
-    tp.Languages.fLanguages = [new tp.ResLang('en-US', 'English'), new tp.ResLang('el-GR', 'Greek')];
-    tp.Languages.En = tp.Languages.fLanguages[0];
-    tp.Languages.Gr = tp.Languages.fLanguages[1];
-    tp.Languages.fCurrent = tp.Languages.En;
-})();
+ 
 
 //#endregion
  
@@ -15667,6 +15684,10 @@ background-color: ${BorderColor};
 
 
 //---------------------------------------------------------------------------------------
+// initialization
+//---------------------------------------------------------------------------------------
+
+ 
 
 //#region document ready state
 
@@ -15697,7 +15718,36 @@ tp.Main = function () {
  
 (function () {
 
+    let InitializeLanguages = function () {
+
+        tp.Languages.fLanguages = [new tp.Language('English', 'en', 'en-US'), new tp.Language('Greek', 'el', 'el-GR')];
+        tp.Languages.En = tp.Languages.fLanguages[0];
+        tp.Languages.Gr = tp.Languages.fLanguages[1];
+        tp.Languages.fCurrent = tp.Languages.En;
+    };
+
+    let InitializeCulture = function () {
+
+        //tp.CultureCode = 'en-US';
+        tp.CultureCode = 'el-GR'; 
+
+        let CultureCode = document.querySelector('html').getAttribute('lang');
+        if (tp.IsString(CultureCode)) {
+            if (CultureCode.length < 3) {
+                tp.Throw(`Invalid culture code: ${CultureCode}`);
+            }
+
+            if (CultureCode.startsWith('el-')) {
+                tp.Languages.fCurrent = tp.Languages.Gr;
+                tp.CultureCode = 'el-GR';
+            }
+        }
+    };
+
     let ReadyFunc = function () {
+
+        InitializeLanguages();
+        InitializeCulture();
 
         // initialize global objects
         tp.Environment.Initialize();

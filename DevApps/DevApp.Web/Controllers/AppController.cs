@@ -38,7 +38,7 @@ namespace DevApp.Web.Controllers
             JArray JItems = new JArray();
             JPacket.Add("Items", JItems);
 
-            DynPacket.LanguageCode = Session.LanguageCode;
+            DynPacket.LanguageCode = Session.Language.Code;
             DynPacket.Flag = true;
             DynPacket.Date = DateTime.Now;
 
@@ -53,19 +53,19 @@ namespace DevApp.Web.Controllers
         }
 
         [HttpGet] 
-        public JsonResult Culture()
+        public JsonResult Laguage()
         { 
             HttpActionResult Result = new HttpActionResult();
-            Result.Packet = Session.LanguageCode;
+            Result.Packet = Session.Language.Code;
             Result.IsSuccess = true;
 
             return this.Json(Result);
         }
         [HttpPost]
-        public JsonResult Culture(string LanguageCode)
+        public JsonResult Laguage(string LanguageCode)
         {
             HttpActionResult SimpleResult = new HttpActionResult();
-            Session.LanguageCode = LanguageCode;
+            Session.Language = Languages.FindOrDefault(LanguageCode);
             SimpleResult.IsSuccess = true;
             return this.Json(SimpleResult);
         }

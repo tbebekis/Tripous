@@ -42,9 +42,7 @@ namespace DevApp.Web.Controllers
         {
             return base.Json(data);
         }
-
-
-
+ 
         /* properties */
         /// <summary>
         /// Returns true if the user is authenticated
