@@ -41,6 +41,7 @@ namespace DevApp.Web.Controllers
         }
         /// <summary>
         /// Test
+        /// </summary>
         public IActionResult ToolBar()
         {
             return View();

@@ -62,7 +62,10 @@
     var Button1Click = function () {
         //tp.SysConfig.UseServerStringResources = true;
         //tp.Languages.Current = 'el-GR';
-        f();
+        //f();
+
+        var Text = tp.ToDateTimeString(new Date(), 'el-GR', true);
+        alert(Text);
     }
 
     function Button2Click() {

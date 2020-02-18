@@ -453,6 +453,187 @@ tp.Logger.DisplayNotificationBoxes = true;
 
 //#endregion
 
+
+
+
+//---------------------------------------------------------------------------------------
+// tp Properties and constants
+//---------------------------------------------------------------------------------------
+
+//#region tp Properties and constants
+
+// NOTE: some properties or constants may declared twice, just for the intellisense to work.
+/** Line Break    
+ * WARNING: .Net line break = \r\n */
+tp.LB = '\n';
+tp.SPACE = ' ';
+tp.NO_NAME = 'no-name';
+
+tp.NULL = "___null___";
+
+
+/** The undefined constant as a tp constant.
+ * 
+ @type {undefined}
+ */
+tp.Undefined = void 0;
+Object.defineProperty(tp, 'Undefined', {
+    get() { return void 0; }
+});
+//tp.Constant('Undefined', tp, void 0); // http://stackoverflow.com/questions/7452341/what-does-void-0-mean
+
+
+/** The currency symbol. Defaults to the symbor of the euro */
+tp.CurrencySymbol = '\u20ac'; // euro
+
+/** The current decimal separator */
+tp.DecimalSeparator = '.';
+
+/** The current thousand separator */
+tp.ThousandSeparator = ',';
+
+/** The current date separator  */
+tp.DateSeparator = '/';
+
+tp.DayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+tp.MonthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+tp.DateFormatLocal = 'yyyy/MM/dd';
+tp.DateFormatISO = 'yyyy-MM-dd';
+
+
+tp.GetDecimalSeparator = (CultureCode) => {
+    let n = 1.1;
+    let Result = n.toLocaleString(CultureCode).substring(1, 2);
+    return Result;
+};
+
+tp.GetThousandSeparator = (CultureCode) => {
+    let n = 1000;
+    let Result = n.toLocaleString(CultureCode).substring(1, 2);
+    return Result;
+};
+
+tp.GetDateSeparator = (CultureCode) => {
+    let S = new Date().toLocaleDateString(CultureCode);
+
+    if (S.indexOf('/') !== -1) {
+        return '/';
+    } else if (S.indexOf('.') !== -1) {
+        return '.';
+    }
+
+    return '-';
+};
+
+tp.GetDateFormat = (CultureCode) => {
+    let i, ln;
+    let DateSeparator = tp.GetDateSeparator(CultureCode);
+
+    let DT = new Date('2000-10-15');
+    let S = DT.toLocaleDateString(CultureCode, { year: 'numeric', month: '2-digit', day: '2-digit' });
+
+    let Parts = S.split(DateSeparator);
+
+    for (i = 0, ln = Parts.length; i < ln; i++)
+        Parts[i] = Parts[i].trim();
+
+    for (i = 0, ln = Parts.length; i < ln; i++) {
+        if (Parts[i] === '2000') {
+            Parts[i] = 'yyyy';
+        }
+        if (Parts[i] === '10') {
+            Parts[i] = 'MM';
+        }
+        if (Parts[i] === '15') {
+            Parts[i] = 'dd';
+        }
+    }
+
+    return Parts.join(DateSeparator);
+
+};
+
+tp.OnCultureChanged = function () {
+    tp.DecimalSeparator = tp.GetDecimalSeparator(tp.CultureCode); 
+    tp.ThousandSeparator = tp.GetThousandSeparator(tp.CultureCode);
+    tp.DateSeparator = tp.GetDateSeparator(tp.CultureCode);
+    tp.DateFormatLocal = tp.GetDateFormat(tp.CultureCode);
+};
+
+/** Gets or sets the current culture, i.e. locale. By default returns 'en-US'
+@type {string}
+*/
+tp.CultureCode = null;
+Object.defineProperty(tp, 'CultureCode', {
+    get () {
+        return !tp.IsBlank(tp.fCultureCode) ? tp.fCultureCode : 'en-US';
+    },
+    set (v) {
+        if (v && v !== tp.fCultureCode) {
+            tp.fCultureCode = v;
+            tp.OnCultureChanged();
+        }
+    }
+});
+
+
+
+/** The document the script operates on */
+tp.Doc = window.frameElement ? window.top.document : window.document;
+
+
+/** The currently active element 
+ @type {Element}
+ */
+tp.ActiveElement = null;
+Object.defineProperty(tp, 'ActiveElement', {
+    get() { return tp.Doc.activeElement; }
+});
+
+
+tp.Prefix = 'tp-';
+
+tp.ButtonClasses = [];
+
+/** A global object for keeping the urls used by a javascript application in ajax and other calls. */
+tp.Urls = {};
+
+tp.IcoChars = {
+    Insert: '+',    // '➕',
+    Delete: '-',    // '➖',
+    Edit: '*',      // '✱',
+    Find: '🔍',
+    LargeButtonDown: '&#9660;'
+};
+
+// (🗖 🗗 🗕🗙      × _ □ )
+
+
+/**
+Control create params.
+Create params are placed here as 
+    tp.GlobalCreateParams[Id] = { };
+
+@class
+*/
+tp.GlobalCreateParams = {};
+
+/**
+The system configuration global object
+@class
+*/
+tp.SysConfig = {};
+tp.SysConfig.CompanyFieldName = 'CompanyId';
+tp.SysConfig.VariablesPrefix = ':@';
+tp.SysConfig.LocatorShowDropDownRowCountLimit = 200;
+tp.SysConfig.UseServerStringResources = false;
+tp.SysConfig.DefaultConnection = "DEFAULT";
+
+
+//#endregion
+
+
 //---------------------------------------------------------------------------------------
 // tp functions
 //---------------------------------------------------------------------------------------
@@ -1801,24 +1982,21 @@ tp.Day = {
 };
 Object.freeze(tp.Day);
 
-tp.DayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-tp.MonthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
-tp.DateFormatLocal = 'yyyy/MM/dd';
-tp.DateFormatISO = 'yyyy-MM-dd';
+
 
 
 /**
 Formats a Date value based on a format string pattern. 
 Adapted from: https://github.com/UziTech/js-date-format/blob/master/js-date-format.js
-@param {Date} v - The Date value to format. Use d or D for a format like yyyy-MM-dd where - is the current date separator.
+@param {Date} v - The Date value to format.  
 @param {string} format - The format string pattern
 @returns {string} Returns the formatted string
 */
 tp.FormatDateTime = function (v, format = 'yyyy-MM-dd') {
     // adapted from: https://github.com/UziTech/js-date-format/blob/master/js-date-format.js
 
-    format = format || 'yyyy-MM-dd';
+    format = format || tp.DateFormatISO;
 
     let Pad = function (value, length) {
         var negative = value < 0? "-" : "";
@@ -1869,14 +2047,7 @@ tp.FormatDateTime = function (v, format = 'yyyy-MM-dd') {
         zz: function () { return Pad(Math.floor(-Parts.date.getTimezoneOffset() / 60), 2); },
         z: function () { return Math.floor(-Parts.date.getTimezoneOffset() / 60); }
     };
-
-    if (!format) {
-        format = tp.Format('yyyy{0}MM{0}dd', tp.DateSeparator);
-    } else if (format.length === 1) {
-        if (format === 'd' || format === 'D') {
-            format = tp.Format('yyyy{0}MM{0}dd', tp.DateSeparator);
-        }
-    }
+ 
 
     var Result = [];
     var IsMatch = false;
@@ -1907,6 +2078,7 @@ tp.FormatDateTime = function (v, format = 'yyyy-MM-dd') {
  Using the / date separator the date is parsed to local date-time.  
  Using the - date separator the date is parsed to UTC date-time. 
  @see {@link http://stackoverflow.com/questions/5619202/converting-string-to-date-in-js|stackoverflow}
+ @see {@link https://stackoverflow.com/questions/2587345/why-does-date-parse-give-incorrect-results|stackoverflow}
  * @param   {string} v A date string in the format yyyy/MM/dd for local dates and yyyy-MM-dd for UTC dates.
  * @returns  {Date} A date object
  */
@@ -1941,40 +2113,55 @@ tp.TryParseDateTime = function (v) {
     return Info;
 };
 /**
- * Formats a Date value to a string using local or UTC format.
+ * Returns a specified Date value formatted as ISO Date string, i.e. yyyy-MM-dd.
  * @param   {Date} v The Date value to format
- * @param   {boolean} [ToLocal=false] Defaults to false. When true a local date string is returned, else a Utc date string.
  * @returns  {string} The formatted string
  */
-tp.ToDateString = function (v, ToLocal = false) {
-    ToLocal = ToLocal === true;
-    return tp.FormatDateTime(v, ToLocal ? tp.DateFormatLocal : tp.DateFormatISO);
+tp.ToISODateString = (v) => {
+    return tp.FormatDateTime(v, tp.DateFormatISO);
 };
 /**
- * Formats a Date value to a time string, optionally with seconds.
+ * Formats a Date value to a string using local or ISO format. <br />
+ * If a culture code is specified then the value is formatted according to that specified culture code, i.e. 'el-GR'.  <br />
+ * If no culture code is specified, then the value is formatted according to the current culture, see: {@link tp.CultureCode}.    <br />
+ * If the string 'ISO' is specified as the culture code, then the value is formatted as an ISO Date string, i.e. yyyy-MM-dd.
  * @param   {Date} v The Date value to format
- * @param   {boolean} [Seconds=false] Defaults to false. When true, then seconds are included in the returned string.
+ * @param   {string} [CultureCode=null] Defaults to null. Could be null, meaning the current culture, or a culture code, i.e. 'el-GR' or the string 'ISO'.
  * @returns  {string} The formatted string
  */
-tp.ToTimeString = function (v, Seconds = false) {
-    Seconds = Seconds === true;
-    return tp.FormatDateTime(v, Seconds ? 'HH:mm:ss' : 'HH:mm');
+tp.ToDateString = (v, CultureCode = null) => {
+    return CultureCode === 'ISO' ? tp.ToISODateString(v) : tp.FormatDateTime(v, tp.IsBlank(CultureCode) ? tp.DateFormatLocal : tp.GetDateFormat(CultureCode));
 };
 /**
- * Formats a Date value to a date-time string using local or UTC format, and optionally with seconds.
+ * Formats a Date value to a time string, optionally with seconds and milliseconds.
  * @param   {Date} v The Date value to format
- * @param   {boolean} [ToLocal=false] Defaults to false. When true a local date string is returned, else a Utc date string.
  * @param   {boolean} [Seconds=false] Defaults to false. When true, then seconds are included in the returned string.
+ * @param   {boolean} [Milliseconds=false] Defaults to false. When true, then seconds and milliseconds are included in the returned string.
  * @returns  {string} The formatted string
  */
-tp.ToDateTimeString = function (v, ToLocal = false, Seconds = false) {
-    ToLocal = ToLocal === true;
-    Seconds = Seconds === true;
+tp.ToTimeString = (v, Seconds = false, Milliseconds = false) => {
+    let format = 'HH:mm';
 
-    var S = ToLocal ? tp.DateFormatLocal : tp.DateFormatISO;
-    S = S + (Seconds ? ' HH:mm:ss' : ' HH:mm');
+    if (Milliseconds == true)
+        format = 'HH:mm:ss.fff';
+    else if (Seconds === true)
+        format = 'HH:mm:ss';
 
-    return tp.FormatDateTime(v, S);
+    return tp.FormatDateTime(v, format);
+};
+/**
+ * Formats a Date value to a date-time string using local or ISO format, and optionally with seconds and milliseconds.
+ * If a culture code is specified then the value is formatted according to that specified culture code, i.e. 'el-GR'.  <br />
+ * If no culture code is specified, then the value is formatted according to the current culture, see: {@link tp.CultureCode}.    <br />
+ * If the string 'ISO' is specified as the culture code, then the value is formatted as an ISO Date string, i.e. yyyy-MM-dd.
+ * @param   {Date} v The Date value to format
+ * @param   {string} [CultureCode=null] Defaults to null. Could be null, meaning the current culture, or a culture code, i.e. 'el-GR' or the string 'ISO'.
+ * @param   {boolean} [Seconds=false] Defaults to false. When true, then seconds are included in the returned string.
+ * @param   {boolean} [Milliseconds=false] Defaults to false. When true, then seconds and milliseconds are included in the returned string.
+ * @returns  {string} The formatted string
+ */
+tp.ToDateTimeString = function (v, CultureCode = null, Seconds = false, Milliseconds = false) {
+    return tp.ToDateString(v, CultureCode) + ' ' + tp.ToTimeString(v, Seconds, Milliseconds);
 };
 /**
 Returns a Date value with the current date and time.
@@ -4902,6 +5089,10 @@ tp.TextSizeInfo = {
 
 //#endregion
 
+
+
+
+
 //---------------------------------------------------------------------------------------
 
 //#region Events
@@ -7103,114 +7294,6 @@ tp.RandomColor = function () {
 }; 
 //#endregion
 
-//---------------------------------------------------------------------------------------
-// tp Properties and constants
-//---------------------------------------------------------------------------------------
-
-//#region tp Properties and constants
-
-// NOTE: some properties or constants may declared twice, just for the intellisense to work.
-/** Line Break    
- * WARNING: .Net line break = \r\n */
-tp.LB = '\n';
-tp.SPACE = ' ';
-tp.NO_NAME = 'no-name';
-
-tp.NULL = "___null___";
-
-
-tp.Undefined = null;
-tp.Constant('Undefined', tp, void 0); // http://stackoverflow.com/questions/7452341/what-does-void-0-mean
-//tp.Undefined = void 0;
-
-/** The document the script operates on */
-tp.Doc = window.frameElement ? window.top.document : window.document;
-/** The currently active element */
-tp.ActiveElement = null;
-tp.Property('ActiveElement', tp, () => tp.Doc.activeElement);
-
-tp.CultureChanged = function () {
-    var n = 1.1;
-    tp.DecimalSeparator = n.toLocaleString(tp.fCultureCode).substring(1, 2);
-
-    n = 1000;
-    tp.ThousandSeparator = n.toLocaleString(tp.fCultureCode).substring(1, 2);
-
-    var D = new Date();
-    var S = D.toLocaleDateString(tp.fCultureCode);
-    if (S.indexOf('/') !== -1) {
-        tp.DateSeparator = '/';
-    } else if (S.indexOf('.') !== -1) {
-        tp.DateSeparator = '.';
-    } else {
-        tp.DateSeparator = '-';
-    }
-};
-
-/** The current culture, i.e. locale */
-tp.Property('CultureCode', tp,
-    () => {
-        return tp.fCultureCode;
-    },
-    (v) => {
-        if (v && v !== tp.fCultureCode) {
-            tp.fCultureCode = v;
-            tp.CultureChanged();
-        }
-    });
- 
-/** The current decimal separator */
-tp.DecimalSeparator = '.';
-/** The current thousand separator */
-tp.ThousandSeparator = ',';
-/** The current date separator  */
-tp.DateSeparator = '/';
-
-/** The currency symbol. Defaults to the symbor of the euro */
-tp.CurrencySymbol = '\u20ac'; // euro
-
-tp.Prefix = 'tp-';
-
-tp.ButtonClasses = [];
-
-/** A global object for keeping the urls used by a javascript application in ajax and other calls. */
-tp.Urls = {};
-
-tp.IcoChars = {
-    Insert: '+',    // '➕',
-    Delete: '-',    // '➖',
-    Edit: '*',      // '✱',
-    Find: '🔍',
-    LargeButtonDown: '&#9660;'
-};
-
-// (🗖 🗗 🗕🗙      × _ □ )
-
-
-/**
-Control create params.
-Create params are placed here as 
-    tp.GlobalCreateParams[Id] = { };
-
-@class
-*/
-tp.GlobalCreateParams = {};
-
-/**
-The system configuration global object
-@class
-*/
-tp.SysConfig = {};
-tp.SysConfig.CompanyFieldName = 'CompanyId';
-tp.SysConfig.VariablesPrefix = ':@';
-tp.SysConfig.LocatorShowDropDownRowCountLimit = 200;
-tp.SysConfig.UseServerStringResources = false;
-tp.SysConfig.DefaultConnection = "DEFAULT";
-
-
-
-
-//#endregion
 
  
 //---------------------------------------------------------------------------------------
@@ -15377,43 +15460,41 @@ tp.FrameBoxPromise = function (Text, ContentHtml) {
 
  //#region  NotificationBox
 
-(function () {
-
-    /** NotificationBox. Displays a notification message to the user.
+/** NotificationBox. Displays a notification message to the user.
+ */
+NotificationBox = class extends tp.tpElement {
+    /**
+     * Constructor
+     * @param {string} Message The message
+     * @param {tp.NotificationType} Type The type
      */
-    NotificationBox = class extends tp.tpElement {
-        /**
-         * Constructor
-         * @param {string} Message The message
-         * @param {tp.NotificationType} Type The type
-         */
-        constructor(Message, Type) {
-            /*
-                <div class='tp-NotificationBox tp-Error'>
-                    <div class='tp-Caption'>
-                        <div class="tp-Close tp-UnSelectable">✖</div>
-                    </div>
-                    <div class="tp-Content">
-                        <textarea> </textarea>
-                    </div>
+    constructor(Message, Type) {
+        /*
+            <div class='tp-NotificationBox tp-Error'>
+                <div class='tp-Caption'>
+                    <div class="tp-Close tp-UnSelectable">✖</div>
                 </div>
-            */
+                <div class="tp-Content">
+                    <textarea> </textarea>
+                </div>
+            </div>
+        */
 
-            // create the box and append it to body
+        // create the box and append it to body
 
-            let sType = tp.EnumNameOf(tp.NotificationType, Type);
+        let sType = tp.EnumNameOf(tp.NotificationType, Type);
 
-            let elBox = tp.Doc.createElement('div');
-            elBox.id = tp.SafeId('tp-NotificationBox');
-            let S = tp.Format('tp-NotificationBox tp-{0}', tp.EnumNameOf(tp.NotificationType, Type)); // tp.NotificationType[Type]);
-            elBox.className = S;
+        let elBox = tp.Doc.createElement('div');
+        elBox.id = tp.SafeId('tp-NotificationBox');
+        let S = tp.Format('tp-NotificationBox tp-{0}', tp.EnumNameOf(tp.NotificationType, Type)); // tp.NotificationType[Type]);
+        elBox.className = S;
 
-            let CaptionId = tp.SafeId('tp-Note-Caption');
-            let btnCloseId = tp.SafeId('tp-Note-Close');
-            let ContentId = tp.SafeId('tp-Note-Content');
-            let edtMessageId = tp.SafeId('tp-Note-Text');
+        let CaptionId = tp.SafeId('tp-Note-Caption');
+        let btnCloseId = tp.SafeId('tp-Note-Close');
+        let ContentId = tp.SafeId('tp-Note-Content');
+        let edtMessageId = tp.SafeId('tp-Note-Text');
 
-            let Html = `
+        let Html = `
         <div id='${CaptionId}'>
             <div>${sType}</div>
             <div style='flex-grow: 1;' ></div>
@@ -15423,51 +15504,51 @@ tp.FrameBoxPromise = function (Text, ContentHtml) {
             <textarea id='${edtMessageId}' > </textarea> 
         </div>
 `;
-            elBox.innerHTML = Html;
+        elBox.innerHTML = Html;
 
-            // append to the body
-            tp.Doc.body.appendChild(elBox);
-
-
-            // call the super constructor
-            super(elBox, null);
-
-            this.Type = Type;
+        // append to the body
+        tp.Doc.body.appendChild(elBox);
 
 
-            // further initialize the box
+        // call the super constructor
+        super(elBox, null);
 
-            let BackColor = tp.NotificationBoxSetup.Colors[sType].BackColor;
-            let BorderColor = tp.NotificationBoxSetup.Colors[sType].BorderColor;
-
-            let CssStyle = {
-                'position': 'fixed',
-                'display': 'flex',
-                'flex-direction': 'column',
-                'background-color': BackColor,
-                'height': tp.px(tp.NotificationBoxSetup.Height),
-                'margin': '4px 4px',
-                'right': '10px',
-                'bottom': tp.px(tp.NotificationBoxes.Bottom),
-                'border': '1px solid ' + BorderColor,
-                'border-left-width': '6px',
-                'opacity': '0',
-                'transition': tp.Format('opacity {0}s ease-in 0s', tp.NotificationBoxSetup.DurationSecs),  //   // google : css transition fade out
-                'user-select': 'none'
-            };
-
-            if (tp.Viewport.IsXSmall) {
-                CssStyle['left'] = '2px';
-                CssStyle['right'] = '2px';
-            } else {
-                CssStyle['width'] = tp.px(tp.NotificationBoxSetup.Width);
-            }
-            this.SetStyle(CssStyle);
+        this.Type = Type;
 
 
+        // further initialize the box
 
-            // Caption setup  // justify-content: flex-end;
-            let CssText = `
+        let BackColor = tp.NotificationBoxSetup.Colors[sType].BackColor;
+        let BorderColor = tp.NotificationBoxSetup.Colors[sType].BorderColor;
+
+        let CssStyle = {
+            'position': 'fixed',
+            'display': 'flex',
+            'flex-direction': 'column',
+            'background-color': BackColor,
+            'height': tp.px(tp.NotificationBoxSetup.Height),
+            'margin': '4px 4px',
+            'right': '10px',
+            'bottom': tp.px(tp.NotificationBoxes.Bottom),
+            'border': '1px solid ' + BorderColor,
+            'border-left-width': '6px',
+            'opacity': '0',
+            'transition': tp.Format('opacity {0}s ease-in 0s', tp.NotificationBoxSetup.DurationSecs),  //   // google : css transition fade out
+            'user-select': 'none'
+        };
+
+        if (tp.Viewport.IsXSmall) {
+            CssStyle['left'] = '2px';
+            CssStyle['right'] = '2px';
+        } else {
+            CssStyle['width'] = tp.px(tp.NotificationBoxSetup.Width);
+        }
+        this.SetStyle(CssStyle);
+
+
+
+        // Caption setup  // justify-content: flex-end;
+        let CssText = `
 position: relative;
 display: flex;
 align-items: center;
@@ -15477,12 +15558,12 @@ border-bottom: 1px solid ${BorderColor};
 user-select: none;
 `;
 
-            this.divCaption = tp('#' + CaptionId);
-            this.divCaption.style.cssText = CssText;
-            this.divCaption.tabIndex = 0;
+        this.divCaption = tp('#' + CaptionId);
+        this.divCaption.style.cssText = CssText;
+        this.divCaption.tabIndex = 0;
 
-            // Close button setup
-            CssText = `
+        // Close button setup
+        CssText = `
 padding: 2px 0;
 cursor: default;
 font-family: monospace;
@@ -15490,22 +15571,22 @@ font-size: 12px;
 padding: 0 2px;
 user-select: none;
 `;
-            this.divClose = tp('#' + btnCloseId);
-            this.divClose.style.cssText = CssText;
+        this.divClose = tp('#' + btnCloseId);
+        this.divClose.style.cssText = CssText;
 
-            // Content setup
-            CssText = `
+        // Content setup
+        CssText = `
 position: relative;
 flex-grow: 1;
 display: flex; 
 padding: 4px;
 `;
-            this.divContent = tp('#' + ContentId);
-            this.divContent.style.cssText = CssText;
-            this.divContent.tabIndex = 0;
+        this.divContent = tp('#' + ContentId);
+        this.divContent.style.cssText = CssText;
+        this.divContent.tabIndex = 0;
 
-            // edtMessage textarea setup
-            CssText = `
+        // edtMessage textarea setup
+        CssText = `
 position: relative;
 display: block;
 width: 100%;
@@ -15521,163 +15602,160 @@ padding: 4px;
 box-sizing: border-box;
 background-color: ${BorderColor};
 `;
-            this.edtMessage = tp('#' + edtMessageId);
-            this.edtMessage.style.cssText = CssText;
-            this.edtMessage.cols = 10;
-            this.edtMessage.rows = 2;
-            this.edtMessage.value = Message;
+        this.edtMessage = tp('#' + edtMessageId);
+        this.edtMessage.style.cssText = CssText;
+        this.edtMessage.cols = 10;
+        this.edtMessage.rows = 2;
+        this.edtMessage.value = Message;
 
-            // add to the notification boxes
-            tp.NotificationBoxes.Add(this.Handle);
+        // add to the notification boxes
+        tp.NotificationBoxes.Add(this.Handle);
 
-            // set a close timeout
-            setTimeout(function (box) {
-                if (!box.Clicked) {
-                    box.Dispose();
-                }
-            }, tp.NotificationBoxSetup.DurationSecs * 1000, this);
+        // set a close timeout
+        setTimeout(function (box) {
+            if (!box.Clicked) {
+                box.Dispose();
+            }
+        }, tp.NotificationBoxSetup.DurationSecs * 1000, this);
 
-            // Dragger setup
-            this.Dragger = new tp.Dragger(tp.DraggerMode.Both, this.Handle, this.divCaption);
-            this.Dragger.On(tp.Events.DragStart, this.OnAnyEvent, this);
+        // Dragger setup
+        this.Dragger = new tp.Dragger(tp.DraggerMode.Both, this.Handle, this.divCaption);
+        this.Dragger.On(tp.Events.DragStart, this.OnAnyEvent, this);
 
-            // events
-            this.HookEvent(tp.Events.Click);
-            this.HookEvent(tp.Events.KeyDown);
-            this.HookEvent(tp.Events.MouseDown);
-        }
+        // events
+        this.HookEvent(tp.Events.Click);
+        this.HookEvent(tp.Events.KeyDown);
+        this.HookEvent(tp.Events.MouseDown);
+    }
 
-        /** Returns a string indicating the box type.
-         @type {string}
-         */
-        get TypeText() { return tp.EnumNameOf(tp.NotificationType, this.Type); }
-        /* overrides */
+    /** Returns a string indicating the box type.
+     @type {string}
+     */
+    get TypeText() { return tp.EnumNameOf(tp.NotificationType, this.Type); }
+    /* overrides */
 
-        /**
-         * Initializes the 'static' and 'read-only' class fields
-         * @protected 
-         * @override
-        */
-        InitClass() {
-            super.InitClass();
-            this.tpClass = 'tp.NotificationBox';
-        }
-        /**
-        Handles any DOM event
-        @protected
-        @override
-        @param {Event}  e The Event object
-        */
-        OnAnyDOMEvent(e) {
-            let Type = tp.Events.ToTripous(e.type);
+    /**
+     * Initializes the 'static' and 'read-only' class fields
+     * @protected 
+     * @override
+    */
+    InitClass() {
+        super.InitClass();
+        this.tpClass = 'tp.NotificationBox';
+    }
+    /**
+    Handles any DOM event
+    @protected
+    @override
+    @param {Event}  e The Event object
+    */
+    OnAnyDOMEvent(e) {
+        let Type = tp.Events.ToTripous(e.type);
 
-            if (tp.IsSameText(tp.Events.Click, Type)) {
-                if (this.Clicked !== true) {
-                    this.Clicked = true;
-                    this.Handle.style.transition = 'none';
-                    this.Handle.style.opacity = '1';
-                }
+        if (tp.IsSameText(tp.Events.Click, Type)) {
+            if (this.Clicked !== true) {
+                this.Clicked = true;
+                this.Handle.style.transition = 'none';
+                this.Handle.style.opacity = '1';
+            }
 
-                if (e.target === this.divClose) {
+            if (e.target === this.divClose) {
+                this.Dispose();
+            }
+        } else if (e instanceof KeyboardEvent) {
+            if (tp.IsSameText(tp.Events.KeyDown, Type)) {
+                var Key = e.keyCode;
+                if (tp.Keys.Escape === Key) {
                     this.Dispose();
                 }
-            } else if (e instanceof KeyboardEvent) {
-                if (tp.IsSameText(tp.Events.KeyDown, Type)) {
-                    var Key = e.keyCode;
-                    if (tp.Keys.Escape === Key) {
-                        this.Dispose();
-                    }
-                }
-            } else if (tp.IsSameText(tp.Events.MouseDown, Type)) {
-                this.BringToFront();
-                //log(this.TypeText + ': ' + this.ZIndex.toString());
             }
-
-            if (!this.IsDisposed)
-                super.OnAnyDOMEvent(e);
+        } else if (tp.IsSameText(tp.Events.MouseDown, Type)) {
+            this.BringToFront();
+            //log(this.TypeText + ': ' + this.ZIndex.toString());
         }
-        /**
-        Handles any event. Even DOM events are send in this method.
-        @protected
-        @override
-        @param {tp.EventArgs} Args The tp.EventArgs object
-        */
-        OnAnyEvent(Args) {
-            if (tp.IsSameText(tp.Events.DragStart, Args.EventName)) {
-                if (this.Dragger) {
-                    tp.NotificationBoxes.Remove(this.Handle);
 
-                    let X = this.Handle.offsetLeft - 5;
-                    let Y = this.Handle.offsetTop - 5;
+        if (!this.IsDisposed)
+            super.OnAnyDOMEvent(e);
+    }
+    /**
+    Handles any event. Even DOM events are send in this method.
+    @protected
+    @override
+    @param {tp.EventArgs} Args The tp.EventArgs object
+    */
+    OnAnyEvent(Args) {
+        if (tp.IsSameText(tp.Events.DragStart, Args.EventName)) {
+            if (this.Dragger) {
+                tp.NotificationBoxes.Remove(this.Handle);
 
-                    requestAnimationFrame(() => {
-                        this.X = X;
-                        this.Y = Y;
-                        this.Position = 'absolute';
-                    });
-                }
+                let X = this.Handle.offsetLeft - 5;
+                let Y = this.Handle.offsetTop - 5;
+
+                requestAnimationFrame(() => {
+                    this.X = X;
+                    this.Y = Y;
+                    this.Position = 'absolute';
+                });
             }
         }
-        /**        
-        Destroys the handle (element) of this instance by removing it from DOM and releases any other resources.
-        @protected
-        @override
-        */
-        Dispose() {
-            tp.NotificationBoxes.Remove(this.Handle);
-            super.Dispose();
-        }
-    };
-    /** Field
-     * 
-     * @type {tp.NotificationType}
-     * */
-    NotificationBox.prototype.Type = tp.NotificationType.Information;
-    /** Field
-     * @protected
-     * @type {HTMLElement}
-     * */
-    NotificationBox.prototype.divCaption = null;    // HTMLElement;
-    /** Field
-     * @protected
-     * @type {HTMLElement}
-     * */
-    NotificationBox.prototype.divClose = null;      // HTMLElement;
-    /** Field
-     * @protected
-     * @type {HTMLElement}
-     * */
-    NotificationBox.prototype.divContent = null;    // HTMLElement;
-    /** Field
-     * @protected
-     * @type {HTMLTextAreaElement}
-     * */
-    NotificationBox.prototype.edtMessage = null;    // HTMLTextAreaElement;
+    }
+    /**        
+    Destroys the handle (element) of this instance by removing it from DOM and releases any other resources.
+    @protected
+    @override
+    */
+    Dispose() {
+        tp.NotificationBoxes.Remove(this.Handle);
+        super.Dispose();
+    }
+};
+/** Field
+ * 
+ * @type {tp.NotificationType}
+ * */
+NotificationBox.prototype.Type = tp.NotificationType.Information;
+/** Field
+ * @protected
+ * @type {HTMLElement}
+ * */
+NotificationBox.prototype.divCaption = null;    // HTMLElement;
+/** Field
+ * @protected
+ * @type {HTMLElement}
+ * */
+NotificationBox.prototype.divClose = null;      // HTMLElement;
+/** Field
+ * @protected
+ * @type {HTMLElement}
+ * */
+NotificationBox.prototype.divContent = null;    // HTMLElement;
+/** Field
+ * @protected
+ * @type {HTMLTextAreaElement}
+ * */
+NotificationBox.prototype.edtMessage = null;    // HTMLTextAreaElement;
 
-    /** Field
-     * @protected
-     * @type {boolean}
-     * */
-    NotificationBox.prototype.Clicked = false;
-    /** Field
-     * @protected
-     * @type {tp.Dragger}
-     * */
-    NotificationBox.prototype.Dragger = null;       // tp.Dragger = null;
-
-
-    // 
-    /** Replace the above tp.NotifyFunc <br />
-    Displays a notification message to the user.
-    @param {string} Message The notification message
-    @param {NotificationType} Type The type of notification, i.e. Warning, Error, etc
-     */
-    tp.NotifyFunc = (Message, Type) => {
-        let Box = new NotificationBox(Message, Type);
-    };
+/** Field
+ * @protected
+ * @type {boolean}
+ * */
+NotificationBox.prototype.Clicked = false;
+/** Field
+ * @protected
+ * @type {tp.Dragger}
+ * */
+NotificationBox.prototype.Dragger = null;       // tp.Dragger = null;
 
 
-})();
+// 
+/** Replace the above tp.NotifyFunc <br />
+Displays a notification message to the user.
+@param {string} Message The notification message
+@param {NotificationType} Type The type of notification, i.e. Warning, Error, etc
+ */
+tp.NotifyFunc = (Message, Type) => {
+    let Box = new NotificationBox(Message, Type);
+};
 
 //#endregion
 
@@ -15727,6 +15805,9 @@ tp.Main = function () {
     };
 
     let InitializeCulture = function () {
+
+        
+        tp.fCultureCode = null;
 
         //tp.CultureCode = 'en-US';
         tp.CultureCode = 'el-GR'; 

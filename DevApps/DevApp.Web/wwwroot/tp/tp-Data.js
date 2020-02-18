@@ -1748,7 +1748,7 @@ tp.Db = class {
     @param {tp.DataType} DataType - The datatype of the specified value. One of the {@link tp.DataType} constants.
     @param {boolean} ForList - If true then the value is formatted for grids and lists
     @param {number} [Decimals=2] - Optional. Defaults to 2. The number of decimal places into string (when float value).
-    @param {boolean} [LocalDate=false] - Optional. Defaults to false. When true a local date string is returned, else a Utc date string (when date-time).
+    @param {boolean} [LocalDate=false] - Optional. Defaults to false. When true a local date string is returned, else an ISO date string (when date-time).
     @param {boolean} [DisplaySeconds=false] - Optional. Defaults to false. When true, then seconds are included in the returned string (when date-time).
     @returns {string} Returns the specified value as a string.
     */
@@ -1762,9 +1762,9 @@ tp.Db = class {
                 case tp.DataType.Integer: return v.toString();
                 case tp.DataType.Boolean: return (v === true) || (v === 1) ? 'x' : '';
                 case tp.DataType.Float: return tp.FormatNumber(v, Decimals);
-                case tp.DataType.Date: return tp.ToDateString(v, LocalDate);
+                case tp.DataType.Date: return tp.ToDateString(v, LocalDate === true? '': 'ISO');
                 case tp.DataType.Time: return tp.ToTimeString(v, DisplaySeconds);
-                case tp.DataType.DateTime: return tp.ToDateTimeString(v, LocalDate, DisplaySeconds);
+                case tp.DataType.DateTime: return tp.ToDateTimeString(v, LocalDate === true ? '' : 'ISO');
                 case tp.DataType.Memo: return Boolean(ForList) === true ? '[memo]' : v; // '[memo]';
                 case tp.DataType.Graphic: return Boolean(ForList) === true ? '[graphic]' : v; //  '[graphic]';
                 case tp.DataType.Blob: return Boolean(ForList) === true ? '[blob]' : v; //  '[blob]';

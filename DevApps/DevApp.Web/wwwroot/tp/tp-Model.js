@@ -197,12 +197,10 @@ tp.BrokerEventArgs = class extends tp.EventArgs {
     }
 
     /** Field
-     @property
      @type {tp.Broker}
      */
     Broker;
     /** Field
-     @property
      @type {tp.BrokerAction}
      */
     Action;
@@ -2179,7 +2177,6 @@ tp.DataView.prototype.ForceSelect;
 /* properties */
 /**
 The primary key field name. Defaults to Id
-@property
 @type {string}
  */
 tp.DataView.prototype.PrimaryKeyField;
