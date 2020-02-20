@@ -498,22 +498,34 @@ tp.DateSeparator = '/';
 tp.DayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 tp.MonthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
-tp.DateFormatLocal = 'yyyy/MM/dd';
 tp.DateFormatISO = 'yyyy-MM-dd';
+tp.DateFormatLocal = 'yyyy/MM/dd';
 
-
+/**
+ * Returns the decimal separator of a specified culture, i.e. en-US
+ * @param {string} CultureCode The culture code, i.e. en-US
+ * @return {string} Returns the decimal separator of a specified culture, i.e. en-US
+ */
 tp.GetDecimalSeparator = (CultureCode) => {
     let n = 1.1;
     let Result = n.toLocaleString(CultureCode).substring(1, 2);
     return Result;
 };
-
+/**
+ * Returns the thousand separator of a specified culture, i.e. en-US
+ * @param {string} CultureCode The culture code, i.e. en-US
+ * @return {string} Returns the thousand separator of a specified culture, i.e. en-US
+ */
 tp.GetThousandSeparator = (CultureCode) => {
     let n = 1000;
     let Result = n.toLocaleString(CultureCode).substring(1, 2);
     return Result;
 };
-
+/**
+ * Returns the date separator of a specified culture, i.e. en-US
+ * @param {string} CultureCode The culture code, i.e. en-US
+ * @returns {string} Returns the date separator of a specified culture, i.e. en-US
+ */
 tp.GetDateSeparator = (CultureCode) => {
     let S = new Date().toLocaleDateString(CultureCode);
 
@@ -525,8 +537,15 @@ tp.GetDateSeparator = (CultureCode) => {
 
     return '-';
 };
-
+/**
+ * Returns the date format, i.e. dd/MM/yyyy or MM/dd/YYYY, of a specified culture, i.e. en-US
+ * @param {string} CultureCode The culture code, i.e. en-US
+ * @returns {string} Returns the date format, i.e. dd/MM/yyyy or MM/dd/YYYY, of a specified culture, i.e. en-US
+ */
 tp.GetDateFormat = (CultureCode) => {
+    if (CultureCode === 'ISO')
+        return tp.DateFormatISO;
+
     let i, ln;
     let DateSeparator = tp.GetDateSeparator(CultureCode);
 
@@ -554,6 +573,10 @@ tp.GetDateFormat = (CultureCode) => {
 
 };
 
+
+/** Called right after the {@link tp.CultureCode} property is changed. <br />
+ * It updates the decimal, thousand and date separators and the locale date format according to the new culture.
+ * */
 tp.OnCultureChanged = function () {
     tp.DecimalSeparator = tp.GetDecimalSeparator(tp.CultureCode); 
     tp.ThousandSeparator = tp.GetThousandSeparator(tp.CultureCode);
@@ -561,7 +584,8 @@ tp.OnCultureChanged = function () {
     tp.DateFormatLocal = tp.GetDateFormat(tp.CultureCode);
 };
 
-/** Gets or sets the current culture, i.e. locale. By default returns 'en-US'
+/** Gets or sets the current culture, i.e. locale. By default returns 'en-US'. <br />
+ * The initial value of this property comes from lang attribute of the html element, e.g. <html lang="en-US"> <br />
 @type {string}
 */
 tp.CultureCode = null;
@@ -681,6 +705,16 @@ tp.IsString = function (v) { return typeof v === 'string'; };
  * @returns {boolean} Returns true if the specified value passes the check.
  */
 tp.IsNumber = function (v) { return typeof v === 'number'; };
+/** Type checking function
+ * @param {any} v The value to check
+ * @returns {boolean} Returns true if the specified value passes the check.
+ */
+tp.IsInteger = function(v) { return typeof v === 'number' && v % 1 === 0; }
+/** Type checking function
+ * @param {any} v The value to check
+ * @returns {boolean} Returns true if the specified value passes the check.
+ */
+tp.IsFloat = function (v) { return typeof v === 'number' && n % 1 !== 0; }
 /** Type checking function
  * @param {any} v The value to check
  * @returns {boolean} Returns true if the specified value passes the check.
@@ -2126,7 +2160,7 @@ tp.ToISODateString = (v) => {
  * If no culture code is specified, then the value is formatted according to the current culture, see: {@link tp.CultureCode}.    <br />
  * If the string 'ISO' is specified as the culture code, then the value is formatted as an ISO Date string, i.e. yyyy-MM-dd.
  * @param   {Date} v The Date value to format
- * @param   {string} [CultureCode=null] Defaults to null. Could be null, meaning the current culture, or a culture code, i.e. 'el-GR' or the string 'ISO'.
+ * @param   {string} [CultureCode=null] If null or empty, the default, then the date is formatted according to {@link tp.CultureCode} culture. Else a culture code, i.e. 'el-GR' or the string 'ISO' is required.
  * @returns  {string} The formatted string
  */
 tp.ToDateString = (v, CultureCode = null) => {
@@ -2155,7 +2189,7 @@ tp.ToTimeString = (v, Seconds = false, Milliseconds = false) => {
  * If no culture code is specified, then the value is formatted according to the current culture, see: {@link tp.CultureCode}.    <br />
  * If the string 'ISO' is specified as the culture code, then the value is formatted as an ISO Date string, i.e. yyyy-MM-dd.
  * @param   {Date} v The Date value to format
- * @param   {string} [CultureCode=null] Defaults to null. Could be null, meaning the current culture, or a culture code, i.e. 'el-GR' or the string 'ISO'.
+ * @param   {string} [CultureCode=null] If null or empty, the default, then the date is formatted according to {@link tp.CultureCode} culture. Else a culture code, i.e. 'el-GR' or the string 'ISO' is required.
  * @param   {boolean} [Seconds=false] Defaults to false. When true, then seconds are included in the returned string.
  * @param   {boolean} [Milliseconds=false] Defaults to false. When true, then seconds and milliseconds are included in the returned string.
  * @returns  {string} The formatted string

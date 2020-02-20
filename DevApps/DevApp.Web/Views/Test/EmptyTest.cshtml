@@ -5,9 +5,7 @@
 }
 
 <partial name="~/Views/Shared/_Index.cshtml" />
-<h2>@ViewBag.Title</h2>
-
-<script src="~/js/Tests.js"></script>
+<h2>@ViewBag.Title</h2> 
 
 <button id="btn1" onclick="Button1Click()">Button1</button> <br />
 <button id="btn2" onclick="Button2Click()">Button2</button> <br />
@@ -59,12 +57,16 @@
         tp.Ajax.GetAsync(Url);
     }
 
+    var Text = '';
     var Button1Click = function () {
         //tp.SysConfig.UseServerStringResources = true;
         //tp.Languages.Current = 'el-GR';
         //f();
 
-        var Text = tp.ToDateTimeString(new Date(), 'el-GR', true);
+        //Text = tp.ToDateTimeString(new Date(), 'el-GR', true);
+        //alert(Text);
+
+        Text = tp.Format('Date: {0}, Number: {1}, Boolean: {2}', new Date(), 123.45, true);
         alert(Text);
     }
 
