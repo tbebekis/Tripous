@@ -4,7 +4,7 @@
   "source": {
     "includePattern": ".+\\.js(doc|x)?$",
     "excludePattern": "",
-    "include": [ ".\\wwwroot\\js\\tp\\" ],
+    "include": [ ".\\wwwroot\\tp\\" ],
     "exclude": []
   },
   "opts": {

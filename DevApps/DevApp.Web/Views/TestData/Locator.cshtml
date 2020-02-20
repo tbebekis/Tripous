@@ -91,7 +91,7 @@
 
         let Counter = 1;
         let pnlLog = tp('#pnlLog');
-        let SB = new tp.StringBuilder("", "<br />");
+        let SB = new tp.StringBuilder("<br />");
         Grid.DataSource.On("PositionChanged", () => {
             let Row = Grid.DataSource.Current;
             let Column; 

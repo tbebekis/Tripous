@@ -454,210 +454,6 @@ tp.Logger.DisplayNotificationBoxes = true;
 //#endregion
 
 
-
-
-//---------------------------------------------------------------------------------------
-// tp Properties and constants
-//---------------------------------------------------------------------------------------
-
-//#region tp Properties and constants
-
-// NOTE: some properties or constants may declared twice, just for the intellisense to work.
-/** Line Break    
- * WARNING: .Net line break = \r\n */
-tp.LB = '\n';
-tp.SPACE = ' ';
-tp.NO_NAME = 'no-name';
-
-tp.NULL = "___null___";
-
-
-/** The undefined constant as a tp constant.
- * 
- @type {undefined}
- */
-tp.Undefined = void 0;
-Object.defineProperty(tp, 'Undefined', {
-    get() { return void 0; }
-});
-//tp.Constant('Undefined', tp, void 0); // http://stackoverflow.com/questions/7452341/what-does-void-0-mean
-
-
-/** The currency symbol. Defaults to the symbor of the euro */
-tp.CurrencySymbol = '\u20ac'; // euro
-
-/** The current decimal separator */
-tp.DecimalSeparator = '.';
-
-/** The current thousand separator */
-tp.ThousandSeparator = ',';
-
-/** The current date separator  */
-tp.DateSeparator = '/';
-
-tp.DayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-tp.MonthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-
-tp.DateFormatISO = 'yyyy-MM-dd';
-tp.DateFormatLocal = 'yyyy/MM/dd';
-
-/**
- * Returns the decimal separator of a specified culture, i.e. en-US
- * @param {string} CultureCode The culture code, i.e. en-US
- * @return {string} Returns the decimal separator of a specified culture, i.e. en-US
- */
-tp.GetDecimalSeparator = (CultureCode) => {
-    let n = 1.1;
-    let Result = n.toLocaleString(CultureCode).substring(1, 2);
-    return Result;
-};
-/**
- * Returns the thousand separator of a specified culture, i.e. en-US
- * @param {string} CultureCode The culture code, i.e. en-US
- * @return {string} Returns the thousand separator of a specified culture, i.e. en-US
- */
-tp.GetThousandSeparator = (CultureCode) => {
-    let n = 1000;
-    let Result = n.toLocaleString(CultureCode).substring(1, 2);
-    return Result;
-};
-/**
- * Returns the date separator of a specified culture, i.e. en-US
- * @param {string} CultureCode The culture code, i.e. en-US
- * @returns {string} Returns the date separator of a specified culture, i.e. en-US
- */
-tp.GetDateSeparator = (CultureCode) => {
-    let S = new Date().toLocaleDateString(CultureCode);
-
-    if (S.indexOf('/') !== -1) {
-        return '/';
-    } else if (S.indexOf('.') !== -1) {
-        return '.';
-    }
-
-    return '-';
-};
-/**
- * Returns the date format, i.e. dd/MM/yyyy or MM/dd/YYYY, of a specified culture, i.e. en-US
- * @param {string} CultureCode The culture code, i.e. en-US
- * @returns {string} Returns the date format, i.e. dd/MM/yyyy or MM/dd/YYYY, of a specified culture, i.e. en-US
- */
-tp.GetDateFormat = (CultureCode) => {
-    if (CultureCode === 'ISO')
-        return tp.DateFormatISO;
-
-    let i, ln;
-    let DateSeparator = tp.GetDateSeparator(CultureCode);
-
-    let DT = new Date('2000-10-15');
-    let S = DT.toLocaleDateString(CultureCode, { year: 'numeric', month: '2-digit', day: '2-digit' });
-
-    let Parts = S.split(DateSeparator);
-
-    for (i = 0, ln = Parts.length; i < ln; i++)
-        Parts[i] = Parts[i].trim();
-
-    for (i = 0, ln = Parts.length; i < ln; i++) {
-        if (Parts[i] === '2000') {
-            Parts[i] = 'yyyy';
-        }
-        if (Parts[i] === '10') {
-            Parts[i] = 'MM';
-        }
-        if (Parts[i] === '15') {
-            Parts[i] = 'dd';
-        }
-    }
-
-    return Parts.join(DateSeparator);
-
-};
-
-
-/** Called right after the {@link tp.CultureCode} property is changed. <br />
- * It updates the decimal, thousand and date separators and the locale date format according to the new culture.
- * */
-tp.OnCultureChanged = function () {
-    tp.DecimalSeparator = tp.GetDecimalSeparator(tp.CultureCode); 
-    tp.ThousandSeparator = tp.GetThousandSeparator(tp.CultureCode);
-    tp.DateSeparator = tp.GetDateSeparator(tp.CultureCode);
-    tp.DateFormatLocal = tp.GetDateFormat(tp.CultureCode);
-};
-
-/** Gets or sets the current culture, i.e. locale. By default returns 'en-US'. <br />
- * The initial value of this property comes from lang attribute of the html element, e.g. <html lang="en-US"> <br />
-@type {string}
-*/
-tp.CultureCode = null;
-Object.defineProperty(tp, 'CultureCode', {
-    get () {
-        return !tp.IsBlank(tp.fCultureCode) ? tp.fCultureCode : 'en-US';
-    },
-    set (v) {
-        if (v && v !== tp.fCultureCode) {
-            tp.fCultureCode = v;
-            tp.OnCultureChanged();
-        }
-    }
-});
-
-
-
-/** The document the script operates on */
-tp.Doc = window.frameElement ? window.top.document : window.document;
-
-
-/** The currently active element 
- @type {Element}
- */
-tp.ActiveElement = null;
-Object.defineProperty(tp, 'ActiveElement', {
-    get() { return tp.Doc.activeElement; }
-});
-
-
-tp.Prefix = 'tp-';
-
-tp.ButtonClasses = [];
-
-/** A global object for keeping the urls used by a javascript application in ajax and other calls. */
-tp.Urls = {};
-
-tp.IcoChars = {
-    Insert: '+',    // '➕',
-    Delete: '-',    // '➖',
-    Edit: '*',      // '✱',
-    Find: '🔍',
-    LargeButtonDown: '&#9660;'
-};
-
-// (🗖 🗗 🗕🗙      × _ □ )
-
-
-/**
-Control create params.
-Create params are placed here as 
-    tp.GlobalCreateParams[Id] = { };
-
-@class
-*/
-tp.GlobalCreateParams = {};
-
-/**
-The system configuration global object
-@class
-*/
-tp.SysConfig = {};
-tp.SysConfig.CompanyFieldName = 'CompanyId';
-tp.SysConfig.VariablesPrefix = ':@';
-tp.SysConfig.LocatorShowDropDownRowCountLimit = 200;
-tp.SysConfig.UseServerStringResources = false;
-tp.SysConfig.DefaultConnection = "DEFAULT";
-
-
-//#endregion
-
-
 //---------------------------------------------------------------------------------------
 // tp functions
 //---------------------------------------------------------------------------------------
@@ -1233,6 +1029,246 @@ tp.MergeQuick = function (Dest, Source) {
  
 //#endregion
 
+//#region Format, FormatNumber, FormatDateTime
+
+/**
+Formats a string the C# way <br />
+Number and Date values should be passed as already formatted strings.
+@example
+var S = tp.Format('String: {0}, Number: {1}, Boolean: {2}', 'tripous', 789, true);
+@param {string} s - The format string  
+@param {any[]} ...values - The values for the format string. Number and Date values should be passed as already formatted strings. 
+@returns {string} Returns the formatted string.
+*/
+tp.Format = function (s, ...values) {
+    if (tp.IsString(s)) {
+        let i, ln, Params = [];
+        for (i = 1, ln = arguments.length; i < ln; i++) {
+            Params.push(arguments[i]);
+        }
+
+        for (i = 0; i < Params.length; i++) {
+            let regEx = new RegExp("\\{" + (i) + "\\}", "gm");
+            s = s.replace(regEx, Params[i]);
+        }
+    }
+
+    return s;
+};
+/** 
+ * Formats a number into a string the C# way. <br /> 
+ * It uses two types of formats: Standard and Custom. <br />
+   <pre>
+    ------------------------------------------------------------------------------------------                      
+                                    Standard Formats                                                                
+    ------------------------------------------------------------------------------------------
+    Char   Name        Numbers         Groups      Decimals    Examples
+    ------------------------------------------------------------------------------------------
+    D      Decimal     integers only   no          no          1234 ("D") -> 1234,  -1234 ("D6") -> -001234
+    C      Currency    float numbers   yes         yes         123.456 ("C", en-US) -> $123.46
+    F      Fixed       float numbers   no          yes         -1234.56 ("F4", en-US) -> -1234.5600
+    N      Number      float numbers   yes         yes         -1234.56 ("N3", en-US) -> -1,234.560
+
+    See: https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-string
+    ------------------------------------------------------------------------------------------
+                                    Custom Formats
+    ------------------------------------------------------------------------------------------
+    0	    Zero	    Replaces the zero with the corresponding digit if one is present; otherwise, zero appears in the result string
+    #	    Digit	    Replaces the "#" symbol with the corresponding digit if one is present; otherwise, no digit appears in the result string.
+    .	    Decimal	    Determines the location of the decimal separator in the result string
+    ,	    Group	    Inserts a localized group separator character between each group.
+
+    Examples
+    0     1234.5678 ("00000") -> 01235    0.45678 ("0.00", en-US) -> 0.46
+    #     1234.5678 ("#####") -> 1235     0.45678 ("#.##", en-US) -> 0.46
+    .     0.45678 ("0.00", en-US) -> 0.46
+    ,     2147483647 ("##,#", en-US) -> 2,147,483,647
+
+    See: https://docs.microsoft.com/en-us/dotnet/standard/base-types/custom-numeric-format-strings
+    ------------------------------------------------------------------------------------------
+  </pre>
+ * @param {number} v The number to be formatted as string.
+ * @param {string} format The format to use. 
+ * @returns {string} Returns the formatted string.
+ */
+tp.FormatNumber = (v, format) => {
+    if (typeof v !== 'number')
+        return '';
+
+    let o = {
+        style: 'decimal'
+    };
+
+    format = format.toUpperCase();
+
+    // standard formats
+    if (['C', 'D', 'F', 'N'].indexOf(format[0]) !== -1) {
+
+        let Decimals = format.length > 1 ? format.substring(1) : '0';
+        Decimals = parseInt(Decimals, 10);
+
+        // currency
+        if (format[0] === 'C') {
+            let Culture = tp.Cultures.Find(tp.CultureCode);
+            Decimals = Decimals === 0 ? Culture.CurrencyDecimals : Decimals;
+
+            o.style = 'currency';
+            o.useGrouping = true;
+            o.currency = Culture.CurrencyCode;
+            o.currencyDisplay = 'symbol';
+        }
+        else {  // all others
+            if (format[0] === 'D') {
+                o.minimumIntegerDigits = Decimals > 0 ? Decimals : 1;
+                Decimals = 0;
+            } else {
+                o.minimumIntegerDigits = 1;
+                Decimals = Decimals > 0 ? Decimals : 2;
+            }
+
+            o.useGrouping = format[0] === 'N';
+            o.minimumFractionDigits = Decimals;
+            o.maximumFractionDigits = Decimals;
+        }
+    }
+    else { // custom formats
+
+        let Parts = format.split('.');
+        let sFormatIntPart = Parts[0];
+        let sFormatDecPart = Parts.length > 1 ? Parts[1] : '';
+        let UseGroups = sFormatIntPart.indexOf(',') > -1;
+
+        if (UseGroups) {
+            sFormatIntPart = sFormatIntPart.replace(',', '');
+        }
+
+        o.useGrouping = UseGroups;                  // .replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+        o.minimumIntegerDigits = sFormatIntPart.startsWith('0') ? sFormatIntPart.length : 1;
+        o.minimumFractionDigits = sFormatDecPart.length;
+        o.maximumFractionDigits = sFormatDecPart.length;
+    }
+
+    let Result = v.toLocaleString(tp.CultureCode, o);
+    return Result;
+
+};
+/** Formats a number into a string.
+ Decimals is the number of decimal places into string. 
+ If DecimalSep or ThousandSep are not defined, the corresponging tripous globals are used.
+@param {number} v - The number to be formatted as string.
+@param {number} Decimals - The number of decimal places into string.
+@param {character} [DecimalSep] - The decimal separator to use
+@param {character} [ThousandSep] - The thousand separator to use
+@returns {string} Returns the formatted string.
+*/
+tp.FormatNumber2 = function (v, Decimals = 0, DecimalSep = null, ThousandSep = null) {
+    if (isNaN(v) || !tp.IsValid(v))
+        return '';
+
+    DecimalSep = DecimalSep || tp.DecimalSeparator;
+    ThousandSep = ThousandSep || tp.ThousandSeparator;
+
+    var S = v.toFixed(~~Decimals);
+
+    var Parts = S.split('.');
+    var NumPart = Parts[0];
+    var DecPart = Parts[1] ? DecimalSep + Parts[1] : '';
+
+    return NumPart.replace(/(\d)(?=(?:\d{3})+$)/g, '$1' + ThousandSep) + DecPart;
+};
+/**
+Formats a Date value based on a format string pattern. 
+Adapted from: https://github.com/UziTech/js-date-format/blob/master/js-date-format.js
+@param {Date} v - The Date value to format.  
+@param {string} format - The format string pattern
+@returns {string} Returns the formatted string
+*/
+tp.FormatDateTime = function (v, format = 'yyyy-MM-dd') {
+    // adapted from: https://github.com/UziTech/js-date-format/blob/master/js-date-format.js
+
+    format = format || tp.DateFormatISO;
+
+    let Pad = function (value, length) {
+        var negative = value < 0 ? "-" : "";
+        var zeros = "0";
+        for (var i = 2; i < length; i++) {
+            zeros += "0";
+        }
+        return negative + (zeros + Math.abs(value).toString()).slice(-length);
+    };
+
+    let Parts = {
+        date: v,
+        yyyy: function () { return Parts.date.getFullYear(); },
+        yy: function () { return Parts.date.getFullYear() % 100; },
+        MM: function () { return Pad(Parts.date.getMonth() + 1, 2); },
+        M: function () { return Parts.date.getMonth() + 1; },
+        dd: function () { return Pad(Parts.date.getDate(), 2); },
+        d: function () { return Parts.date.getDate(); },
+        HH: function () { return Pad(Parts.date.getHours(), 2); },
+        H: function () { return Parts.date.getHours(); },
+        hh: function () {
+            var hour = Parts.date.getHours();
+            if (hour > 12) {
+                hour -= 12;
+            } else if (hour < 1) {
+                hour = 12;
+            }
+            return Pad(hour, 2);
+        },
+        h: function () {
+            var hour = Parts.date.getHours();
+            if (hour > 12) {
+                hour -= 12;
+            } else if (hour < 1) {
+                hour = 12;
+            }
+            return hour;
+        },
+        mm: function () { return Pad(Parts.date.getMinutes(), 2); },
+        m: function () { return Parts.date.getMinutes(); },
+        ss: function () { return Pad(Parts.date.getSeconds(), 2); },
+        s: function () { return Parts.date.getSeconds(); },
+        fff: function () { return Pad(Parts.date.getMilliseconds(), 3); },
+        ff: function () { return Pad(Math.floor(Parts.date.getMilliseconds() / 10), 2); },
+        f: function () { return Math.floor(Parts.date.getMilliseconds() / 100); },
+        zzzz: function () { return Pad(Math.floor(-Parts.date.getTimezoneOffset() / 60), 2) + ":" + Pad(-Parts.date.getTimezoneOffset() % 60, 2); },
+        zzz: function () { return Math.floor(-Parts.date.getTimezoneOffset() / 60) + ":" + Pad(-Parts.date.getTimezoneOffset() % 60, 2); },
+        zz: function () { return Pad(Math.floor(-Parts.date.getTimezoneOffset() / 60), 2); },
+        z: function () { return Math.floor(-Parts.date.getTimezoneOffset() / 60); }
+    };
+
+
+    let Result = [];
+    let IsMatch = false;
+    let FormatPart;
+    let ResultPart;
+
+    while (format.length > 0) {
+
+        IsMatch = false;
+        FormatPart;
+        for (var i = format.length; i > 0; i--) {
+            FormatPart = format.substring(0, i);
+            if (FormatPart in Parts) {
+                ResultPart = Parts[FormatPart]();
+                Result.push(ResultPart);
+                format = format.substring(i);
+                IsMatch = true;
+                break;
+            }
+        }
+
+        if (!IsMatch) {
+            Result.push(format[0]);
+            format = format.substring(1);
+        }
+    }
+
+    return Result.join("");
+};
+//#endregion
+
 //#region Strings
 
 
@@ -1272,53 +1308,7 @@ Returns true if a specified text looks like html markup.
 */
 tp.IsHtml = function (Text) { return /<[a-z][\s\S]*>/i.test(Text); };
 
-/**
-Formats a string the C# way
-@example
-var S = tp.Format('String: {0}, Number: {1}, Boolean: {2}', 'tripous', 789, true);
-@param {string} s - The format string  
-@param {any[]} ...values - The values for the format string 
-@returns {string} Returns the formatted string.
-*/
-tp.Format = function (s, ...values) {
-    var i, ln, Params = [];
-    for (i = 1, ln = arguments.length; i < ln; i++) {
-        Params.push(arguments[i]);
-    }
 
-    if (tp.IsString(s)) {
-        for (i = 0; i < Params.length; i++) {
-            var regEx = new RegExp("\\{" + (i) + "\\}", "gm");
-            s = s.replace(regEx, Params[i]);
-        }
-    }
-
-    return s;
-}; 
-/** Formats a number into a string.
- Decimals is the number of decimal places into string. 
- If DecimalSep or ThousandSep are not defined, the corresponging tripous globals are used.
-@param {number} v - The number to be formatted as string.
-@param {number} Decimals - The number of decimal places into string.
-@param {character} [DecimalSep] - The decimal separator to use
-@param {character} [ThousandSep] - The thousand separator to use
-@returns {string} Returns the formatted string.
-*/
-tp.FormatNumber = function (v, Decimals = 0, DecimalSep = null, ThousandSep = null) {
-    if (isNaN(v) || !tp.IsValid(v))
-        return '';
-
-    DecimalSep = DecimalSep || tp.DecimalSeparator;
-    ThousandSep = ThousandSep || tp.ThousandSeparator;
-
-    var S = v.toFixed(~~Decimals);
-
-    var Parts = S.split('.');
-    var NumPart = Parts[0];
-    var DecPart = Parts[1] ? DecimalSep + Parts[1] : '';
-
-    return NumPart.replace(/(\d)(?=(?:\d{3})+$)/g, '$1' + ThousandSep) + DecPart;
-};
 /**
  True if two string are of the same text, case-insensitively always
 @param {string} A - The first string.
@@ -2020,93 +2010,7 @@ Object.freeze(tp.Day);
 
 
 
-/**
-Formats a Date value based on a format string pattern. 
-Adapted from: https://github.com/UziTech/js-date-format/blob/master/js-date-format.js
-@param {Date} v - The Date value to format.  
-@param {string} format - The format string pattern
-@returns {string} Returns the formatted string
-*/
-tp.FormatDateTime = function (v, format = 'yyyy-MM-dd') {
-    // adapted from: https://github.com/UziTech/js-date-format/blob/master/js-date-format.js
 
-    format = format || tp.DateFormatISO;
-
-    let Pad = function (value, length) {
-        var negative = value < 0? "-" : "";
-        var zeros = "0";
-        for (var i = 2; i < length; i++) {
-            zeros += "0";
-        }
-        return negative + (zeros + Math.abs(value).toString()).slice(-length);
-    };
-
-    let Parts = {
-        date: v,
-        yyyy: function () { return Parts.date.getFullYear(); },
-        yy: function () { return Parts.date.getFullYear() % 100; },
-        MM: function () { return Pad(Parts.date.getMonth() + 1, 2); },
-        M: function () { return Parts.date.getMonth() + 1; },
-        dd: function () { return Pad(Parts.date.getDate(), 2); },
-        d: function () { Parts.date.getDate(); },
-        HH: function () { return Pad(Parts.date.getHours(), 2); },
-        H: function () { return Parts.date.getHours(); },
-        hh: function () {
-            var hour = Parts.date.getHours();
-            if (hour > 12) {
-                hour -= 12;
-            } else if (hour < 1) {
-                hour = 12;
-            }
-            return Pad(hour, 2);
-        },
-        h: function () {
-            var hour = Parts.date.getHours();
-            if (hour > 12) {
-                hour -= 12;
-            } else if (hour < 1) {
-                hour = 12;
-            }
-            return hour;
-        },
-        mm: function () { return Pad(Parts.date.getMinutes(), 2); },
-        m: function () { return Parts.date.getMinutes(); },
-        ss: function () { return Pad(Parts.date.getSeconds(), 2); },
-        s: function () { return Parts.date.getSeconds(); },
-        fff: function () { return Pad(Parts.date.getMilliseconds(), 3); },
-        ff: function () { return Pad(Math.floor(Parts.date.getMilliseconds() / 10), 2); },
-        f: function () { return Math.floor(Parts.date.getMilliseconds() / 100); },
-        zzzz: function () { return Pad(Math.floor(-Parts.date.getTimezoneOffset() / 60), 2) + ":" + Pad(-Parts.date.getTimezoneOffset() % 60, 2); },
-        zzz: function () { return Math.floor(-Parts.date.getTimezoneOffset() / 60) + ":" + Pad(-Parts.date.getTimezoneOffset() % 60, 2); },
-        zz: function () { return Pad(Math.floor(-Parts.date.getTimezoneOffset() / 60), 2); },
-        z: function () { return Math.floor(-Parts.date.getTimezoneOffset() / 60); }
-    };
- 
-
-    var Result = [];
-    var IsMatch = false;
-
-    while (format.length > 0) {
-
-        IsMatch = false;
-
-        for (var i = format.length; i > 0; i--) {
-            if (format.substring(0, i) in Parts) {
-                Result.push(Parts[format.substring(0, i)]());
-                format = format.substring(i);
-                IsMatch = true;
-                break;
-            }
-        }
-
-        if (!IsMatch) {
-            Result.push(format[0]);
-            format = format.substring(1);
-        }
-    }
-
-    return Result.join("");
-};
 /**
  * Parses a date, time or date-time string into a Date value. The string format should be in yyyy/MM/dd HH:mm:ss  
  Using the / date separator the date is parsed to local date-time.  
@@ -2151,7 +2055,7 @@ tp.TryParseDateTime = function (v) {
  * @param   {Date} v The Date value to format
  * @returns  {string} The formatted string
  */
-tp.ToISODateString = (v) => {
+tp.ToISODateString = function (v) {
     return tp.FormatDateTime(v, tp.DateFormatISO);
 };
 /**
@@ -2163,8 +2067,13 @@ tp.ToISODateString = (v) => {
  * @param   {string} [CultureCode=null] If null or empty, the default, then the date is formatted according to {@link tp.CultureCode} culture. Else a culture code, i.e. 'el-GR' or the string 'ISO' is required.
  * @returns  {string} The formatted string
  */
-tp.ToDateString = (v, CultureCode = null) => {
-    return CultureCode === 'ISO' ? tp.ToISODateString(v) : tp.FormatDateTime(v, tp.IsBlank(CultureCode) ? tp.DateFormatLocal : tp.GetDateFormat(CultureCode));
+tp.ToDateString = function (v, CultureCode = null) {
+    if (CultureCode === 'ISO')
+        return tp.ToISODateString(v);
+
+    let format = tp.IsBlank(CultureCode) ? tp.DateFormat : tp.GetDateFormat(CultureCode);
+    let Result = tp.FormatDateTime(v, format);
+    return Result;
 };
 /**
  * Formats a Date value to a time string, optionally with seconds and milliseconds.
@@ -2173,7 +2082,7 @@ tp.ToDateString = (v, CultureCode = null) => {
  * @param   {boolean} [Milliseconds=false] Defaults to false. When true, then seconds and milliseconds are included in the returned string.
  * @returns  {string} The formatted string
  */
-tp.ToTimeString = (v, Seconds = false, Milliseconds = false) => {
+tp.ToTimeString = function(v, Seconds = false, Milliseconds = false)  {
     let format = 'HH:mm';
 
     if (Milliseconds == true)
@@ -5363,13 +5272,16 @@ tp.Off = function (Sender, EventName, FuncOrListener, UseCapture = false) {
 /**
 Triggers (fires) an event
 @param {string|Element} Sender - Selector or element. The dom element that fires the event.
-@param {Event} ev - The event to trigger
+@param {Event|string} ev - The event to trigger. Could be a {@link Event} instance or a string, i.e. 'click' or 'change'.
 @returns {boolean} The return value is false if event is cancelable and at least one of the event handlers which handled this event called Event.preventDefault(). Otherwise it returns true.
 */
 tp.Trigger = function (Sender, ev) {
     let target = tp.GetEventTarget(Sender);
+    if (tp.IsString(ev))
+        ev = new Event(ev);
     return target ? target.dispatchEvent(ev) : false;
 };
+
 /**
 Cancels an event.
 @param {Event} e - The event
@@ -5423,6 +5335,9 @@ tp.CreateCustomEvent = function (EventName, Bubbles = true, Cancelable = true, D
     return ev;
 };
 
+//#endregion
+
+//#region tp.EventArgs
 /** Represents event arguments and can be used with native events or tripous script events */
 tp.EventArgs = class {
     /** 
@@ -5501,13 +5416,6 @@ tp.EventArgs.prototype.Cancel = false;
  @type {string}
  */
 tp.EventArgs.prototype.Command = '';
- 
-
-
-
-
-
-
  
 
 //#endregion
@@ -7340,12 +7248,11 @@ tp.RandomColor = function () {
 tp.StringBuilder = class StringBuilder {
     /**
      * A class for constructing strings. The default line break is set to '\n'
-     * @param {string} Text - Optional. The initial text. Defaults to empty string.
      * @param {string} LineBreak - Optional.  The line break to use. Defaults to \n .
      */
-    constructor(Text = '', LineBreak = '\n') {
-        this.fData = Text;
-        this.fLB = LineBreak;
+    constructor(LineBreak = '\n') {
+        this.fData = '';
+        this.fLB = LineBreak || '\n';
     }
 
     /* properties */
@@ -7373,7 +7280,7 @@ tp.StringBuilder = class StringBuilder {
     @param {any} v - The value to append. 
     */
     Append(v) {
-        if (tp.IsValid(v))
+        if (tp.IsString(v))
             this.fData += v.toString();
     }
     /**
@@ -7381,9 +7288,11 @@ tp.StringBuilder = class StringBuilder {
     @param {any} v - Optional. The value to append. If not specified a line break is added.
     */
     AppendLine(v) {
-        if (tp.IsValid(v))
-            this.Append(v);
-        this.Append(this.LineBreak);
+        if (tp.IsString(v)) {
+            this.fData += v.toString();
+        }      
+
+        this.fData += this.LineBreak; 
     }
     /**
     Inserts a value at a specified index in the internal string
@@ -8658,7 +8567,34 @@ tp.Debug.Log = function (o) {
 //#endregion
 
 
+//#region  tp.Log
 
+/**
+ * A static helper class for displaying debug messages to a div with id='LogDiv'.
+ */
+tp.Log = class {
+    /** Clears the log div */
+    static Clear = function ()  {
+        tp.LogDiv.innerHTML = '';
+    };
+    /**
+     Appends a text line to the log div
+     @param {string} Text The text line to append
+     */
+    static Line = function(Text)  {
+        var S = tp.LogDiv.innerHTML ? tp.LogDiv.innerHTML : '';
+        tp.LogDiv.innerHTML = S + Text + '<br />';
+    };
+    /**
+     Replaces the content of the log div with a specified text
+     @param {string} Text The text
+     */
+    static Text = function(Text)  {
+        tp.LogDiv.innerHTML = Text;
+    };
+};
+
+//#endregion
 
 
 //---------------------------------------------------------------------------------------
@@ -10027,245 +9963,7 @@ tp.NameValueStringList = class {
 tp.NameValueStringList.prototype.fItems = []; // string[]
 //#endregion
 
- 
-//---------------------------------------------------------------------------------------
-// string resources
-//---------------------------------------------------------------------------------------
 
-//#region tp.Language
-/**
-A class for storing string resources of a certain language
-*/
-tp.Language = class {
-
-    /**
-    Constructor
-    @param {string} Name - The name of the language
-    @param {string} Code - The code of the language. Must be the two letter code of the language, e.g en, el, it, fr, etc.
-    @param {string} CultureCode -  The culture code associated to this language, e.g.  e.g en-US, el-GR, etc.
-    */
-    constructor(Name, Code, CultureCode) {
-        this.fName = Name;
-        this.fCode = Code;
-        this.fCultureCode = CultureCode;
-        this.fItems = new tp.Dictionary();
-    }
-
-/* private */
-    /** Field. The two letter code of the language, e.g en, el, it, fr, etc.
-     * @private
-     * @type {string}
-     */
-    fCode = '';
-    /** Field. The name of the language
-     * @private
-     * @type {string}
-     */
-    fName = '';
-    /** Field. The culture code associated to this language, e.g.  e.g en-US, el-GR, etc.
-     * @private
-     * @type {string}
-     */
-    fCultureCode = '';
-    /** Field. A string/string dictionary
-     * @private
-     * @type {tp.Dictionary}
-     */
-    fItems = null; // tp.Dictionary = null;
-
-    /* properties */
-    /**
-    The code of the language. The two letter code of the language, e.g en, el, it, fr, etc.
-    @type {string}
-    */
-    get Code() { return this.fCode; }
-    /**
-    The name of the language
-     @type {string}
-    */
-    get Name() { return this.fName; }
-    /**
-    The culture code associated to this language, e.g.  e.g en-US, el-GR, etc.
-     @type {string}
-    */
-    get CultureCode() { return this.fCultureCode; }
-    /**
-    The resource string. A string/string  dictionary with the resources of the language
-    @type {tp.Dictionary}
-    */
-    get Items()  { return this.fItems; }
-
-    /* public */
-    /**
-    Adds a source string list to this instance
-    @param {object} Source The source object to copy strings from
-    */
-    AddStringList(Source) {
-        if (Source) {
-            for (var Key in Source) {
-                this.Items.Set(Key, Source[Key]);
-            }
-        }
-    }
-    /**
-    Returns a string representation of this instance
-    @returns {string} Returns a string representation of this instance
-    */
-    toString() {
-        return tp.Format('{0} - {1}', this.Code, this.Name);
-    }
-};
-//#endregion
-
-tp.Urls.Language = '/App/Language';
-
-//#region tp.Languages
-/**
-A static helper class with a list of languages (Language), where each language is a list of string resources of that certain language
-@static
-*/
-tp.Languages = class { 
- 
-    /**
-    Finds and returns a {@link tp.Language} language by its code, if any, else null
-    @param {string} Code - The code of the language
-    @returns {tp.Language} Returns a {@link tp.Language} language
-    */
-    static Find(Code) {
-        return tp.FirstOrDefault(tp.Languages.fLanguages, function (item) {
-            return tp.IsSameText(Code, item.Code);
-        });
-    }
-    /**
-    Returns true if a {@link tp.Language} language exists, by its code
-    @param {string} Code - The code of the language
-    @returns {boolean} Returns true if a {@link tp.Language}  language exists, by its code
-    */
-    static Exists(Code) {
-        return tp.Languages.Find(Code) !== null;
-    }
-    /**
-    Adds and returns a new {@link tp.Language} language.
-   
-    @param {string} Name - The name of the language
-    @param {string} Code - The two letter code of the language, e.g en, el, it, fr, etc.
-    @param {string} CultureCode - The culture code associated to this language, e.g.  e.g en-US, el-GR, etc.
-    @returns {tp.Language} Returns a new {@link tp.Language} language.
-    */
-    static Add(Name, Code, CultureCode) {
-        var Result = tp.Languages.Find(Code);
-        if (tp.IsEmpty(Result)) {
-            Result = new tp.Language(Name, Code, CultureCode);
-            tp.Languages.fLanguages.push(Result);
-        }
-        return Result;
-    }
-
-    static get Current() {
-        return tp.Languages.fCurrent;
-    }
-    static set Current(v) {
-        if (v !== tp.Languages.fCurrent) {
-            tp.Languages.fCurrent = v;
-
-            if (tp.SysConfig.UseServerStringResources === true) {
-                let Data = {
-                    LanguageCode: v
-                };
-                tp.Ajax.PostAsync(tp.Urls.Language, Data, (Args) => {
-                    // nothing to do
-                });
-            }
-        }
-    }
-};
-
- 
-/**
-The list of resource languages.
-@private
-@type {tp.Language[]}
-*/
-tp.Languages.fLanguages; // tp.Language[];
-/** 
-The current language.
-@type {tp.Language}
-*/
-tp.Languages.fCurrent;
-/** 
-The english language.
-@type {tp.Language}
-*/
-tp.Languages.En;
-/** 
-The greek language.
-@type {tp.Language}
-*/
-tp.Languages.Gr;
-
- 
-
-//#endregion
- 
-
-tp.Urls.StringResource = '/App/StringResource';
-tp.Urls.StringResourceList = '/App/StringResourceList';
-
-//#region tp.Res
-/**
-A static class for getting back string resources
-@static
-*/
-tp.Res = class {
-
-    // TODO: /App/StringResourceList
-
-    /**
-    GS = GetString. <br />
-    Finds a string resource, for the current language, by a key. The string resource is passed back to the caller by calling a callback function.
-    In case of failure a specified default string is passed back. <br />
-    The current language is defined in the Languages class. <br />
-    @param {string} Key - The key for the string resource
-    @param {Function} ResultFunc - A callback function <code>(Value: string, UserTag?: any) => void </code> provided by the caller, to be called in order to return back the string resource
-    @param {string} [Default] - Optional. A default string value, in case the key is not found or the operation fails
-    @param {Object} [Context] - Optional. The context (this) to be used when calling the callback function
-    @param {any} [UserTag] - Optional. A user defined value
-     */
-    static GS(Key, ResultFunc, Default = '', Context = null, UserTag = null) {
-        // GS = GetString.
-        if (tp.IsString(Key) && tp.IsFunction(ResultFunc)) {
-            UserTag = UserTag || Key;
-            var Value;
-            if (tp.Languages.Current.Items.ContainsKey(Key)) {
-                Value = tp.Languages.Current.Items.ValueOf(Key, Default);
-                ResultFunc.call(Context, Value, UserTag);
-            } else if (tp.SysConfig.UseServerStringResources === true) {
-                tp.Ajax.GetAsync(tp.Urls.StringResource, (Args) => {
-                    Value = Args.ResponseData.Packet;
-                    tp.Languages.Current.Items.Set(Key, Value);
-                    ResultFunc.call(Context, Value, UserTag);
-                });
-            } else {
-                ResultFunc.call(Context, Default, UserTag);
-            }
-        }
-    }
-    /**
-     Finds a string resource, for the current language, by a key. The string resource is passed back to the caller by calling a callback function.
-     In case of failure a specified default string is passed back. <br />
-     The current language is defined in the Languages class. <br />
-     This function first looks up for the key in the current language, and if not there, it uses a provider and tries a communication with the server.
-    @param {string} Key - The key for the string resource
-    @param {Function} ResultFunc - A callback function <code>(Value: string, UserTag?: any) => void </code> provided by the caller, to be called in order to return back the string resource
-    @param {string} [Default] - Optional. A default string value, in case the key is not found or the operation fails
-    @param {Object} [Context] - Optional. The context (this) to be used when calling the callback function
-    @param {any} [UserTag] - Optional. A user defined value
-     */
-    static GetString(Key, ResultFunc, Default = '', Context = null, UserTag = null) {
-        tp.Res.GS(Key, ResultFunc, Default, Context, UserTag);
-    }
-};
-//#endregion
 
 
 //---------------------------------------------------------------------------------------
@@ -15796,6 +15494,702 @@ tp.NotifyFunc = (Message, Type) => {
 
 
 //---------------------------------------------------------------------------------------
+// tp Properties and constants
+//---------------------------------------------------------------------------------------
+
+//#region tp Properties and constants
+
+// NOTE: some properties or constants may declared twice, just for the intellisense to work.
+/** Line Break    
+ * WARNING: .Net line break = \r\n */
+tp.LB = '\n';
+tp.SPACE = ' ';
+tp.NO_NAME = 'no-name';
+
+tp.NULL = "___null___";
+
+
+/** The undefined constant as a tp constant.
+ * 
+ @type {undefined}
+ */
+tp.Undefined = void 0;
+Object.defineProperty(tp, 'Undefined', {
+    get() { return void 0; }
+});
+//tp.Constant('Undefined', tp, void 0); // http://stackoverflow.com/questions/7452341/what-does-void-0-mean
+
+
+
+
+
+/** The document the script operates on */
+tp.Doc = window.frameElement ? window.top.document : window.document;
+
+
+/** The currently active element 
+ @type {Element}
+ */
+tp.ActiveElement = null;
+Object.defineProperty(tp, 'ActiveElement', {
+    get() { return tp.Doc.activeElement; }
+});
+
+
+tp.Prefix = 'tp-';
+
+tp.ButtonClasses = [];
+
+/** A global object for keeping the urls used by a javascript application in ajax and other calls. */
+tp.Urls = {};
+tp.Urls.Language = '/App/Language';
+tp.Urls.StringResource = '/App/StringResource';
+tp.Urls.StringResourceList = '/App/StringResourceList';
+tp.Urls.Culture = '/App/Culture';
+
+tp.IcoChars = {
+    Insert: '+',    // '➕',
+    Delete: '-',    // '➖',
+    Edit: '*',      // '✱',
+    Find: '🔍',
+    LargeButtonDown: '&#9660;'
+};
+
+// (🗖 🗗 🗕🗙      × _ □ )
+
+
+/**
+Control create params.
+Create params are placed here as 
+    tp.GlobalCreateParams[Id] = { };
+
+@class
+*/
+tp.GlobalCreateParams = {};
+
+/**
+The system configuration global object
+@class
+*/
+tp.SysConfig = {};
+tp.SysConfig.CompanyFieldName = 'CompanyId';
+tp.SysConfig.VariablesPrefix = ':@';
+tp.SysConfig.LocatorShowDropDownRowCountLimit = 200;
+tp.SysConfig.UseServerStringResources = false;
+tp.SysConfig.UseServerCultures = false;
+tp.SysConfig.DefaultConnection = "DEFAULT";
+
+
+//#endregion
+
+
+//---------------------------------------------------------------------------------------
+// Languages - string resources
+//---------------------------------------------------------------------------------------
+
+//#region tp.Language
+/**
+A class for storing string resources of a certain language <br />
+A language is identified by a two-letter language code. <br />
+SEE: https://en.wikipedia.org/wiki/ISO_639-1  <br />
+SEE: https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes <br />
+SEE: https://www.ietf.org/rfc/bcp/bcp47.txt
+*/
+tp.Language = class {
+
+    /**
+    Constructor
+    @param {string} Name - The name of the language
+    @param {string} Code - The two letter code of the language, e.g en, el, it, fr, etc.
+    @param {string} CultureCode -  The culture code associated to this language, e.g.  e.g en-US, el-GR, etc.
+    */
+    constructor(Name, Code, CultureCode) {
+        this.fName = Name;
+        this.fCode = Code;
+        this.fCultureCode = CultureCode;
+        this.fItems = new tp.Dictionary();
+    }
+
+    /* private */
+    /** Field. The two letter code of the language, e.g en, el, it, fr, etc.
+     * @private
+     * @type {string}
+     */
+    fCode = '';
+    /** Field. The name of the language
+     * @private
+     * @type {string}
+     */
+    fName = '';
+    /** Field. The culture code associated to this language, e.g.  e.g en-US, el-GR, etc.
+     * @private
+     * @type {string}
+     */
+    fCultureCode = '';
+    /** Field. A string/string dictionary
+     * @private
+     * @type {tp.Dictionary}
+     */
+    fItems = null; // tp.Dictionary = null;
+
+    /* properties */
+    /**
+    The two letter code of the language, e.g en, el, it, fr, etc.
+    @type {string}
+    */
+    get Code() { return this.fCode; }
+    /**
+    The name of the language
+     @type {string}
+    */
+    get Name() { return this.fName; }
+    /**
+    The culture code associated to this language, e.g.  e.g en-US, el-GR, etc.
+     @type {string}
+    */
+    get CultureCode() { return this.fCultureCode; }
+    /**
+    The resource string. A string/string  dictionary with the resources of the language
+    @type {tp.Dictionary}
+    */
+    get Items() { return this.fItems; }
+
+    /* public */
+    /**
+    Adds a source string list to this instance
+    @param {object} Source The source object to copy strings from
+    */
+    AddStringList(Source) {
+        if (Source) {
+            for (var Key in Source) {
+                this.Items.Set(Key, Source[Key]);
+            }
+        }
+    }
+    /**
+    Returns a string representation of this instance
+    @returns {string} Returns a string representation of this instance
+    */
+    toString() {
+        return tp.Format('{0} - {1}', this.Code, this.Name);
+    }
+};
+//#endregion
+
+//#region tp.Languages
+/**
+A static helper class with a list of languages (Language), where each language is a list of string resources of that certain language
+@static
+*/
+tp.Languages = class {
+
+    /**
+    Finds and returns a {@link tp.Language} language by its code, if any, else null
+    @param {string} Code - The two letter code of the language, e.g en, el, it, fr, etc.
+    @returns {tp.Language} Returns a {@link tp.Language} language
+    */
+    static Find(Code) {
+        return tp.FirstOrDefault(tp.Languages.Items, function (item) {
+            return tp.IsSameText(Code, item.Code);
+        });
+    }
+    /**
+    Returns true if a {@link tp.Language} language exists, by its code
+    @param {string} Code - The code of the language. The two letter code of the language, e.g en, el, it, fr, etc.
+    @returns {boolean} Returns true if a {@link tp.Language}  language exists, by its code
+    */
+    static Exists(Code) {
+        return tp.Languages.Find(Code) !== null;
+    }
+    /**
+    Adds and returns a new {@link tp.Language} language.
+   
+    @param {string} Name - The name of the language
+    @param {string} Code - The two letter code of the language, e.g en, el, it, fr, etc.
+    @param {string} CultureCode - The culture code associated to this language, e.g.  e.g en-US, el-GR, etc.
+    @returns {tp.Language} Returns a new {@link tp.Language} language.
+    */
+    static Add(Name, Code, CultureCode) {
+        var Result = tp.Languages.Find(Code);
+        if (tp.IsEmpty(Result)) {
+            Result = new tp.Language(Name, Code, CultureCode);
+            tp.Languages.Items.push(Result);
+        }
+        return Result;
+    }
+
+    static get Current() {
+        if (this.fCurrent instanceof tp.Language)
+            return this.fCurrent;
+
+        if (tp.IsValid(this.Items) && this.Items.length > 0)
+            return this.Items[0];
+
+        return null;
+    }
+    static set Current(v) {
+        if (v instanceof tp.Language && v !== tp.Languages.fCurrent) {
+            tp.Languages.fCurrent = v;
+
+            if (tp.SysConfig.UseServerStringResources === true) {
+                let Data = {
+                    LanguageCode: v
+                };
+                tp.Ajax.PostAsync(tp.Urls.Language, Data, (Args) => {
+                    // nothing to do
+                });
+            }
+        }
+    }
+};
+
+/**
+The list of resource languages.
+@private
+@type {tp.Language[]}
+*/
+tp.Languages.Items = []; // tp.Language[];
+/** 
+The current language.
+@type {tp.Language}
+*/
+tp.Languages.fCurrent;
+/** 
+The english language.
+@type {tp.Language}
+*/
+tp.Languages.En;
+/** 
+The greek language.
+@type {tp.Language}
+*/
+tp.Languages.Gr;
+
+//#endregion
+
+//#region tp.Res
+/**
+A static class for getting back string resources
+@static
+*/
+tp.Res = class {
+
+    // TODO: /App/StringResourceList
+
+    /**
+    GS = GetString. <br />
+    Finds a string resource, for the current language, by a key. The string resource is passed back to the caller by calling a callback function.
+    In case of failure a specified default string is passed back. <br />
+    The current language is defined in the Languages class. <br />
+    @param {string} Key - The key for the string resource
+    @param {Function} ResultFunc - A callback function <code>(Value: string, UserTag?: any) => void </code> provided by the caller, to be called in order to return back the string resource
+    @param {string} [Default] - Optional. A default string value, in case the key is not found or the operation fails
+    @param {Object} [Context] - Optional. The context (this) to be used when calling the callback function
+    @param {any} [UserTag] - Optional. A user defined value
+     */
+    static GS(Key, ResultFunc, Default = '', Context = null, UserTag = null) {
+        // GS = GetString.
+        if (tp.IsString(Key) && tp.IsFunction(ResultFunc)) {
+            UserTag = UserTag || Key;
+            var Value;
+            if (tp.Languages.Current.Items.ContainsKey(Key)) {
+                Value = tp.Languages.Current.Items.ValueOf(Key, Default);
+                ResultFunc.call(Context, Value, UserTag);
+            } else if (tp.SysConfig.UseServerStringResources === true) {
+                tp.Ajax.GetAsync(tp.Urls.StringResource, (Args) => {
+                    Value = Args.ResponseData.Packet;
+                    tp.Languages.Current.Items.Set(Key, Value);
+                    ResultFunc.call(Context, Value, UserTag);
+                });
+            } else {
+                ResultFunc.call(Context, Default, UserTag);
+            }
+        }
+    }
+    /**
+     Finds a string resource, for the current language, by a key. The string resource is passed back to the caller by calling a callback function.
+     In case of failure a specified default string is passed back. <br />
+     The current language is defined in the Languages class. <br />
+     This function first looks up for the key in the current language, and if not there, it uses a provider and tries a communication with the server.
+    @param {string} Key - The key for the string resource
+    @param {Function} ResultFunc - A callback function <code>(Value: string, UserTag?: any) => void </code> provided by the caller, to be called in order to return back the string resource
+    @param {string} [Default] - Optional. A default string value, in case the key is not found or the operation fails
+    @param {Object} [Context] - Optional. The context (this) to be used when calling the callback function
+    @param {any} [UserTag] - Optional. A user defined value
+     */
+    static GetString(Key, ResultFunc, Default = '', Context = null, UserTag = null) {
+        tp.Res.GS(Key, ResultFunc, Default, Context, UserTag);
+    }
+};
+//#endregion
+
+
+//---------------------------------------------------------------------------------------
+// Cultures
+//---------------------------------------------------------------------------------------
+
+//#region tp.Culture
+/**
+A culture class. Provides information about a certain culture (locale), i.e. the 'en-US', regarding date and time patterns and separators, day and month names, numeric separators, etc.
+*/
+tp.Culture = class {
+
+    /**
+    Constructor
+    @param {object} [Source=null] Optional. A source object to copy property values from.
+    */
+    constructor(Source = null) {
+        if (Source) {
+            tp.MergeQuick(this, Source);
+        }
+    }
+
+    /** Country name, in English.
+     @type {string}
+     */
+    Country = '';
+
+    /** Culture name, in English.
+     @type {string}
+     */
+    Name = '';
+    /** Culture code, i.e. 'en-US'
+     @type {string}
+     */
+    Code = '';
+
+    /** Full date time format pattern.
+     @type {string}
+     */
+    FullDateTimeFormat = '';
+
+    /** Date format pattern.
+     @type {string}
+     */
+    DateFormat = '';
+    /** Date separator.
+     @type {string}
+     */
+    DateSeparator = '';
+    /** The name of the first day of the week, in English.
+     @type {string}
+     */
+    FirstDayOfWeek = '';
+
+    /** Time format pattern.
+     @type {string}
+     */
+    TimeFormat = '';
+    /** Time separator.
+     @type {string}
+     */
+    TimeSeparator = '';
+    /** The PM designator.
+     @type {string}
+     */
+    PM = '';
+    /** The AM designator.
+     @type {string}
+     */
+    AM = '';
+
+    /** Array of day names
+     @type {string[]}
+     */
+    DayNames = [];
+    /** Array of abbreviated day names.
+     @type {string[]}
+     */
+    AbbreviatedDayNames = [];
+
+    /** Array of month names.
+     @type {string[]}
+     */
+    MonthNames = [];
+    /** Array of abbreviated month names.
+     @type {string[]}
+     */
+    AbbreviatedMonthNames = [];
+
+    /** Decimal separator.
+     @type {string}
+     */
+    DecimalSeparator = '';
+    /** Thousand separator
+     @type {string}
+     */
+    ThousandSeparator = '';
+
+    /** Currency name, in English
+     @type {string}
+     */
+    CurrencyName = '';
+    /** Currency code, i.e. USD or EUR.
+     @type {string}
+     */
+    CurrencyCode = '';
+    /** Currency symbol, i.e. $ or €
+     @type {string}
+     */
+    CurrencySymbol = '';
+
+    /** Default decimal places for a currency value.
+     @type {string}
+     */
+    CurrencyDecimals = 0;
+
+};
+
+//#endregion
+
+//#region tp.Cultures
+/**
+A static helper class with a list of cultures ({@link tp.Culture}) 
+@static
+*/
+tp.Cultures = class {    
+
+    /**
+     * Finds and returns a {@link tp.Culture} by a specified culture code, i.e. en-US, if any, else null.
+     * @param {string} Code The culture code, i.e. en-US
+     * @returns {tp.Culture} Returns a {@link tp.Culture}, if any, else null.
+     */
+    static Find(Code) {
+        return tp.FirstOrDefault(this.Items, function (item) {
+            return tp.IsSameText(Code, item.Code);
+        });
+    }
+    /**
+     * Adds a {@link tp.Culture} instance in the internal cultures list.
+     * @param {tp.Culture} Culture The {tp.Culture} to add.
+     */
+    static Add(Culture) {
+        if (Culture instanceof tp.Culture && !this.Find(Culture.Code)) {
+            this.Items.push(Culture);
+        }
+    }
+    /**
+     * Sorts the culture list by a specified property.
+     * @param {string} [PropName='Code'] Optional. Defaults to 'Code'. The property name to use in sorting the culture list.
+     */
+    static Sort(PropName = 'Code') {
+        tp.ListSort(Items, [{ Prop: PropName, Reverse: false }]);
+    }
+
+    /** Gets or sets the current {@link tp.Culture} culture.
+     * @type {tp.Culture}
+     */
+    static get Current() {
+        if (this.fCurrent instanceof tp.Culture)
+            return this.fCurrent;
+
+        if (tp.IsValid(this.Items) && this.Items.length > 0)
+            return this.Items[0];
+
+        return null;
+    }
+    static set Current(v) {
+        if (v instanceof tp.Culture && v !== this.fCurrent) {
+            this.fCurrent = v; 
+        }
+    }
+};
+
+tp.Cultures.Items = [];
+
+//#endregion
+
+//#region Culture related methods
+
+/**
+ * Returns the decimal separator of a specified culture, i.e. en-US
+ * @param {string} CultureCode The culture code, i.e. en-US
+ * @return {string} Returns the decimal separator of a specified culture, i.e. en-US
+ */
+tp.GetDecimalSeparator = (CultureCode) => {
+    let n = 1.1;
+    let Result = n.toLocaleString(CultureCode).substring(1, 2);
+    return Result;
+};
+/**
+ * Returns the thousand separator of a specified culture, i.e. en-US
+ * @param {string} CultureCode The culture code, i.e. en-US
+ * @return {string} Returns the thousand separator of a specified culture, i.e. en-US
+ */
+tp.GetThousandSeparator = (CultureCode) => {
+    let n = 1000;
+    let Result = n.toLocaleString(CultureCode).substring(1, 2);
+    return Result;
+};
+/**
+ * Returns the date separator of a specified culture, i.e. en-US
+ * @param {string} CultureCode The culture code, i.e. en-US
+ * @returns {string} Returns the date separator of a specified culture, i.e. en-US
+ */
+tp.GetDateSeparator = (CultureCode) => {
+    let S = new Date().toLocaleDateString(CultureCode);
+
+    if (S.indexOf('/') !== -1) {
+        return '/';
+    } else if (S.indexOf('.') !== -1) {
+        return '.';
+    }
+
+    return '-';
+};
+/**
+ * Returns the date format, i.e. dd/MM/yyyy or MM/dd/YYYY, of a specified culture, i.e. en-US
+ * @param {string} CultureCode The culture code, i.e. en-US
+ * @returns {string} Returns the date format, i.e. dd/MM/yyyy or MM/dd/YYYY, of a specified culture, i.e. en-US
+ */
+tp.GetDateFormat = (CultureCode) => {
+    if (CultureCode === 'ISO')
+        return tp.DateFormatISO;
+
+    let i, ln;
+    let DateSeparator = tp.GetDateSeparator(CultureCode);
+
+    let DT = new Date('2000-10-15');
+    let S = DT.toLocaleDateString(CultureCode, { year: 'numeric', month: '2-digit', day: '2-digit' });
+
+    let Parts = S.split(DateSeparator);
+
+    for (i = 0, ln = Parts.length; i < ln; i++)
+        Parts[i] = Parts[i].trim();
+
+    for (i = 0, ln = Parts.length; i < ln; i++) {
+        if (Parts[i] === '2000') {
+            Parts[i] = 'yyyy';
+        }
+        if (Parts[i] === '10') {
+            Parts[i] = 'MM';
+        }
+        if (Parts[i] === '15') {
+            Parts[i] = 'dd';
+        }
+    }
+
+    return Parts.join(DateSeparator);
+
+};
+
+//#endregion
+ 
+//#region Culture related properties and variables 
+
+
+/** The currency symbol. Defaults to dollar sign. According to current culture (locale)
+ @type {string}
+ */
+tp.CurrencySymbol = null; // '$'; // '€'; 
+Object.defineProperty(tp, 'CurrencySymbol', {
+    get() { return tp.Cultures.Current.CurrencySymbol; }  
+});
+/** The current decimal separator. According to current culture (locale)
+ @type {string}
+ */
+tp.DecimalSeparator = null; // '.';
+Object.defineProperty(tp, 'DecimalSeparator', {
+    get() { return tp.Cultures.Current.DecimalSeparator; }
+});
+
+/** The current thousand separator. According to current culture (locale)
+ @type {string}
+ */
+tp.ThousandSeparator = null // ',';
+Object.defineProperty(tp, 'ThousandSeparator', {
+    get() { return tp.Cultures.Current.ThousandSeparator; }
+});
+
+/** The current date separator. According to current culture (locale)
+ @type {string}
+ */
+tp.DateSeparator = null; // '/';
+Object.defineProperty(tp, 'DateSeparator', {
+    get() { return tp.Cultures.Current.DateSeparator; }
+});
+/** The current date format pattern. According to current culture (locale)
+ @type {string}
+ */
+tp.DateFormat = null; // 'yyyy/MM/dd';
+Object.defineProperty(tp, 'DateFormat', {
+    get() { return tp.Cultures.Current.DateFormat; } 
+});
+/** The ISO date format pattern
+ @type {string}
+ */
+tp.DateFormatISO = null; // 'yyyy-MM-dd';
+Object.defineProperty(tp, 'DateFormatISO', {
+    value: 'yyyy-MM-dd',
+    writable: false
+});
+/** Array of day names. According to current culture (locale)
+ @type {string[]}
+ */
+tp.DayNames = null;  
+Object.defineProperty(tp, 'DayNames', {
+    get() { return tp.Cultures.Current.DayNames; }
+});
+/** Array of monthe names. According to current culture (locale)
+ @type {string[]}
+ */
+tp.MonthNames = null; 
+Object.defineProperty(tp, 'MonthNames', {
+    get() { return tp.Cultures.Current.MonthNames; }
+});
+//#endregion
+
+//#region tp.CultureCode
+
+/** Gets or sets the current culture, i.e. locale. By default returns 'en-US'. <br />
+ * The initial value of this property comes from lang attribute of the html element, e.g. <html lang="en-US"> <br />
+@type {string}
+*/
+tp.CultureCode = null;
+Object.defineProperty(tp, 'CultureCode', {
+    get() {
+        return tp.Cultures.Current.Code;
+    },
+    set(v) {
+        if (v.toUpperCase() !== tp.Cultures.Current.Code.toUpperCase()) {
+            let C = tp.Cultures.Find(v);
+            if (C) {
+                tp.Cultures.Current = C;
+            }
+            else {
+                // is allowed to get this culture from server?
+                if (tp.SysConfig.UseServerCultures === true) {
+                    let Data = {
+                        CultureCode: v
+                    };
+                    tp.Ajax.PostAsync(tp.Urls.Culture, Data, (Args) => {
+                        // TODO
+                    });
+                }
+                else {
+
+                    // create a copy of en-US and set some crucial properties
+                    let EnUS = tp.Cultures.Find('en-US');
+
+                    C = new tp.Culture(EnUS);
+                    C.Code = v;
+                    C.DecimalSeparator = tp.GetDecimalSeparator(v);
+                    C.ThousandSeparator = tp.GetThousandSeparator(v);
+                    C.DateSeparator = tp.GetDateSeparator(v);
+                    C.DateFormat = tp.GetDateFormat(v);
+
+                    tp.Cultures.Add(C);
+                    tp.Cultures.Current = C;
+                }
+            }   
+        }  
+ 
+    }
+});
+
+//#endregion
+
+//---------------------------------------------------------------------------------------
 // initialization
 //---------------------------------------------------------------------------------------
 
@@ -15827,39 +16221,113 @@ tp.Ready = function (Func) {
 /** Just a placeholder. Client code may re-assign this property. */
 tp.Main = function () {
 };
- 
+
+/** Just a placeholder for a function that adds languages. */
+tp.AddLanguagesFunc = null;
+
 (function () {
 
-    let InitializeLanguages = function () {
-
-        tp.Languages.fLanguages = [new tp.Language('English', 'en', 'en-US'), new tp.Language('Greek', 'el', 'el-GR')];
-        tp.Languages.En = tp.Languages.fLanguages[0];
-        tp.Languages.Gr = tp.Languages.fLanguages[1];
-        tp.Languages.fCurrent = tp.Languages.En;
-    };
-
-    let InitializeCulture = function () {
-
-        
-        tp.fCultureCode = null;
-
-        //tp.CultureCode = 'en-US';
-        tp.CultureCode = 'el-GR'; 
-
-        let CultureCode = document.querySelector('html').getAttribute('lang');
-        if (tp.IsString(CultureCode)) {
-            if (CultureCode.length < 3) {
-                tp.Throw(`Invalid culture code: ${CultureCode}`);
-            }
-
-            if (CultureCode.startsWith('el-')) {
-                tp.Languages.fCurrent = tp.Languages.Gr;
-                tp.CultureCode = 'el-GR';
+    let InitializeLogDiv = function () {
+        if (!tp.LogDiv) {
+            tp.LogDiv = document.getElementById('LogDiv');
+            if (!tp.LogDiv) {
+                var div = document.createElement('div');
+                div.id = 'LogDiv';
+                div.style.cssText = 'padding: 15px';
+                tp.LogDiv = div;
+                document.body.appendChild(tp.LogDiv);
             }
         }
     };
 
+    let InitializeLanguages = function () {
+        tp.Languages.En = new tp.Language('English', 'en', 'en-US');
+        tp.Languages.Gr = new tp.Language('Greek', 'el', 'el-GR');
+        tp.Languages.Items.push(tp.Languages.En, tp.Languages.Gr); 
+        tp.Languages.fCurrent = tp.Languages.En;
+
+        tp.Call(tp.AddLanguagesFunc);
+    };
+
+    let InitializeCulture = function () {
+
+        // en-US
+        let C = new tp.Culture();
+        C.Country = 'United States';
+        C.Name = 'English (United States)';
+        C.Code = 'en-US';
+        C.FullDateTimeFormat = 'dddd, MMMM d, yyyy h:mm:ss tt';
+        C.DateFormat = '"M/d/yyyy';
+        C.DateSeparator = '/';
+        C.FirstDayOfWeek = 'Sunday';
+        C.TimeFormat = 'h:mm tt';
+        C.TimeSeparator = ':';
+        C.PM = 'PM';
+        C.AM = 'AM';
+        C.DayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+        C.AbbreviatedDayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+        C.MonthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        C.AbbreviatedMonthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        C.DecimalSeparator = '.';
+        C.ThousandSeparator = ',';
+        C.CurrencyName = 'US Dollar';
+        C.CurrencyCode = 'USD';
+        C.CurrencySymbol = '$';
+        C.CurrencyDecimals = 2;
+
+        tp.Cultures.Add(C);
+        tp.Culture.Current = C;
+
+        // el-GR
+        C = new tp.Culture();
+        C.Country = 'Greece';
+        C.Name = 'Greek (Greece)';
+        C.Code = 'el-GR';
+        C.FullDateTimeFormat = 'dddd, d MMMM yyyy h:mm:ss tt';
+        C.DateFormat = 'd/M/yyyy';
+        C.DateSeparator = '/';
+        C.FirstDayOfWeek = 'Monday';
+        C.TimeFormat = 'h:mm tt';
+        C.TimeSeparator = ':';
+        C.PM = 'μμ';
+        C.AM = 'πμ';
+        C.DayNames = ["Κυριακή", "Δευτέρα", "Τρίτη", "Τετάρτη", "Πέμπτη", "Παρασκευή", "Σάββατο"];
+        C.AbbreviatedDayNames = ["Κυρ", "Δευ", "Τρι", "Τετ", "Πεμ", "Παρ", "Σαβ"];
+        C.MonthNames = ["Ιανουάριος", "Φεβρουάριος", "Μάρτιος", "Απρίλιος", "Μάιος", "Ιούνιος", "Ιούλιος", "Αύγουστος", "Σεπτέμβριος", "Οκτώβριος", "Νοέμβριος", "Δεκέμβριος"];
+        C.AbbreviatedMonthNames = ["Ιαν", "Φεβ", "Μαρ", "Απρ", "Μαϊ", "Ιουν", "Ιουλ", "Αυγ", "Σεπ", "Οκτ", "Νοε", "Δεκ"];
+        C.DecimalSeparator = ',';
+        C.ThousandSeparator = '.';
+        C.CurrencyName = 'Euro';
+        C.CurrencyCode = 'EUR';
+        C.CurrencySymbol = '€';
+        C.CurrencyDecimals = 2;
+
+        tp.Cultures.Add(C);
+        tp.Culture.Current = C;
+
+        let CultureCode = document.querySelector('html').getAttribute('lang');
+
+        if (tp.IsString(CultureCode)) {
+
+            if (CultureCode.length < 5 || CultureCode[2] !== '-')
+                tp.Throw(`Invalid culture code: ${CultureCode} \nPlease define a Culture in the html lang attribute. Example lang="en-US"`);
+
+            tp.CultureCode = CultureCode;
+
+            let Parts = CultureCode.split('-');
+            let Lang = tp.Languages.Find(Parts[0]);
+            if (!Lang) {
+                Lang = tp.Languages.Add("unknown", Parts[0], CultureCode);
+            }
+
+            tp.Languages.fCurrent = tp.Languages.Lang; 
+        }
+ 
+    };
+
     let ReadyFunc = function () {
+
+        InitializeLogDiv();
 
         InitializeLanguages();
         InitializeCulture();

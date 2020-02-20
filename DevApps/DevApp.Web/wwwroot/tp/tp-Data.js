@@ -1761,7 +1761,7 @@ tp.Db = class {
                 case tp.DataType.String: return v.toString();
                 case tp.DataType.Integer: return v.toString();
                 case tp.DataType.Boolean: return (v === true) || (v === 1) ? 'x' : '';
-                case tp.DataType.Float: return tp.FormatNumber(v, Decimals);
+                case tp.DataType.Float: return tp.FormatNumber2(v, Decimals);
                 case tp.DataType.Date: return tp.ToDateString(v, LocalDate === true? '': 'ISO');
                 case tp.DataType.Time: return tp.ToTimeString(v, DisplaySeconds);
                 case tp.DataType.DateTime: return tp.ToDateTimeString(v, LocalDate === true ? '' : 'ISO');
