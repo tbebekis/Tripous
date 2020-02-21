@@ -63,7 +63,6 @@ namespace Tripous.Web
                 return Item;
             }
         }
-
         
         /// <summary>
         /// Registers a language
@@ -96,6 +95,6 @@ namespace Tripous.Web
         /// <summary>
         /// The list of registered languages
         /// </summary>
-        static public LanguageItem[] Items { get {  lock (syncLock) return fItems.ToArray(); } }
+        static public LanguageItem[] Items { get {   return fItems.ToArray(); } }
     }
 }

@@ -14,7 +14,7 @@ using DevApp.Web.Models;
 namespace DevApp.Web.Controllers
 {
     [AllowAnonymous]
-    public class TestGridController : BaseAppController
+    public class TestGridController : BaseControllerMvc
     {
 
         /* actions */ 

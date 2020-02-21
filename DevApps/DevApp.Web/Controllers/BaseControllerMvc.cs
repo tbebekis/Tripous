@@ -14,9 +14,9 @@ namespace DevApp.Web.Controllers
 {
 
     /// <summary>
-    /// Base application controller
+    /// Base MVC controller
     /// </summary>
-    public class BaseAppController: Controller
+    public class BaseControllerMvc: Controller
     {
         /// <summary>
         /// Converts Instance to a json string using the NewtonSoft json serializer.

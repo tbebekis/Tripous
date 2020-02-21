@@ -23,13 +23,9 @@ namespace DevApp.Web.Controllers
     /// Test controller
     /// </summary>
     [AllowAnonymous]
-    public class AppController : BaseAppController
+    public class AppController : BaseControllerAjax
     {
-        public IActionResult Index()
-        {
-            return View();
-        }
-
+ 
         public JsonResult Test()
         {
              
@@ -167,14 +163,5 @@ namespace DevApp.Web.Controllers
             return this.Json(JO);
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            //return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-
-            HttpErrorInfo EI = new HttpErrorInfo(this.HttpContext);
-            Sys.LogError(EI.ToString());
-            return View(EI);
-        }
     }
 }

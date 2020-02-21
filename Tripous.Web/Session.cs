@@ -133,17 +133,12 @@ namespace Tripous.Web
             }
             set
             {
-                LanguageItem Lang = Languages.DefaultLanguage;
+                //LanguageItem Lang = Languages.DefaultLanguage;
 
                 if (value != null)
                 {
-                    Set<LanguageItem>("Language", value);
-                    Lang = value;
+                    Set("Language", value);
                 }
-
-                CultureInfo.CurrentCulture = Lang.Culture;
-                CultureInfo.CurrentUICulture = Lang.Culture;
-
             }
         }
  

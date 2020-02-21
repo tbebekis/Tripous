@@ -14,7 +14,7 @@ namespace DevApp.Web.Controllers
     /// A test controller
     /// </summary>
     [AllowAnonymous]
-    public class TestMenusController : BaseAppController
+    public class TestMenusController : BaseControllerMvc
     {
         /* actions */
         /// <summary>

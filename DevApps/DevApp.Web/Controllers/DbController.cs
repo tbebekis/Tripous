@@ -21,7 +21,7 @@ namespace DevApp.Web.Controllers
 {
 
     [AllowAnonymous]
-    public class DbController : BaseAppController
+    public class DbController : BaseControllerMvc
     {
 
 

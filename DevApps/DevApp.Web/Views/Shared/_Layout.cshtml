@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html lang="@Tripous.Web.Session.Language.CultureCode">
+<html lang="@WApp.CultureCode">
 @*  lang="el-GR" TODO: change this in a real application *@
 <head>
     <meta charset="utf-8" />
@@ -54,7 +54,11 @@
     -->
 
     <div>
+        @await Component.InvokeAsync("LanguageSelector")
+
         @RenderBody()
+
+
 
         <footer>
             <p>&copy; 2019 - DevApp.WebMvc</p>

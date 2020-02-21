@@ -80,6 +80,10 @@ namespace Tripous.Web
 
         /* properties */
         /// <summary>
+        /// Returns the physical path of the \bin folder, e.g. C:\inetpub\wwwroot\bin
+        /// </summary>
+        static public string BinFolder { get { return AppContext.BaseDirectory; } }
+        /// <summary>
         /// Returns the service provider
         /// </summary>
         static public IServiceProvider ServiceProvider { get; private set; }
@@ -95,5 +99,7 @@ namespace Tripous.Web
         /// Returns the Configuration
         /// </summary>
         static public IConfiguration Configuration { get; private set; }
+
+ 
     }
 }

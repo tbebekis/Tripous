@@ -61,9 +61,9 @@ create table {0} (
             SqlText = string.Format(SqlText, SysTables.Lang, SysConfig.PrimaryKeyStr);
             schema.AddTable(SqlText);
 
-            SqlText = string.Format(@"insert into {0} (Id, Name, CultureCode, SeoCode) values ('{1}', 'English', 'en-US', 'en') ", SysTables.Lang, Sys.EnId);
+            SqlText = string.Format(@"insert into {0} (Id, Name, CultureCode, SeoCode, FlagImage) values ('{1}', 'English', 'en-US', 'en', 'flag_great_britain.png') ", SysTables.Lang, Sys.EnId);
             schema.AddStatementAfter(SqlText);
-            SqlText = string.Format(@"insert into {0} (Id, Name, CultureCode, SeoCode) values ('{1}', 'Greek', 'el-GR', 'gr') ", SysTables.Lang, Sys.GrId);
+            SqlText = string.Format(@"insert into {0} (Id, Name, CultureCode, SeoCode, FlagImage) values ('{1}', 'Greek', 'el-GR', 'gr', 'flag_greece.png') ", SysTables.Lang, Sys.GrId);
             schema.AddStatementAfter(SqlText);
 
 

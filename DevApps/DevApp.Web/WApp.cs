@@ -4,10 +4,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Data;
 using System.Data.Common;
+using System.Drawing;
 using System.IO;
+using System.Globalization;
 
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Localization;
+
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -23,8 +27,10 @@ namespace DevApp.Web
     /// <summary>
     /// Represents this application
     /// </summary>
-    static class WApp
+    static public class WApp
     {
+        static SqlStore fDefaultStore;
+
         /* event handlers */
         /// <summary>
         /// The host has fully started.
@@ -33,8 +39,7 @@ namespace DevApp.Web
         static void OnStarted()
         {
             Sys.LogInfo("OnStarted");
-
-            Start();
+ 
         }
         /// <summary>
         /// The host is performing a graceful shutdown. Requests may still be processing. Shutdown blocks until this event completes.
@@ -53,6 +58,62 @@ namespace DevApp.Web
             Sys.LogInfo("OnStopped");
         }
 
+        /* private */
+        static void LoadLanguages()
+        {
+            Dictionary<string, string> ImageNames = null;
+            string ImagesFolder = Path.Combine(HostEnvironment.WebRootPath, "images");
+            string ImagePath;
+            string ImageResourcePath;
+            Image Image;
+            Func<string, string> GetImageResourcePath = (ImageFileName) =>
+            {
+                foreach (var Entry in ImageNames)
+                {
+                    if (Entry.Value.EndsWith(ImageFileName, StringComparison.InvariantCultureIgnoreCase))
+                        return Entry.Value;
+                }
+
+                return string.Empty;
+            };
+            
+            
+
+            string SqlText = $"select * from {SysTables.Lang} where IsActive = 1 order by DisplayOrder";
+            DataTable Table = DefaultStore.Select(SqlText);
+            if (Table.Rows.Count > 0)
+            {
+               ImageNames = Icons32.GetNamesDictionary();
+
+                LanguageItem LI;
+                foreach (DataRow Row in Table.Rows)
+                {
+                    LI = new LanguageItem(Row);
+                    Languages.Add(LI);
+
+                    if (!string.IsNullOrWhiteSpace(LI.FlagImage))
+                    {
+                        ImagePath = Path.Combine(ImagesFolder, LI.FlagImage);
+                        if (!File.Exists(ImagePath))
+                        {
+                            ImageResourcePath = GetImageResourcePath(LI.FlagImage);
+                            if (!string.IsNullOrWhiteSpace(ImageResourcePath))
+                            {
+                                Image = Icons32.GetImage(ImageResourcePath);
+                                if (Image != null)
+                                {
+                                    Image.Save(ImagePath);
+                                }
+                            }
+                        }
+ 
+                    }
+
+                }
+            }          
+
+            
+        }
 
         /// <summary>
         /// Sets-up the SysConfig
@@ -86,12 +147,10 @@ namespace DevApp.Web
             SysConfig.MachineIdRequired = false;
         }
         /// <summary>
-        /// Starts the application.
+        /// Initializes the application
         /// </summary>
-        static void Start()
+        static void InitializeApplication()
         {
- 
-
             try
             {
                 // 1. initialize libraries
@@ -112,12 +171,12 @@ namespace DevApp.Web
                 //EnsureMachineId();
                 //ExternalModulesLoad();              /* load and initialize any plugins first */
 
- 
-
                 // 3. initialize databases            
                 //DbProviderFactories.RegisterFactory("System.Data.SqlClient", System.Data.SqlClient.SqlClientFactory.Instance);
                 AppLib.ConnectDatabases();
                 AppLib.CreateDatabases();
+
+
 
                 // 4. register and execute database schemas 
                 AppLib.RegisterSchemas();
@@ -139,8 +198,6 @@ namespace DevApp.Web
 
                 // 7. initial data
                 AppLib.InsertInitialData();
-
- 
             }
             catch (Exception ex)
             {
@@ -149,24 +206,146 @@ namespace DevApp.Web
             }
         }
 
-        /// <summary>
-        /// Configure services
-        /// </summary>
-        static public void ConfigureServices(IServiceCollection services)
+        static void ConfigureLocalizationServices(IServiceCollection services)
         {
+            LoadLanguages();
+
+            LanguageItem[] LangItems = Languages.Items;
+
+            // UseRequestLocalization initializes a RequestLocalizationOptions object. 
+            // On every request the list of RequestCultureProvider in the RequestLocalizationOptions is enumerated 
+            // and the first provider that can successfully determine the request culture is used.
+            // SEE: https://docs.microsoft.com/en-us/aspnet/core/fundamentals/localization#localization-middleware
+            services.Configure<RequestLocalizationOptions>(options =>
+            {
+                options.DefaultRequestCulture = new RequestCulture(LangItems[0].CultureCode);
+                options.SupportedCultures = LangItems.Select(item => item.Culture).ToList();
+                options.SupportedUICultures = options.SupportedUICultures;
+
+                options.RequestCultureProviders.Clear();
+                options.RequestCultureProviders.Insert(0, new AppRequestCultureProvider());
+            });
+        }
+
+        /// <summary>
+        /// Configure services before
+        /// </summary>
+        static internal void ConfigureServicesBefore(IServiceCollection services, IWebHostEnvironment HostEnvironment)
+        {
+            WApp.HostEnvironment = HostEnvironment;
+            WSys.SetHostEnvironment(HostEnvironment);            
         }
         /// <summary>
-        /// Configure application
+        /// Initializes the application. Should be called from Configure() just before adding the MVC service.
         /// </summary>
-        static public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime appLifetime)
+        static internal void ConfigureServices(IServiceCollection services, IWebHostEnvironment HostEnvironment)
         {
-            WSys.SetHostEnvironment(env);
+            InitializeApplication();
+
+            // further initialization
+            ConfigureLocalizationServices(services);
+        }
+        /// <summary>
+        /// Configure services after
+        /// </summary>
+        static internal void ConfigureServicesAfter(IServiceCollection services, IWebHostEnvironment HostEnvironment)
+        {
+        }
+        
+        
+        /// <summary>
+        /// Configure application before
+        /// </summary>
+        static internal void ConfigureBefore(IApplicationBuilder app, IHostApplicationLifetime appLifetime)
+        {
             WSys.SetServiceProvider(app.ApplicationServices);
 
             appLifetime.ApplicationStarted.Register(WApp.OnStarted);
             appLifetime.ApplicationStopping.Register(WApp.OnStopping);
             appLifetime.ApplicationStopped.Register(WApp.OnStopped);
+
+            //ConfigureLocalization(app);
         }
+        /// <summary>
+        /// Configure application. Should be called from ConfigureServices() just before calling UseMvc() or UseEndpoints().
+        /// </summary>
+        static internal void Configure(IApplicationBuilder app, IHostApplicationLifetime appLifetime)
+        {
+            // UseRequestLocalization initializes a RequestLocalizationOptions object. 
+            // On every request the list of RequestCultureProvider in the RequestLocalizationOptions is enumerated 
+            // and the first provider that can successfully determine the request culture is used.
+            // SEE: https://docs.microsoft.com/en-us/aspnet/core/fundamentals/localization#localization-middleware
+            app.UseRequestLocalization();
+        }
+        /// <summary>
+        /// Configure application after
+        /// </summary>
+        static internal void ConfigureAfter(IApplicationBuilder app, IHostApplicationLifetime appLifetime)
+        {
+           
+        }
+
+
+        /* properties */
+        /// <summary>
+        /// Hosting environment
+        /// </summary>
+        static public IWebHostEnvironment HostEnvironment { get; private set; }
+        /// <summary>
+        /// Gets or sets the absolute path to the directory that contains the application content files.
+        /// </summary>
+        static public string ContentRootPath { get { return HostEnvironment.ContentRootPath; } }
+        /// <summary>
+        /// Gets or sets the absolute path to the directory that contains the web-servable application content files.
+        /// </summary>
+        static public string WebRootPath { get { return HostEnvironment.WebRootPath; } }
+        /// <summary>
+        /// The default <see cref="SqlStore"/>
+        /// </summary>
+        static public SqlStore DefaultStore
+        {
+            get
+            {
+                if (fDefaultStore == null)
+                    fDefaultStore = SqlStores.CreateDefaultSqlStore();
+                return fDefaultStore;
+            }
+        }
+        static public LanguageItem[] LanguageItems
+        {
+            get
+            {
+                LanguageItem[] Result = Languages.Items;
+                if (Result.Length == 0)
+                    LoadLanguages();
+                return Languages.Items;
+            }
+        }
+        /// <summary>
+        /// Gets or sets the language of the current session. A two letter language code, e.g en, el, it, fr, etc.
+        /// </summary>
+        static public string Language
+        {
+            get
+            {
+                var Lang = Session.Language;
+                return Lang.Code;
+            }
+            set
+            {
+                if (value != Language)
+                {
+                    var Lang = Languages.Find(value);
+                    if (Lang != null)
+                        Session.Language = Lang;
+                }
+            }
+        }
+        /// <summary>
+        ///  The culture code of the current session. A culture code, e.g en-US, el-GR, etc.
+        /// </summary>
+        static public string CultureCode { get { return Session.Language.CultureCode; } }
+     
 
     }
 }

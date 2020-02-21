@@ -31,7 +31,7 @@ namespace DevApp.Web
     public class Startup
     {
         IConfiguration Configuration;
-        IWebHostEnvironment HostingEnvironment;
+        IWebHostEnvironment HostEnvironment;
 
         /// <summary>
         /// Constructor
@@ -39,7 +39,7 @@ namespace DevApp.Web
         public Startup(IConfiguration configuration, IWebHostEnvironment environment)
         {
             this.Configuration = configuration;
-            HostingEnvironment = environment;
+            HostEnvironment = environment;
         }
 
 
@@ -47,6 +47,8 @@ namespace DevApp.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            WApp.ConfigureServicesBefore(services, HostEnvironment);
+
             services.AddHttpContextAccessor();
 
             // see: https://docs.microsoft.com/en-us/aspnet/core/performance/caching/distributed
@@ -71,7 +73,9 @@ namespace DevApp.Web
                 options.Cookie.SameSite = SameSiteMode.None;
             });
 
-            services.AddControllersWithViews()
+            WApp.ConfigureServices(services, HostEnvironment);
+
+            IMvcBuilder builder = services.AddControllersWithViews()
                 .AddNewtonsoftJson()
             /*
                 // the default case for serializing output to JSON is camelCase in Asp.Net Core, so we turn it off here.
@@ -81,17 +85,30 @@ namespace DevApp.Web
             */
                 .AddJsonOptions(opt => { opt.JsonSerializerOptions.PropertyNamingPolicy = null; });
 
+#if DEBUG
+            // see: https://docs.microsoft.com/en-us/aspnet/core/mvc/views/view-compilation
+            if (HostEnvironment.IsDevelopment())
+            {
+                builder.AddRazorRuntimeCompilation();
+            }
+#endif
 
-
-            WApp.ConfigureServices(services);
+            WApp.ConfigureServicesAfter(services, HostEnvironment);
         }
         //IApplicationBuilder app, IApplicationLifetime appLifetime
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime appLifetime)
         {
+            WApp.ConfigureBefore(app, appLifetime);
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+
+#if DEBUG
+                // see: https://docs.microsoft.com/en-us/aspnet/core/client-side/using-browserlink
+                app.UseBrowserLink();
+#endif
             }
             else
             {
@@ -107,14 +124,16 @@ namespace DevApp.Web
             app.UseSession();
             app.UseAuthorization();
 
+            WApp.Configure(app, appLifetime);
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=App}/{action=Index}/{id?}");
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
             });
 
-            WApp.Configure(app, env, appLifetime);
+            WApp.ConfigureAfter(app, appLifetime);
 
         }
     }

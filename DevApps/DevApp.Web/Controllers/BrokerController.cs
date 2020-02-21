@@ -23,7 +23,7 @@ namespace DevApp.Web.Controllers
     /// Test controller
     /// </summary>
     [AllowAnonymous]
-    public class BrokerController : BaseAppController
+    public class BrokerController : BaseControllerMvc
     {
         /* actions */
         /// <summary>
