@@ -1,8 +1,9 @@
-﻿@model  LanguageItem[]
+﻿@* LanguageSelector component *@
+@model  LanguageItem[]
 
 @if (Model != null & Model.Length > 0)
 {
-    <div>
+    <div class="tp-Language-Selector">
         <ul>
             @foreach(var Item in Model)
             {

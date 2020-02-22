@@ -11277,7 +11277,7 @@ tp.tpElement = class extends tp.tpObject {
     /** The DOM document this element belongs to. 
      * @type {HTMLDocument}
      */
-    get Document() { return this.fDocument; }
+    get Document() { return this.fDocument || tp.Doc; }
     /** Returns the number of direct HTMLElement children of this element 
      * @type {number}
      */

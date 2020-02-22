@@ -71,4 +71,18 @@ legend {
 }
 
 /* --------------------------------------------------------------------------------------------- */
+.tp-Language-Selector {
+    display: flex;
+    flex-direction: row-reverse;
+    padding-right: 4px;
+}
+
+.tp-Language-Selector > ul {
+    list-style: none;
+    display: flex;
+}
+
+.tp-Language-Selector > ul > li {
+    padding: 0 8px;
+}
 

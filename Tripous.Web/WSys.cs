@@ -24,8 +24,7 @@ namespace Tripous.Web
     {
         /* private */
         static IHttpContextAccessor HttpContextAccessor;
-
-
+ 
         /* public - initialization */
         /// <summary>
         /// Sets the host environment <see cref="IHostEnvironment"/> value
@@ -53,9 +52,7 @@ namespace Tripous.Web
             HttpContextAccessor = ServiceProvider.GetRequiredService<IHttpContextAccessor>();
             HostEnvironment = HostEnvironment ?? ServiceProvider.GetRequiredService<IHostEnvironment>();
         }
-
-
-
+ 
         /* IServiceCollection */
         /// <summary>
         /// <para>After calling this method the <see cref="Db.Connections"/> is loaded from the appsettings.json file with Sql database connection information. </para>
@@ -100,6 +97,5 @@ namespace Tripous.Web
         /// </summary>
         static public IConfiguration Configuration { get; private set; }
 
- 
     }
 }

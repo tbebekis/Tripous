@@ -63,7 +63,11 @@ namespace Tripous.Web
         {
             return $"{CultureCode} - {Name}";
         }
- 
+        /// <summary>
+        /// Returns <see cref="CultureInfo"/> instance associated to this language
+        /// </summary>
+        public CultureInfo GetCulture() { return new CultureInfo(CultureCode); }
+
         /* properties */
         /// <summary>
         /// The id, if any, else null or empty string
@@ -86,11 +90,7 @@ namespace Tripous.Web
         /// </summary>
         public string FlagImage { get; set; }
 
-        /// <summary>
-        /// The <see cref="CultureInfo"/> instance associated to this language
-        /// </summary>
-        [JsonIgnore]
-        public CultureInfo Culture { get { return new CultureInfo(CultureCode); } }
+
 
  
     }

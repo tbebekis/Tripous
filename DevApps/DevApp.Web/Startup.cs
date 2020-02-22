@@ -18,21 +18,20 @@ using Newtonsoft.Json.Serialization;
 
 using Tripous;
 using Tripous.Web;
-
-/* new types
- Microsoft.Extensions.Hosting.IHostEnvironment
-Microsoft.AspNetCore.Hosting.IWebHostEnvironment : IHostEnvironment
-Microsoft.Extensions.Hosting.IHostApplicationLifetime
-Microsoft.Extensions.Hosting.Environments
-     */
-
+ 
 namespace DevApp.Web
 {
+
+    /// <summary>
+    /// The startup class
+    /// </summary>
     public class Startup
     {
+        /* private */
         IConfiguration Configuration;
         IWebHostEnvironment HostEnvironment;
 
+        /* construction */
         /// <summary>
         /// Constructor
         /// </summary>
@@ -42,14 +41,15 @@ namespace DevApp.Web
             HostEnvironment = environment;
         }
 
-
-
-        // This method gets called by the runtime. Use this method to add services to the container.
+        /* public */
+        /// <summary>
+        /// This method gets called by the runtime. Use this method to add services to the container.
+        /// </summary>
         public void ConfigureServices(IServiceCollection services)
         {
-            WApp.ConfigureServicesBefore(services, HostEnvironment);
-
             services.AddHttpContextAccessor();
+
+            WApp.ConfigureServicesBefore(services, HostEnvironment);            
 
             // see: https://docs.microsoft.com/en-us/aspnet/core/performance/caching/distributed
             services.AddDistributedMemoryCache();
@@ -75,6 +75,7 @@ namespace DevApp.Web
 
             WApp.ConfigureServices(services, HostEnvironment);
 
+            // MVC
             IMvcBuilder builder = services.AddControllersWithViews()
                 .AddNewtonsoftJson()
             /*
@@ -95,8 +96,9 @@ namespace DevApp.Web
 
             WApp.ConfigureServicesAfter(services, HostEnvironment);
         }
-        //IApplicationBuilder app, IApplicationLifetime appLifetime
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        /// <summary>
+        /// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        /// </summary>
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime appLifetime)
         {
             WApp.ConfigureBefore(app, appLifetime);

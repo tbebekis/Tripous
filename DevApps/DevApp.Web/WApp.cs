@@ -38,8 +38,7 @@ namespace DevApp.Web
         /// </summary>
         static void OnStarted()
         {
-            Sys.LogInfo("OnStarted");
- 
+            Sys.LogInfo("OnStarted"); 
         }
         /// <summary>
         /// The host is performing a graceful shutdown. Requests may still be processing. Shutdown blocks until this event completes.
@@ -59,6 +58,10 @@ namespace DevApp.Web
         }
 
         /* private */
+        /// <summary>
+        /// Loads the active languages from the database table.
+        /// <para>It also extracts language flag images from resources and saves it to wwwroot/images, if not already there.</para>
+        /// </summary>
         static void LoadLanguages()
         {
             Dictionary<string, string> ImageNames = null;
@@ -66,6 +69,8 @@ namespace DevApp.Web
             string ImagePath;
             string ImageResourcePath;
             Image Image;
+            
+            // nested function to find the resource path of flag image of a language
             Func<string, string> GetImageResourcePath = (ImageFileName) =>
             {
                 foreach (var Entry in ImageNames)
@@ -75,12 +80,13 @@ namespace DevApp.Web
                 }
 
                 return string.Empty;
-            };
+            };            
             
-            
-
+            // load active languages from database
             string SqlText = $"select * from {SysTables.Lang} where IsActive = 1 order by DisplayOrder";
             DataTable Table = DefaultStore.Select(SqlText);
+            
+            // create language items and handle flag images
             if (Table.Rows.Count > 0)
             {
                ImageNames = Icons32.GetNamesDictionary();
@@ -105,12 +111,10 @@ namespace DevApp.Web
                                     Image.Save(ImagePath);
                                 }
                             }
-                        }
- 
+                        } 
                     }
-
                 }
-            }          
+            }  
 
             
         }
@@ -206,11 +210,13 @@ namespace DevApp.Web
             }
         }
 
-        static void ConfigureLocalizationServices(IServiceCollection services)
-        {
-            LoadLanguages();
-
-            LanguageItem[] LangItems = Languages.Items;
+        /// <summary>
+        /// Configures the request culture provider.
+        /// <para>SEE: https://teonotebook.wordpress.com/2020/02/22/asp-net-core-3-0-mvc-request-localization-or-how-to-set-the-culture-of-a-user-session/ </para>
+        /// </summary>
+        static void ConfigureRequestCultureProvider(IServiceCollection services)
+        { 
+            LanguageItem[] LangItems = WApp.LanguageItems;
 
             // UseRequestLocalization initializes a RequestLocalizationOptions object. 
             // On every request the list of RequestCultureProvider in the RequestLocalizationOptions is enumerated 
@@ -219,16 +225,24 @@ namespace DevApp.Web
             services.Configure<RequestLocalizationOptions>(options =>
             {
                 options.DefaultRequestCulture = new RequestCulture(LangItems[0].CultureCode);
-                options.SupportedCultures = LangItems.Select(item => item.Culture).ToList();
+                options.SupportedCultures = LangItems.Select(item => item.GetCulture()).ToList();
                 options.SupportedUICultures = options.SupportedUICultures;
 
-                options.RequestCultureProviders.Clear();
-                options.RequestCultureProviders.Insert(0, new AppRequestCultureProvider());
+                //options.RequestCultureProviders.Clear();
+
+                // use the built-in CustomRequestCultureProvider which accepts a proper lambda
+                options.RequestCultureProviders.Insert(0, new CustomRequestCultureProvider(async (HttpContext) => {
+                    await Task.Yield();
+                    return new ProviderCultureResult(Session.Language.CultureCode);
+                }));
+
             });
         }
 
+        /* internal */
         /// <summary>
         /// Configure services before
+        /// <para>Called from ConfigureServices()</para>
         /// </summary>
         static internal void ConfigureServicesBefore(IServiceCollection services, IWebHostEnvironment HostEnvironment)
         {
@@ -236,25 +250,26 @@ namespace DevApp.Web
             WSys.SetHostEnvironment(HostEnvironment);            
         }
         /// <summary>
-        /// Initializes the application. Should be called from Configure() just before adding the MVC service.
+        /// Initializes the application. Should be called from ConfigureServices() just before adding the MVC service.
         /// </summary>
         static internal void ConfigureServices(IServiceCollection services, IWebHostEnvironment HostEnvironment)
         {
             InitializeApplication();
 
             // further initialization
-            ConfigureLocalizationServices(services);
+            ConfigureRequestCultureProvider(services);
         }
         /// <summary>
         /// Configure services after
+        /// <para>Called from ConfigureServices()</para>
         /// </summary>
         static internal void ConfigureServicesAfter(IServiceCollection services, IWebHostEnvironment HostEnvironment)
         {
         }
-        
-        
+ 
         /// <summary>
         /// Configure application before
+        /// <para>Called from Configure()</para>
         /// </summary>
         static internal void ConfigureBefore(IApplicationBuilder app, IHostApplicationLifetime appLifetime)
         {
@@ -267,7 +282,7 @@ namespace DevApp.Web
             //ConfigureLocalization(app);
         }
         /// <summary>
-        /// Configure application. Should be called from ConfigureServices() just before calling UseMvc() or UseEndpoints().
+        /// Configure application. Should be called from Configure() just before calling UseMvc() or UseEndpoints().
         /// </summary>
         static internal void Configure(IApplicationBuilder app, IHostApplicationLifetime appLifetime)
         {
@@ -279,12 +294,12 @@ namespace DevApp.Web
         }
         /// <summary>
         /// Configure application after
+        /// <para>Called from Configure()</para>
         /// </summary>
         static internal void ConfigureAfter(IApplicationBuilder app, IHostApplicationLifetime appLifetime)
         {
            
         }
-
 
         /* properties */
         /// <summary>
@@ -311,6 +326,9 @@ namespace DevApp.Web
                 return fDefaultStore;
             }
         }
+        /// <summary>
+        /// The available languages
+        /// </summary>
         static public LanguageItem[] LanguageItems
         {
             get
@@ -345,7 +363,5 @@ namespace DevApp.Web
         ///  The culture code of the current session. A culture code, e.g en-US, el-GR, etc.
         /// </summary>
         static public string CultureCode { get { return Session.Language.CultureCode; } }
-     
-
     }
 }
