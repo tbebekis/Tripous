@@ -8573,15 +8573,20 @@ tp.Debug.Log = function (o) {
  * A static helper class for displaying debug messages to a div with id='LogDiv'.
  */
 tp.Log = class {
+
+    constructor() {
+        throw 'Can not create an instance of a full static class';
+    }
+
     /** Clears the log div */
-    static Clear = function ()  {
+    static Clear()  {
         tp.LogDiv.innerHTML = '';
     };
     /**
      Appends a text line to the log div
      @param {string} Text The text line to append
      */
-    static Line = function(Text)  {
+    static Line(Text)  {
         var S = tp.LogDiv.innerHTML ? tp.LogDiv.innerHTML : '';
         tp.LogDiv.innerHTML = S + Text + '<br />';
     };
@@ -8589,7 +8594,7 @@ tp.Log = class {
      Replaces the content of the log div with a specified text
      @param {string} Text The text
      */
-    static Text = function(Text)  {
+    static Text(Text)  {
         tp.LogDiv.innerHTML = Text;
     };
 };

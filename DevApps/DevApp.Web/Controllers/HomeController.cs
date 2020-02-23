@@ -31,8 +31,6 @@ namespace DevApp.Web.Controllers
 
         public IActionResult Index()
         {
-   
-
             return View();
         }
 

@@ -4,9 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Data.Common;
 
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Hosting;
 
 using Microsoft.Extensions.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -30,7 +31,7 @@ namespace Tripous.Web
         /// Sets the host environment <see cref="IHostEnvironment"/> value
         /// <para>Call it from inside the <code>Startup</code> constructor.</para>
         /// </summary>
-        static public void SetHostEnvironment(IHostEnvironment Value)
+        static public void SetHostEnvironment(IWebHostEnvironment Value)
         {
             HostEnvironment = Value;
         }
@@ -50,7 +51,7 @@ namespace Tripous.Web
         {
             ServiceProvider = Value;
             HttpContextAccessor = ServiceProvider.GetRequiredService<IHttpContextAccessor>();
-            HostEnvironment = HostEnvironment ?? ServiceProvider.GetRequiredService<IHostEnvironment>();
+            //HostEnvironment = (HostEnvironment ?? ServiceProvider.GetRequiredService<IHostEnvironment>()) as IWebHostEnvironment;
         }
  
         /* IServiceCollection */
@@ -91,7 +92,7 @@ namespace Tripous.Web
         /// <summary>
         /// Returns the HostingEnvironment
         /// </summary>
-        static public IHostEnvironment HostEnvironment { get; private set; }
+        static public IWebHostEnvironment HostEnvironment { get; private set; }
         /// <summary>
         /// Returns the Configuration
         /// </summary>

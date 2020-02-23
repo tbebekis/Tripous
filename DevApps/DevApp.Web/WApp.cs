@@ -8,11 +8,15 @@ using System.Drawing;
 using System.IO;
 using System.Globalization;
 
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Localization;
 
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.DependencyInjection;
 
 using Tripous;
@@ -29,6 +33,7 @@ namespace DevApp.Web
     /// </summary>
     static public class WApp
     {
+        static IDisposable AppSettingsChangeToken;
         static SqlStore fDefaultStore;
 
         /* event handlers */
@@ -38,7 +43,7 @@ namespace DevApp.Web
         /// </summary>
         static void OnStarted()
         {
-            Sys.LogInfo("OnStarted"); 
+            Sys.LogInfo("Started", "Application");
         }
         /// <summary>
         /// The host is performing a graceful shutdown. Requests may still be processing. Shutdown blocks until this event completes.
@@ -46,7 +51,7 @@ namespace DevApp.Web
         /// </summary>
         static void OnStopping()
         {
-            Sys.LogInfo("OnStopping");
+            Sys.LogInfo("Stopping", "Application");
         }
         /// <summary>
         /// The host is completing a graceful shutdown. All requests should be processed. Shutdown blocks until this event completes.
@@ -54,7 +59,7 @@ namespace DevApp.Web
         /// </summary>
         static void OnStopped()
         {
-            Sys.LogInfo("OnStopped");
+            Sys.LogInfo("Stopped", "Application");
         }
 
         /* private */
@@ -209,13 +214,55 @@ namespace DevApp.Web
                 throw;
             }
         }
+ 
+ 
 
+        /* internal */
         /// <summary>
-        /// Configures the request culture provider.
-        /// <para>SEE: https://teonotebook.wordpress.com/2020/02/22/asp-net-core-3-0-mvc-request-localization-or-how-to-set-the-culture-of-a-user-session/ </para>
+        /// Configure services 
         /// </summary>
-        static void ConfigureRequestCultureProvider(IServiceCollection services)
-        { 
+        static internal void ConfigureServices(IServiceCollection services)
+        {
+
+            // ● AppSettings - bind AppSettings to a private field
+            IConfigurationSection AppSettingsSection = Configuration.GetSection(typeof(AppSettings).Name);
+            services.Configure<AppSettings>(AppSettingsSection);
+            Settings = Settings ?? new AppSettings();
+            AppSettingsSection.Bind(Settings);
+
+            // ● HttpContext
+            services.AddHttpContextAccessor();
+
+            // ● Memory Cache
+            // see: https://docs.microsoft.com/en-us/aspnet/core/performance/caching/distributed
+            services.AddDistributedMemoryCache();
+
+            // ● Session
+            services.AddSession(options =>
+            {
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;  // Make the session cookie essential
+                //options.IdleTimeout = TimeSpan.FromSeconds(10);
+            });
+
+            // ● Cookies
+            services.Configure<CookiePolicyOptions>(options =>
+            {
+                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
+                options.CheckConsentNeeded = context => true;
+                options.MinimumSameSitePolicy = SameSiteMode.None;
+            });
+
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.Cookie.SameSite = SameSiteMode.None;
+            });
+
+            // ● Application
+            InitializeApplication();
+
+            // ● Request Culture Provider
+            // SEE: https://teonotebook.wordpress.com/2020/02/22/asp-net-core-3-0-mvc-request-localization-or-how-to-set-the-culture-of-a-user-session/
             LanguageItem[] LangItems = WApp.LanguageItems;
 
             // UseRequestLocalization initializes a RequestLocalizationOptions object. 
@@ -237,75 +284,138 @@ namespace DevApp.Web
                 }));
 
             });
-        }
 
-        /* internal */
-        /// <summary>
-        /// Configure services before
-        /// <para>Called from ConfigureServices()</para>
-        /// </summary>
-        static internal void ConfigureServicesBefore(IServiceCollection services, IWebHostEnvironment HostEnvironment)
-        {
-            WApp.HostEnvironment = HostEnvironment;
-            WSys.SetHostEnvironment(HostEnvironment);            
-        }
-        /// <summary>
-        /// Initializes the application. Should be called from ConfigureServices() just before adding the MVC service.
-        /// </summary>
-        static internal void ConfigureServices(IServiceCollection services, IWebHostEnvironment HostEnvironment)
-        {
-            InitializeApplication();
 
-            // further initialization
-            ConfigureRequestCultureProvider(services);
+            // ● MVC
+            IMvcBuilder MvcBuilder = services.AddControllersWithViews()
+                .AddNewtonsoftJson()
+            /*
+                // the default case for serializing output to JSON is camelCase in Asp.Net Core, so we turn it off here.
+                // https://stackoverflow.com/questions/38728200/how-to-turn-off-or-handle-camelcasing-in-json-response-asp-net-core
+                // https://github.com/aspnet/Announcements/issues/194
+                .AddJsonOptions(opt => opt.SerializerSettings.ContractResolver = new DefaultContractResolver());
+            */
+                .AddJsonOptions(opt => { opt.JsonSerializerOptions.PropertyNamingPolicy = null; });
+
+
+            // ● Razor Runtime Compilation
+            // see: https://docs.microsoft.com/en-us/aspnet/core/mvc/views/view-compilation
+            if (DebugMode && HostEnvironment.IsDevelopment())
+            {
+                MvcBuilder.AddRazorRuntimeCompilation();
+            }
+
         }
         /// <summary>
-        /// Configure services after
-        /// <para>Called from ConfigureServices()</para>
+        /// Configure application pipeline
         /// </summary>
-        static internal void ConfigureServicesAfter(IServiceCollection services, IWebHostEnvironment HostEnvironment)
+        static internal void Configure(IApplicationBuilder app, IOptionsMonitor<AppSettings> AppSettingsAccessor)
         {
-        }
- 
-        /// <summary>
-        /// Configure application before
-        /// <para>Called from Configure()</para>
-        /// </summary>
-        static internal void ConfigureBefore(IApplicationBuilder app, IHostApplicationLifetime appLifetime)
-        {
+            // ● Service Provider
             WSys.SetServiceProvider(app.ApplicationServices);
 
+            // ● events
+            IHostApplicationLifetime appLifetime = ServiceProvider.GetRequiredService<IHostApplicationLifetime>();
             appLifetime.ApplicationStarted.Register(WApp.OnStarted);
             appLifetime.ApplicationStopping.Register(WApp.OnStopping);
             appLifetime.ApplicationStopped.Register(WApp.OnStopped);
 
-            //ConfigureLocalization(app);
-        }
-        /// <summary>
-        /// Configure application. Should be called from Configure() just before calling UseMvc() or UseEndpoints().
-        /// </summary>
-        static internal void Configure(IApplicationBuilder app, IHostApplicationLifetime appLifetime)
-        {
+            // ● AppSettings - initializes application settings and sets-up setttings change notification.
+            Settings = AppSettingsAccessor.CurrentValue;
+
+            AppSettingsChangeToken = AppSettingsAccessor.OnChange(settings => 
+            {
+                if (AppSettingsChangeToken != null)
+                {
+                    try
+                    {
+                        AppSettingsChangeToken.Dispose();
+                    }
+                    catch
+                    {
+                    }
+                    finally
+                    {
+                        AppSettingsChangeToken = null;
+                    }
+                }
+                Settings = settings;
+            });
+
+            // ● Miscs
+            if (HostEnvironment.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+                app.UseBrowserLink();           // see: https://docs.microsoft.com/en-us/aspnet/core/client-side/using-browserlink
+            }
+            else
+            {
+                app.UseExceptionHandler("/Home/Error");                
+                app.UseHsts();                  // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+            }
+
+            app.UseHttpsRedirection();
+            app.UseStaticFiles();
+            app.UseCookiePolicy();
+            app.UseRouting();
+            app.UseSession();
+            app.UseAuthorization();
+
+            // ● Request Localization Middleware
             // UseRequestLocalization initializes a RequestLocalizationOptions object. 
             // On every request the list of RequestCultureProvider in the RequestLocalizationOptions is enumerated 
             // and the first provider that can successfully determine the request culture is used.
             // SEE: https://docs.microsoft.com/en-us/aspnet/core/fundamentals/localization#localization-middleware
             app.UseRequestLocalization();
+
+            // ● MVC
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
+            });
+
+ 
+
         }
-        /// <summary>
-        /// Configure application after
-        /// <para>Called from Configure()</para>
-        /// </summary>
-        static internal void ConfigureAfter(IApplicationBuilder app, IHostApplicationLifetime appLifetime)
-        {
-           
-        }
+ 
 
         /* properties */
         /// <summary>
+        /// Returns true when in debug mode, i.e. the DEBUG constant is defined.
+        /// </summary>
+        static public bool DebugMode
+        {
+            get
+            {
+#if DEBUG
+                return true;
+#else
+                return false;
+#endif
+            }
+        }
+        /// <summary>
+        /// Returns the ServiceProvider
+        /// </summary>
+        static public IServiceProvider ServiceProvider { get { return WSys.ServiceProvider; } }
+        /// <summary>
+        /// Returns the HttpContext
+        /// </summary>
+        static public HttpContext HttpContext { get { return WSys.HttpContext; } }
+        /// <summary>
         /// Hosting environment
         /// </summary>
-        static public IWebHostEnvironment HostEnvironment { get; private set; }
+        static public IWebHostEnvironment HostEnvironment { get { return WSys.HostEnvironment; } }
+        /// <summary>
+        /// The configuration instance for the appsettings.json
+        /// </summary>
+        static public IConfiguration Configuration { get { return WSys.Configuration; } }
+        /// <summary>
+        /// Returns an <see cref="IFileProvider"/> pointing to <see cref="IHostEnvironment.ContentRootPath"/>.
+        /// </summary>
+        static public IFileProvider ContentRootFileProvider { get { return HostEnvironment.ContentRootFileProvider; } }
         /// <summary>
         /// Gets or sets the absolute path to the directory that contains the application content files.
         /// </summary>
@@ -314,18 +424,7 @@ namespace DevApp.Web
         /// Gets or sets the absolute path to the directory that contains the web-servable application content files.
         /// </summary>
         static public string WebRootPath { get { return HostEnvironment.WebRootPath; } }
-        /// <summary>
-        /// The default <see cref="SqlStore"/>
-        /// </summary>
-        static public SqlStore DefaultStore
-        {
-            get
-            {
-                if (fDefaultStore == null)
-                    fDefaultStore = SqlStores.CreateDefaultSqlStore();
-                return fDefaultStore;
-            }
-        }
+ 
         /// <summary>
         /// The available languages
         /// </summary>
@@ -363,5 +462,22 @@ namespace DevApp.Web
         ///  The culture code of the current session. A culture code, e.g en-US, el-GR, etc.
         /// </summary>
         static public string CultureCode { get { return Session.Language.CultureCode; } }
+
+        /// <summary>
+        /// Application settings, coming from appsettings.json
+        /// </summary>
+        static public AppSettings Settings { get; private set; }
+        /// <summary>
+        /// The default <see cref="SqlStore"/>
+        /// </summary>
+        static public SqlStore DefaultStore
+        {
+            get
+            {
+                if (fDefaultStore == null)
+                    fDefaultStore = SqlStores.CreateDefaultSqlStore();
+                return fDefaultStore;
+            }
+        }
     }
 }

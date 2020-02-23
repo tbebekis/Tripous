@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Microsoft.Extensions.DependencyInjection;
 
 using Newtonsoft.Json;
@@ -23,7 +24,7 @@ namespace DevApp.Web
 {
 
     /// <summary>
-    /// The startup class
+    /// The startup class. It actually delegates all "action" to <see cref="WApp"/> class
     /// </summary>
     public class Startup
     {
@@ -39,6 +40,9 @@ namespace DevApp.Web
         {
             this.Configuration = configuration;
             HostEnvironment = environment;
+
+            WSys.SetConfiguration(Configuration);
+            WSys.SetHostEnvironment(HostEnvironment);
         }
 
         /* public */
@@ -47,96 +51,14 @@ namespace DevApp.Web
         /// </summary>
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddHttpContextAccessor();
-
-            WApp.ConfigureServicesBefore(services, HostEnvironment);            
-
-            // see: https://docs.microsoft.com/en-us/aspnet/core/performance/caching/distributed
-            services.AddDistributedMemoryCache();
-
-            services.AddSession(options =>
-            {
-                options.Cookie.HttpOnly = true;
-                options.Cookie.IsEssential = true;  // Make the session cookie essential
-                //options.IdleTimeout = TimeSpan.FromSeconds(10);
-            });
-
-            services.Configure<CookiePolicyOptions>(options =>
-            {
-                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
-                options.CheckConsentNeeded = context => true;
-                options.MinimumSameSitePolicy = SameSiteMode.None;
-            });
-
-            services.ConfigureApplicationCookie(options =>
-            {
-                options.Cookie.SameSite = SameSiteMode.None;
-            });
-
-            WApp.ConfigureServices(services, HostEnvironment);
-
-            // MVC
-            IMvcBuilder builder = services.AddControllersWithViews()
-                .AddNewtonsoftJson()
-            /*
-                // the default case for serializing output to JSON is camelCase in Asp.Net Core, so we turn it off here.
-                // https://stackoverflow.com/questions/38728200/how-to-turn-off-or-handle-camelcasing-in-json-response-asp-net-core
-                // https://github.com/aspnet/Announcements/issues/194
-                .AddJsonOptions(opt => opt.SerializerSettings.ContractResolver = new DefaultContractResolver());
-            */
-                .AddJsonOptions(opt => { opt.JsonSerializerOptions.PropertyNamingPolicy = null; });
-
-#if DEBUG
-            // see: https://docs.microsoft.com/en-us/aspnet/core/mvc/views/view-compilation
-            if (HostEnvironment.IsDevelopment())
-            {
-                builder.AddRazorRuntimeCompilation();
-            }
-#endif
-
-            WApp.ConfigureServicesAfter(services, HostEnvironment);
+            WApp.ConfigureServices(services);  
         }
         /// <summary>
         /// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         /// </summary>
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime appLifetime)
+        public void Configure(IApplicationBuilder app, IOptionsMonitor<AppSettings> SettingsAccessor)
         {
-            WApp.ConfigureBefore(app, appLifetime);
-
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-
-#if DEBUG
-                // see: https://docs.microsoft.com/en-us/aspnet/core/client-side/using-browserlink
-                app.UseBrowserLink();
-#endif
-            }
-            else
-            {
-                app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
-            }
- 
-            app.UseHttpsRedirection();
-            app.UseStaticFiles();
-            app.UseCookiePolicy();
-            app.UseRouting();
-            app.UseSession();
-            app.UseAuthorization();
-
-            WApp.Configure(app, appLifetime);
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
-            });
-
-            WApp.ConfigureAfter(app, appLifetime);
-
+            WApp.Configure(app, SettingsAccessor);
         }
     }
 }

@@ -27,6 +27,4 @@ tp.Ready(async function () {
     }
 
     var x = await f();
-
-    log(typeof x);
 });
