@@ -311,11 +311,11 @@ namespace DevApp.Web
         /// </summary>
         static internal void Configure(IApplicationBuilder app, IOptionsMonitor<AppSettings> AppSettingsAccessor)
         {
-            // ● Service Provider
-            WSys.SetServiceProvider(app.ApplicationServices);
+            // ● HttpContext
+            WSys.SetHttpContextAccessor(app.ApplicationServices);
 
             // ● events
-            IHostApplicationLifetime appLifetime = ServiceProvider.GetRequiredService<IHostApplicationLifetime>();
+            IHostApplicationLifetime appLifetime = WSys.GetService<IHostApplicationLifetime>();
             appLifetime.ApplicationStarted.Register(WApp.OnStarted);
             appLifetime.ApplicationStopping.Register(WApp.OnStopping);
             appLifetime.ApplicationStopped.Register(WApp.OnStopped);
@@ -396,10 +396,6 @@ namespace DevApp.Web
 #endif
             }
         }
-        /// <summary>
-        /// Returns the ServiceProvider
-        /// </summary>
-        static public IServiceProvider ServiceProvider { get { return WSys.ServiceProvider; } }
         /// <summary>
         /// Returns the HttpContext
         /// </summary>
