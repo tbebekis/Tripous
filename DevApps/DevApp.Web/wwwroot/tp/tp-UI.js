@@ -8027,7 +8027,7 @@ tp.NumberBox = class extends tp.Control {
 
     /** Formats the value according to decimals in the step property 
      @private
-     */
+     
     FormatValue() {
         this.Formatting = true;
         try {
@@ -8043,22 +8043,8 @@ tp.NumberBox = class extends tp.Control {
             this.Formatting = false;
         }
     }
-
-    /* notifications */
-    /**
-    Notification. Called by CreateHandle() after all creation and initialization processing is done, that is AFTER handle creation, AFTER field initialization
-    and AFTER options (CreateParams) processing 
-    - Handle creation
-    - Field initialization
-    - Option processing
-    - Completed notification
-    @protected
-    @override
-    */
-    OnInitializationCompleted() {
-        super.OnInitializationCompleted();
-        this.FormatValue();
-    }
+*/
+ 
 
     /* Event triggers */
     /**
@@ -8066,7 +8052,6 @@ tp.NumberBox = class extends tp.Control {
     */
     OnValueChanged() {
         if (!this.Formatting) {
-            this.FormatValue();
             this.Trigger('ValueChanged', {});
         }
     }
@@ -11661,7 +11646,7 @@ tp.HtmlNumberBox = class extends tp.InputControl {
 
     /** Formats the value according to decimals in the step property 
      @private
-     */
+     
     FormatValue() {
         this.Formatting = true;
         try {
@@ -11677,7 +11662,7 @@ tp.HtmlNumberBox = class extends tp.InputControl {
             this.Formatting = false;
         }
     }
-
+*/
 
 
     /* overrides */
@@ -11695,7 +11680,6 @@ tp.HtmlNumberBox = class extends tp.InputControl {
     */
     OnInitializationCompleted() {
         super.OnInitializationCompleted();
-        this.FormatValue();
     }
 
     /**
@@ -11745,7 +11729,6 @@ tp.HtmlNumberBox = class extends tp.InputControl {
     */
     OnValueChanged() {
         if (!this.Formatting) {
-            this.FormatValue();
             this.Trigger('ValueChanged', {});
         }  
     }
