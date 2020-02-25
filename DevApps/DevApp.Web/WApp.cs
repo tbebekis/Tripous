@@ -11,6 +11,8 @@ using System.Globalization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Localization;
 
 using Microsoft.Extensions.Hosting;
@@ -232,6 +234,7 @@ namespace DevApp.Web
 
             // ● HttpContext
             services.AddHttpContextAccessor();
+            services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();  // see: https://github.com/aspnet/mvc/issues/3936
 
             // ● Memory Cache
             // see: https://docs.microsoft.com/en-us/aspnet/core/performance/caching/distributed

@@ -7,6 +7,7 @@ using System.Data.Common;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Hosting;
 
+using Microsoft.Extensions.Primitives;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,7 +26,8 @@ namespace Tripous.Web
     {
         /* private */
         static IHttpContextAccessor HttpContextAccessor;
- 
+        static IServiceProvider RootServiceProvider;
+
         /* public - initialization */
         /// <summary>
         /// Sets the host environment <see cref="IHostEnvironment"/> value
@@ -47,9 +49,10 @@ namespace Tripous.Web
         /// Sets the service provider <see cref="IServiceProvider"/> value.
         /// <para>Call it from inside the <code>Startup.Configure()</code> method as <code>WSys.SetServiceProvider(app.ApplicationServices)</code> </para>
         /// </summary>
-        static public void SetHttpContextAccessor(IServiceProvider ServiceProvider)
+        static public void SetHttpContextAccessor(IServiceProvider RootServiceProvider)
         {
-            HttpContextAccessor = ServiceProvider.GetRequiredService<IHttpContextAccessor>();
+            WSys.RootServiceProvider = RootServiceProvider;
+            HttpContextAccessor = RootServiceProvider.GetRequiredService<IHttpContextAccessor>();
             //HostEnvironment = (HostEnvironment ?? ServiceProvider.GetRequiredService<IHostEnvironment>()) as IWebHostEnvironment;
         }
 
@@ -64,7 +67,7 @@ namespace Tripous.Web
         /// </summary>
         public static T GetService<T>()
         {
-            return HttpContext.RequestServices.GetRequiredService<T>();
+            return HttpContext != null? HttpContext.RequestServices.GetRequiredService<T>(): RootServiceProvider.GetRequiredService<T>();
         }
         /// <summary>
         /// Replaces one service with another
@@ -88,9 +91,43 @@ namespace Tripous.Web
             Db.Connections = Connections;
         }
 
+        /* miscs */
+        /// <summary>
+        /// Returns the value of a query string parameter.
+        /// <para>NOTE: When a parameter is included more than once, e.g. ?page=1&amp;page=2 then the result will be 1,2 hence this function returns an array.</para>
+        /// </summary>
+        static public string[] GetQueryParameter(string Key)
+        {
+            if (HttpContext != null)
+            {
+                if (HttpContext.Request.Query.ContainsKey(Key))
+                    return HttpContext.Request.Query[Key].ToArray();
+            }
 
+            return new string[0];
+        }
 
         /* properties */
+        /// <summary>
+        /// Returns the base url of this application.
+        /// <para>CAUTION: There should be a valid HttpContext in order to be able to return the base url.</para>
+        /// </summary>
+        static public string BaseUrl
+        { 
+            get 
+            {
+                if (HttpContext != null)
+                {
+                    string Scheme = HttpContext.Request.Scheme;
+                    string Host = HttpContext.Request.Host.Host;
+                    string Port = HttpContext.Request.Host.Port != 80 && HttpContext.Request.Host.Port != 443 ? $":{HttpContext.Request.Host.Port}" : "";
+
+                    return $"{Scheme}://{Host}{Port}";
+                }
+
+                return string.Empty;                
+            } 
+        }
         /// <summary>
         /// Returns the physical path of the \bin folder, e.g. C:\inetpub\wwwroot\bin
         /// </summary>
