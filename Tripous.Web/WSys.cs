@@ -128,10 +128,24 @@ namespace Tripous.Web
                 return string.Empty;                
             } 
         }
+ 
         /// <summary>
-        /// Returns the physical path of the \bin folder, e.g. C:\inetpub\wwwroot\bin
+        /// The physical "root path", i.e. the root folder of the application
+        /// <para> e.g. C:\MyApp</para>
         /// </summary>
-        static public string BinFolder { get { return AppContext.BaseDirectory; } }
+        static public string RootPath { get { return HostEnvironment.ContentRootPath; } }
+        /// <summary>
+        /// The physical "web root" path, i.e. the path to the "wwwroot" folder
+        /// <para>e.g. C:\MyApp\wwwwroot</para>
+        /// </summary>
+        static public string WebRootPath { get { return HostEnvironment.WebRootPath; } }
+        /// <summary>
+        /// The physical path of the \bin folder
+        /// <para>e.g. C:\MyApp\bin\Debug\netcoreapp3.0\  </para>
+        /// <para>e.g. C:\inetpub\wwwroot\bin\</para>
+        /// </summary>
+        static public string BinPath { get { return AppContext.BaseDirectory; } }
+
         /// <summary>
         /// Returns the HttpContext
         /// </summary>
@@ -144,6 +158,9 @@ namespace Tripous.Web
         /// Returns the Configuration
         /// </summary>
         static public IConfiguration Configuration { get; private set; }
-
+        /// <summary>
+        /// True when is development environment.
+        /// </summary>
+        static public bool IsDevelopment { get { return HostEnvironment.IsDevelopment(); } }
     }
 }
