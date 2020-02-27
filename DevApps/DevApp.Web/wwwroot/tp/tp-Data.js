@@ -1501,21 +1501,7 @@ tp.SqlTextItem = class {
         this.ConnectionName = ConnectionName || tp.SysConfig.DefaultConnection;
     }
 
-    /**
-    The name of the statement
-    @type {string}
-    */
-    Name = '';
-    /**
-    The statement text
-    @type {string}
-    */
-    SqlText = '';
-    /**
-    The name of the connection (database)
-    @type {string}
-    */
-    ConnectionName = '';
+
 
     /**
      * Creates a new {@link tp.DataRow} based on this instance property values and adds the row to a specified {@link tp.DataTable}
@@ -1529,6 +1515,22 @@ tp.SqlTextItem = class {
         Table.AddRow(Row);
     }
 };
+
+/**
+The name of the statement
+@type {string}
+*/
+tp.SqlTextItem.prototype.Name = '';
+/**
+The statement text
+@type {string}
+*/
+tp.SqlTextItem.prototype.SqlText = '';
+/**
+The name of the connection (database)
+@type {string}
+*/
+tp.SqlTextItem.prototype.ConnectionName = '';
 //#endregion  
 
 
@@ -2093,17 +2095,7 @@ tp.DataSet = class extends tp.tpObject {
         this.Name = Name || tp.NextName("DataSet");
     }
 
-    /* properties */
-    /**
-    The list of the data tables
-    @type {tp.DataTable[]}
-    */
-    Tables = [];
-    /**
-    Dataset name
-    @type {string}
-    */
-    Name = "";
+
 
     /* public */
     /**
@@ -2238,6 +2230,18 @@ tp.DataSet = class extends tp.tpObject {
         }
     }
 };
+/* properties */
+/**
+The list of the data tables
+@type {tp.DataTable[]}
+*/
+tp.DataSet.prototype.Tables = [];
+/**
+Dataset name
+@type {string}
+*/
+tp.DataSet.prototype.Name = "";
+
 //#endregion  
 
 //#region tp.DataTable
@@ -2268,68 +2272,7 @@ tp.DataTable = class extends tp.tpObject {
         this.Name = Name || tp.NextName("DataTable");
     }
 
-    fName = '';
-    fBatchCounter = 0;
-    fPrimaryKeyField = '';
-    fPrimaryKeyIndex = -1;
-    fBindingSource = null; // tp.DataSource;
 
-    /* properties */
-
-    /**
-    The owner dataset, if any, else null.
-    @type {tp.DataSet}
-    */
-    DataSet = null;
-    /**
-    The columns list
-    @type {tp.DataColumn[]}
-    */
-    Columns = [];               // array of tp.DataColumn objects 
-    /**
-    The rows list
-    @type {tp.DataRow[]}
-    */
-    Rows = [];                     // array of tp.DataRow objects 
-    /**
-    The deleted rows list
-    @type {tp.DataRow[]}
-    */
-    Deleted = [];                 // array of deleted tp.DataRow objects
-    /**
-    A list of table names of tables that are detail tables to this table
-    @type {string[]}
-    */
-    Details = [];                      // table names
-    /**
-    Stock table names list. Stock tables are used by brokers.
-    A stock table of the main broker table is a single row table and it is SELECTed each time the broker SELECTs the main table.
-    The SELECT of a stock table could be something like <code>select Field0, Field1, FieldN from STOCK_TABLE_NAME where Id = :SQL_PARAM</code>
-    @type {string[]}
-    */
-    StockTables = [];                  // table names
-    /**
-    The name of the primary key field of the master table of this table
-    @default Id
-    @type {string}
-    */
-    MasterKeyField = "Id";                  // belongs to master table
-    /**
-    The name of the foreign key field of this table to match with the primary key field of the master table (MasterKeyField)
-    @type {string}
-    */
-    DetailKeyField = "";                    // belongs to this, match to the master's Id (MasterKeyField)
-    /**
-    The name of the master table, this table is detail to. Both tables sould belong to the same dataset
-    @type {string}
-    */
-    MasterTableName = "";
-    /**
-    When true then a GUID string value is auto-generated and set as value to the primary key field, on any new data row.
-    @default true
-    @type {boolean}
-    */
-    AutoGenerateGuidKeys = true;
     /**
     A data-source created on this table. Used when a list of tables/datasources used with the same grid
     @type {tp.DataSource}
@@ -3072,6 +3015,69 @@ tp.DataTable = class extends tp.tpObject {
     }
 
 };
+
+tp.DataTable.prototype.fName = '';
+tp.DataTable.prototype.fBatchCounter = 0;
+tp.DataTable.prototype.fPrimaryKeyField = '';
+tp.DataTable.prototype.fPrimaryKeyIndex = -1;
+tp.DataTable.prototype.fBindingSource = null; // tp.DataSource;
+
+/* properties */
+
+/**
+The owner dataset, if any, else null.
+@type {tp.DataSet}
+*/
+tp.DataTable.prototype.DataSet = null;
+/**
+The columns list
+@type {tp.DataColumn[]}
+*/
+tp.DataTable.prototype.Columns = [];               // array of tp.DataColumn objects 
+/**
+The rows list
+@type {tp.DataRow[]}
+*/
+tp.DataTable.prototype.Rows = [];                     // array of tp.DataRow objects 
+/**
+The deleted rows list
+@type {tp.DataRow[]}
+*/
+tp.DataTable.prototype.Deleted = [];                 // array of deleted tp.DataRow objects
+/**
+A list of table names of tables that are detail tables to this table
+@type {string[]}
+*/
+tp.DataTable.prototype.Details = [];                      // table names
+/**
+Stock table names list. Stock tables are used by brokers.
+A stock table of the main broker table is a single row table and it is SELECTed each time the broker SELECTs the main table.
+The SELECT of a stock table could be something like <code>select Field0, Field1, FieldN from STOCK_TABLE_NAME where Id = :SQL_PARAM</code>
+@type {string[]}
+*/
+tp.DataTable.prototype.StockTables = [];                  // table names
+/**
+The name of the primary key field of the master table of this table
+@default Id
+@type {string}
+*/
+tp.DataTable.prototype.MasterKeyField = "Id";                  // belongs to master table
+/**
+The name of the foreign key field of this table to match with the primary key field of the master table (MasterKeyField)
+@type {string}
+*/
+tp.DataTable.prototype.DetailKeyField = "";                    // belongs to this, match to the master's Id (MasterKeyField)
+/**
+The name of the master table, this table is detail to. Both tables sould belong to the same dataset
+@type {string}
+*/
+tp.DataTable.prototype.MasterTableName = "";
+/**
+When true then a GUID string value is auto-generated and set as value to the primary key field, on any new data row.
+@default true
+@type {boolean}
+*/
+tp.DataTable.prototype.AutoGenerateGuidKeys = true;
 //#endregion  
 
 //#region tp.DataColumn

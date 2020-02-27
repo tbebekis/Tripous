@@ -1766,16 +1766,16 @@ tp.NumberConvertionResult = class {
         this.Value = Value;
         this.Result = Result;
     }
-
-    /** The value after the convertion 
-     @type {number}
-     */
-    Value;
-    /** Result of the convertion 
-     @type {boolean}
-     */
-    Result;
+ 
 };
+/** The value after the convertion
+ @type {number}
+ */
+tp.NumberConvertionResult.prototype.Value;
+/** Result of the convertion
+ @type {boolean}
+ */
+tp.NumberConvertionResult.prototype.Result;
 
 /**
 Tries to convert a string into an integer.   
@@ -15615,27 +15615,7 @@ tp.Language = class {
         this.fItems = new tp.Dictionary();
     }
 
-    /* private */
-    /** Field. The two letter code of the language, e.g en, el, it, fr, etc.
-     * @private
-     * @type {string}
-     */
-    fCode = '';
-    /** Field. The name of the language
-     * @private
-     * @type {string}
-     */
-    fName = '';
-    /** Field. The culture code associated to this language, e.g.  e.g en-US, el-GR, etc.
-     * @private
-     * @type {string}
-     */
-    fCultureCode = '';
-    /** Field. A string/string dictionary
-     * @private
-     * @type {tp.Dictionary}
-     */
-    fItems = null; // tp.Dictionary = null;
+
 
     /* properties */
     /**
@@ -15679,6 +15659,29 @@ tp.Language = class {
         return tp.Format('{0} - {1}', this.Code, this.Name);
     }
 };
+
+/* private */
+/** Field. The two letter code of the language, e.g en, el, it, fr, etc.
+ * @private
+ * @type {string}
+ */
+tp.Language.prototype.fCode = '';
+/** Field. The name of the language
+ * @private
+ * @type {string}
+ */
+tp.Language.prototype.fName = '';
+/** Field. The culture code associated to this language, e.g.  e.g en-US, el-GR, etc.
+ * @private
+ * @type {string}
+ */
+tp.Language.prototype.fCultureCode = '';
+/** Field. A string/string dictionary
+ * @private
+ * @type {tp.Dictionary}
+ */
+tp.Language.prototype.fItems = null; // tp.Dictionary = null;
+
 //#endregion
 
 //#region tp.Languages
@@ -15849,102 +15852,102 @@ tp.Culture = class {
         }
     }
 
-    /** Country name, in English.
-     @type {string}
-     */
-    Country = '';
 
-    /** Culture name, in English.
-     @type {string}
-     */
-    Name = '';
-    /** Culture code, i.e. 'en-US'
-     @type {string}
-     */
-    Code = '';
-
-    /** Full date time format pattern.
-     @type {string}
-     */
-    FullDateTimeFormat = '';
-
-    /** Date format pattern.
-     @type {string}
-     */
-    DateFormat = '';
-    /** Date separator.
-     @type {string}
-     */
-    DateSeparator = '';
-    /** The name of the first day of the week, in English.
-     @type {string}
-     */
-    FirstDayOfWeek = '';
-
-    /** Time format pattern.
-     @type {string}
-     */
-    TimeFormat = '';
-    /** Time separator.
-     @type {string}
-     */
-    TimeSeparator = '';
-    /** The PM designator.
-     @type {string}
-     */
-    PM = '';
-    /** The AM designator.
-     @type {string}
-     */
-    AM = '';
-
-    /** Array of day names
-     @type {string[]}
-     */
-    DayNames = [];
-    /** Array of abbreviated day names.
-     @type {string[]}
-     */
-    AbbreviatedDayNames = [];
-
-    /** Array of month names.
-     @type {string[]}
-     */
-    MonthNames = [];
-    /** Array of abbreviated month names.
-     @type {string[]}
-     */
-    AbbreviatedMonthNames = [];
-
-    /** Decimal separator.
-     @type {string}
-     */
-    DecimalSeparator = '';
-    /** Thousand separator
-     @type {string}
-     */
-    ThousandSeparator = '';
-
-    /** Currency name, in English
-     @type {string}
-     */
-    CurrencyName = '';
-    /** Currency code, i.e. USD or EUR.
-     @type {string}
-     */
-    CurrencyCode = '';
-    /** Currency symbol, i.e. $ or €
-     @type {string}
-     */
-    CurrencySymbol = '';
-
-    /** Default decimal places for a currency value.
-     @type {string}
-     */
-    CurrencyDecimals = 0;
 
 };
+/** Country name, in English.
+ @type {string}
+ */
+tp.Culture.prototype.Country = '';
 
+/** Culture name, in English.
+ @type {string}
+ */
+tp.Culture.prototype.Name = '';
+/** Culture code, i.e. 'en-US'
+ @type {string}
+ */
+tp.Culture.prototype.Code = '';
+
+/** Full date time format pattern.
+ @type {string}
+ */
+tp.Culture.prototype.FullDateTimeFormat = '';
+
+/** Date format pattern.
+ @type {string}
+ */
+tp.Culture.prototype.DateFormat = '';
+/** Date separator.
+ @type {string}
+ */
+tp.Culture.prototype.DateSeparator = '';
+/** The name of the first day of the week, in English.
+ @type {string}
+ */
+tp.Culture.prototype.FirstDayOfWeek = '';
+
+/** Time format pattern.
+ @type {string}
+ */
+tp.Culture.prototype.TimeFormat = '';
+/** Time separator.
+ @type {string}
+ */
+tp.Culture.prototype.TimeSeparator = '';
+/** The PM designator.
+ @type {string}
+ */
+tp.Culture.prototype.PM = '';
+/** The AM designator.
+ @type {string}
+ */
+tp.Culture.prototype.AM = '';
+
+/** Array of day names
+ @type {string[]}
+ */
+tp.Culture.prototype.DayNames = [];
+/** Array of abbreviated day names.
+ @type {string[]}
+ */
+tp.Culture.prototype.AbbreviatedDayNames = [];
+
+/** Array of month names.
+ @type {string[]}
+ */
+tp.Culture.prototype.MonthNames = [];
+/** Array of abbreviated month names.
+ @type {string[]}
+ */
+tp.Culture.prototype.AbbreviatedMonthNames = [];
+
+/** Decimal separator.
+ @type {string}
+ */
+tp.Culture.prototype.DecimalSeparator = '';
+/** Thousand separator
+ @type {string}
+ */
+tp.Culture.prototype.ThousandSeparator = '';
+
+/** Currency name, in English
+ @type {string}
+ */
+tp.Culture.prototype.CurrencyName = '';
+/** Currency code, i.e. USD or EUR.
+ @type {string}
+ */
+tp.Culture.prototype.CurrencyCode = '';
+/** Currency symbol, i.e. $ or €
+ @type {string}
+ */
+tp.Culture.prototype.CurrencySymbol = '';
+
+/** Default decimal places for a currency value.
+ @type {string}
+ */
+tp.Culture.prototype.CurrencyDecimals = 0;
 //#endregion
 
 //#region tp.Cultures
