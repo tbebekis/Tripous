@@ -1,97 +1,8 @@
-/*
-            from            to
-XSmall         0             767
-Small        768             991
-Medium       992            1199
-Large       1200         
-    
-@XSmallMax	:  767px;
-@SmallMin	:  768px;
-@SmallMax	:  991px;
-@MediumMin	:  992px;
-@MediumMax	: 1199px;
-@LargeMin	: 1200px;
-*/
+
 
 :root {
-
-/* 12-grid column widths for all screen sizes */
---c1  :  8.33333%; 
---c2  : 16.66666%; 
---c3  : 24.99999%; 
---c4  : 33.33333%; 
---c5  : 41.66666%; 
---c6  : 49.99999%; 
---c7  : 58.33333%; 
---c8  : 66.66666%; 
---c9  : 74.99999%; 
---c10 : 83.33333%; 
---c11 : 91.66666%; 
---c12 : 99.99999%; 	
-
-/* Column Widths - In percents */
---p-1   :   0.99999%; 
---p-2   :   1.99999%; 
---p-3   :   2.99999%; 
---p-4   :   3.99999%; 
---p-5   :   4.99999%; 
---p-10  :   9.99999%;  
---p-15  :  14.99999%; 
---p-20  :  19.99999%; 
---p-25  :  24.99999%; 
---p-30  :  29.99999%; 
---p-35  :  34.99999%; 
---p-40  :  39.99999%; 
---p-45  :  44.99999%; 
---p-50  :  49.99999%; 
---p-55  :  54.99999%; 
---p-60  :  59.99999%; 
---p-65  :  64.99999%; 
---p-70  :  69.99999%; 
---p-75  :  74.99999%; 
---p-80  :  79.99999%; 
---p-85  :  84.99999%; 
---p-90  :  89.99999%; 
---p-95  :  94.99999%; 
---p-100 :  99.99999%; 
  
---p-33  :  33.33333%; 
---p-66  :  66.66666%;  
-
-
 /* Fonts */ 
---Font10: 10px;
---Font11: 11px;
---Font12: 12px;
---Font13: 13px;
---Font14: 14px;
---Font15: 15px;
---Font16: 16px;
---Font17: 17px;
---Font18: 18px;
---Font19: 19px;
---Font20: 20px;
---Font21: 21px;
---Font22: 22px;
---Font23: 23px;
---Font24: 24px;
---Font25: 25px;
---Font26: 26px;
---Font27: 27px;
---Font28: 28px;
---Font29: 29px;
---Font30: 30px;
---Font31: 31px;
---Font32: 32px;
---Font33: 33px;
---Font34: 34px;
---Font35: 35px;
---Font36: 36px;
---Font37: 37px;
---Font38: 38px;
---Font39: 39px;
---Font40: 40px;
-
 --FontXS: 10px;
 --FontS: 12px;
 --Font: 13px;
@@ -161,6 +72,9 @@ Large       1200
 
 --ShadowColor: rgba(0,0,0,0.25);
 --SpinnerColor: #034F84;
+
+
+/* Miscs */ 
 --GridDropTargetOutline: var(--SelectedColor) double thick;
 
 --Border: 1px solid var(--BorderColor);
