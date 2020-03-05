@@ -1,5 +1,4 @@
-@import "tp.css";
-
+@import "tp-Variables.css";
 
 /*---------------------------------------------------------------------------------------
  tp-GroupBox - fieldset
@@ -768,7 +767,7 @@ button {
  
 label {
     position: relative;
-    line-height: var(--LineHeight);
+    /* line-height: var(--LineHeight); */
     height: var(--ControlHeight);
     padding: var(--TextPadding);
 }
@@ -779,7 +778,7 @@ label {
  
 input {
     position: relative;
-    line-height: var(--LineHeight);
+    /* line-height: var(--LineHeight); */
     height: var(--ControlHeight);
     padding: var(--TextPadding);
 }
@@ -980,7 +979,7 @@ select.tp-HtmlListBox {
     position: relative;
     display: inline-flex;
     align-items: center;
-    line-height: var(--LineHeight);
+    /* line-height: var(--LineHeight); */
     height: var(--ControlHeight);
     margin: 2px;
     border: var(--Border);
@@ -1122,7 +1121,7 @@ table.tp-Calendar td.tp-Marked {
 
 .tp-RadioGroup label {
     display: flex;
-    line-height: var(--LineHeight);
+    /* line-height: var(--LineHeight); */
     align-items: center;
 }
 
