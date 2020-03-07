@@ -23,13 +23,13 @@ namespace Tripous
      
         
 
-        static JsonSerializerSettings CreateDefaultSettings()
+        static JsonSerializerSettings CreateDefaultSettings(bool Formatted = true)
         {
             JsonSerializerSettings Result = new JsonSerializerSettings();
 
-            Result = new Newtonsoft.Json.JsonSerializerSettings();
-            Result.Formatting = Newtonsoft.Json.Formatting.Indented;
-            Result.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+            Result = new JsonSerializerSettings();
+            Result.Formatting = Formatted? Formatting.Indented: Formatting.None;
+            Result.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
 
             return Result;
         }
@@ -55,6 +55,13 @@ namespace Tripous
             return JsonConvert.SerializeObject(parsedJson, Formatting.Indented);
         }
 
+        /// <summary>
+        /// Converts Instance to a json string using the NewtonSoft json serializer.
+        /// </summary>
+        static public string ToJson(object Instance, bool Formatted)
+        {
+            return ToJson(Instance, CreateDefaultSettings(Formatted));
+        }
         /// <summary>
         /// Converts Instance to a json string using the NewtonSoft json serializer.
         /// <para>If no settings specified then it uses the default JsonSerializerSettings</para> 
