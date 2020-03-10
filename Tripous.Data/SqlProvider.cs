@@ -202,13 +202,22 @@ namespace Tripous.Data
 
         /* DbProviderFactory related */
         /// <summary>
+        /// Creates and returns a DbConnection initialized with ConnectionString.
+        /// <para>WARNING: It does NOT open the connection.</para>
+        /// </summary>
+        public virtual DbConnection CreateConnection(string ConnectionString)
+        {
+            DbConnection Result = Factory.CreateConnection();
+            Result.ConnectionString = ConnectionString;
+            return Result;
+        }
+        /// <summary>
         /// Creates, opens and returns a DbConnection initialized with ConnectionString.
         /// <para>WARNING: It opens the connection too.</para>
         /// </summary>
         public virtual DbConnection OpenConnection(string ConnectionString)
         {
-            DbConnection Result = Factory.CreateConnection();
-            Result.ConnectionString = ConnectionString;
+            DbConnection Result = CreateConnection(ConnectionString);
             Result.Open();
             return Result;
         }
