@@ -202,6 +202,7 @@ tp.NotificationBoxSetup = {
             BorderColor: '#2196F3'
         }
     },
+    ToTop: false,
     DurationSecs: 10,
     Height: 110,
     Width: 350
@@ -245,6 +246,21 @@ tp.NotificationBoxes = (function () {
 
             return Result;
         },
+        /** Returns the value of the top property, as a number, of the next notification box. 
+         @return {number} Returns the value of the top property, as a number, of the next notification box.
+         @memberof tp.NotificationBoxes
+         @static
+         */
+        get Top() {
+            let Result = 5;
+            if (Boxes.length > 0) {
+                let Box = Boxes[Boxes.length - 1];
+                let CS = tp.ComputedStyle(Box);
+                Result = Result + tp.ExtractNumber(CS.top) + tp.ExtractNumber(CS.height);
+            }
+
+            return Result;
+        },
         /** Returns the maximum z-index of all registered boxes 
          @type {integer}
          @memberof tp.NotificationBoxes
@@ -275,8 +291,7 @@ Displays a notification message to the user.
 */
 tp.NotifyFunc = function (Message, Type) {
     let Width = tp.Viewport.IsXSmall ? '100%' : tp.px(tp.NotificationBoxSetup.Width);
-    let Height = tp.px(tp.NotificationBoxSetup.Height);
-    let Bottom = tp.NotificationBoxes.Bottom;
+    let Height = tp.px(tp.NotificationBoxSetup.Height); 
 
     let Title = tp.EnumNameOf(tp.NotificationType, Type);
     let BackColor = tp.NotificationBoxSetup.Colors[Title].BackColor;
@@ -290,11 +305,17 @@ tp.NotifyFunc = function (Message, Type) {
         'height': Height,
         'margin': '4px 4px',
         'right': '10px',
-        'bottom': tp.px(Bottom),
         'border': '1px solid ' + BorderColor,
         'border-left-width': '6px'
         //'transition': tp.Format('opacity {0}s ease-in 0s', tp.NotificationBoxSetup.DurationSecs)  //   google : css transition fade out
     };
+
+    if (tp.NotificationBoxSetup.ToTop === true) {
+        CssStyle['top'] = tp.px(tp.NotificationBoxes.Top);
+    }
+    else {
+        CssStyle['bottom'] = tp.px(tp.NotificationBoxes.Bottom);
+    }
 
     let divNote = tp.Div(document.body);
 
@@ -10003,6 +10024,7 @@ tp.AjaxArgs = class {
         this.OnSuccess = null;                  // function(Args: tp.AjaxArgs)
         this.OnFailure = null;                  // function(Args: tp.AjaxArgs)
         this.OnRequestHeaders = null;           // function(Args: tp.AjaxArgs)
+        this.ResponseHandlerFunc = tp.AjaxResponseDefaultHandler;
 
         this.XHR = null;                        // XMLHttpRequest
         this.ErrorText = '';                    // the XMLHttpRequest.statusText in case of an error
@@ -10117,6 +10139,16 @@ tp.AjaxArgs.prototype.OnFailure = null;
  @type {function}
  */
 tp.AjaxArgs.prototype.OnRequestHeaders = null;
+/**
+ * A function(Args: tp.AjaxArgs) callback function. It is called just before the OnSuccess() call-back. <br />
+ * Processes the response after an ajax call returns. <br />
+ * The default response handler deserializes the Args.ResponseText into an object and assigns the Args.ResponseData object.
+ * It assumes that the ResponseText is a json text containing an object with at least two properties: <code> { Result: boolean, ErrorText: string } </code>. <br />
+ * Further on, if the Args.ResponseData  contains a Packet property and that Packet property is a json text, deserializes it into an object.
+ @default null
+ @type {function}
+ */
+tp.AjaxArgs.prototype.ResponseHandlerFunc = null;
 
 /** The {@link https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest|XMLHttpRequest} object. <br />
  * <strong>Valid only after response from server</strong>
@@ -10132,7 +10164,8 @@ tp.AjaxArgs.prototype.ErrorText = '';
  @type {boolean}
  */
 tp.AjaxArgs.prototype.Result = false;
-/** The response from the server it is always packaged as an object <code>{ Result: false, ErrorText: '', Packet: {} }</code>  where Packet is the actual response data. <br />
+/** The response from the server it is always packaged as a C# Tripous.HttpActionResult instance. <br />
+ * That is it comes as an object <code>{ IsSuccess: false, ErrorText: '', Packet: {} }</code>  where Packet is the actual response json data. <br />
  * <strong>Valid only after response from server</strong>
  @type {object}
  */
@@ -10144,6 +10177,41 @@ tp.AjaxArgs.prototype.ResponseData = { Result: false, ErrorText: '', Packet: {} 
 tp.AjaxArgs.prototype.Tag = null;
 
 //#endregion
+
+/**
+ * The default handler after an ajax call returns. <br />
+ * Deserializes the Args.ResponseText into an object and assigns the Args.ResponseData object.
+ * It assumes that the ResponseText is a json text containing an object with at least two properties: <code> { Result: boolean, ErrorText: string } </code>. <br />
+ * Further on, if the Args.ResponseData  contains a Packet property and that Packet property is a json text, deserializes it into an object.
+ * @param {tp.AjaxArgs} Args  A {@link tp.AjaxArgs} instance
+ */
+tp.AjaxResponseDefaultHandler = function (Args) {
+    function ErrorText(Text) {
+        return tp.IsString(Text) && !tp.IsBlank(Text) ? Text : "Unknown error";
+    }
+
+    if (Args.Result === false)
+        throw ErrorText(Args.ErrorText);
+
+    let o = null;
+    try {
+        o = JSON.parse(Args.ResponseText);
+        Args.ResponseData = o;
+    } catch (e) {
+        return;
+    }
+
+    if (!tp.IsEmpty(o) && o.Result === false)
+        throw ErrorText(o.ErrorText);
+
+    if (tp.IsJson(Args.ResponseData.Packet)) {
+        try {
+            Args.ResponseData.Packet = JSON.parse(Args.ResponseData.Packet);
+        } catch (e) {
+            //
+        }
+    }
+};
 
 //#region Ajax
  
@@ -10211,8 +10279,7 @@ tp.Ajax = function (Args) {
             Args.ResponseText = XHR.responseText;
             if (Succeeded(XHR)) {
                 Args.Result = true;
-                if (tp.IsFunction(tp.Ajax.ResponseDefaultHandler))
-                    tp.Call(tp.Ajax.ResponseDefaultHandler, null, Args);
+                tp.Call(Args.ResponseHandlerFunc, null, Args);
                 tp.Call(Args.OnSuccess, Context, Args);
             } else {
                 OnError(e);
@@ -10252,40 +10319,7 @@ tp.Ajax = function (Args) {
 
 
 
-/**
- * The default handler after an ajax call returns. <br />
- * Deserializes the Args.ResponseText into an object and assigns the Args.ResponseData object.
- * It assumes that the ResponseText is a json text containing an object with at least two properties: <code> { Result: boolean, ErrorText: string } </code>. <br />
- * Further on, if the Args.ResponseData  contains a Packet property and that Packet property is a json text, deserializes it into an object.
- * @param {tp.AjaxArgs} Args  A {@link tp.AjaxArgs instance
- */
-tp.Ajax.ResponseDefaultHandler = function (Args) {
-    function ErrorText(Text) {
-        return tp.IsString(Text) && !tp.IsBlank(Text) ? Text : "Unknown error";
-    }
 
-    if (Args.Result === false)
-        throw ErrorText(Args.ErrorText);
-
-    let o = null;
-    try {
-        o = JSON.parse(Args.ResponseText);
-        Args.ResponseData = o;
-    } catch (e) {
-        return;
-    }
-
-    if (!tp.IsEmpty(o) && o.Result === false)
-        throw ErrorText(o.ErrorText);
-
-    if (tp.IsJson(Args.ResponseData.Packet)) {
-        try {
-            Args.ResponseData.Packet = JSON.parse(Args.ResponseData.Packet);
-        } catch (e) {
-            //
-        }
-    }
-};
 
 /**
 Executes an ajax request inside a promise.
@@ -15266,13 +15300,19 @@ NotificationBox = class extends tp.tpElement {
             'height': tp.px(tp.NotificationBoxSetup.Height),
             'margin': '4px 4px',
             'right': '10px',
-            'bottom': tp.px(tp.NotificationBoxes.Bottom),
             'border': '1px solid ' + BorderColor,
             'border-left-width': '6px',
             'opacity': '0',
             'transition': tp.Format('opacity {0}s ease-in 0s', tp.NotificationBoxSetup.DurationSecs),  //   // google : css transition fade out
             'user-select': 'none'
         };
+
+        if (tp.NotificationBoxSetup.ToTop === true) {
+            CssStyle['top'] = tp.px(tp.NotificationBoxes.Top);
+        }
+        else {
+            CssStyle['bottom'] = tp.px(tp.NotificationBoxes.Bottom);
+        }
 
         if (tp.Viewport.IsXSmall) {
             CssStyle['left'] = '2px';
@@ -15363,6 +15403,8 @@ background-color: ${BorderColor};
         this.HookEvent(tp.Events.Click);
         this.HookEvent(tp.Events.KeyDown);
         this.HookEvent(tp.Events.MouseDown);
+
+        this.BringToFront();
     }
 
     /** Returns a string indicating the box type.

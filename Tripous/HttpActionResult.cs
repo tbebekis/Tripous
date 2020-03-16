@@ -17,6 +17,14 @@ namespace Tripous
         public HttpActionResult()
         {
         }
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public HttpActionResult(object Packet, bool IsSuccess = true)
+        {
+            SerializePacket(Packet);
+            this.IsSuccess = IsSuccess;
+        }
 
         /* public */
         /// <summary>
@@ -24,7 +32,8 @@ namespace Tripous
         /// </summary>
         public void SerializePacket(object Packet)
         {
-            this.Packet = Json.ToJson(Packet);
+            if (Packet != null)
+                this.Packet = Json.ToJson(Packet);
         }
         /// <summary>
         /// Deserializes Packet string property to an instance of a specified type
