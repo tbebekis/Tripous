@@ -6,6 +6,7 @@ namespace Tripous.Logging
     /// <summary>
     /// The level of log info to issue, display, or persist
     /// </summary>
+    [Flags]
     public enum LogLevel
     {
         /// <summary>
@@ -23,19 +24,19 @@ namespace Tripous.Logging
         /// <summary>
         /// Info
         /// </summary>
-        Info = 3,
+        Info = 4,
         /// <summary>
         /// Warn
         /// </summary>
-        Warn = 4,
+        Warn = 8,
         /// <summary>
         /// Error
         /// </summary>
-        Error = 5,
+        Error = 0x10,
         /// <summary>
         /// Fatal
         /// </summary>
-        Fatal = 6,
+        Fatal = 0x20,
 
     }
 }
