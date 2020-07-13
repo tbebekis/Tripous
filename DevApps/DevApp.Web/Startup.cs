@@ -41,8 +41,8 @@ namespace DevApp.Web
             this.Configuration = configuration;
             HostEnvironment = environment;
 
-            WSys.SetConfiguration(Configuration);
-            WSys.SetHostEnvironment(HostEnvironment);
+            WSys.Configuration = Configuration;
+            WSys.HostEnvironment = HostEnvironment;
         }
 
         /* public */

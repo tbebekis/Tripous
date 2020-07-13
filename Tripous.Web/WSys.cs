@@ -25,6 +25,8 @@ namespace Tripous.Web
     /// </summary>
     static public class WSys
     {
+        static IServiceProvider fRootServiceProvider;
+
         /* private */
         /// <summary>
         /// FROM: https://stackoverflow.com/questions/13086856/mobile-device-detection-in-asp-net
@@ -38,10 +40,8 @@ namespace Tripous.Web
         /// FROM: https://stackoverflow.com/questions/7576508/how-to-detect-crawlers-in-asp-net-mvc
         /// </summary>
         static Regex CrawlerCheck = new Regex(@"bot|crawler|baiduspider|80legs|ia_archiver|voyager|curl|wget|yahoo! slurp|mediapartners-google", RegexOptions.IgnoreCase | RegexOptions.Multiline | RegexOptions.Compiled);
-
-
-        static IHttpContextAccessor HttpContextAccessor;
-        static IServiceProvider RootServiceProvider;
+ 
+        
 
         /* construction */
         /// <summary>
@@ -51,33 +51,7 @@ namespace Tripous.Web
         {
         }
 
-        /* public - initialization */
-        /// <summary>
-        /// Sets the host environment <see cref="IHostEnvironment"/> value
-        /// <para>Call it from inside the <code>Startup</code> constructor.</para>
-        /// </summary>
-        static public void SetHostEnvironment(IWebHostEnvironment Value)
-        {
-            HostEnvironment = Value;
-        }
-        /// <summary>
-        /// Sets the configuration <see cref="IConfiguration"/> value
-        /// <para>Call it from inside the <code>Startup</code> constructor.</para>
-        /// </summary>
-        static public void SetConfiguration(IConfiguration Value)
-        {
-            Configuration = Value;
-        }
-        /// <summary>
-        /// Sets the service provider <see cref="IServiceProvider"/> value.
-        /// <para>Call it from inside the <code>Startup.Configure()</code> method as <code>WSys.SetServiceProvider(app.ApplicationServices)</code> </para>
-        /// </summary>
-        static public void SetHttpContextAccessor(IServiceProvider RootServiceProvider)
-        {
-            WSys.RootServiceProvider = RootServiceProvider;
-            HttpContextAccessor = RootServiceProvider.GetRequiredService<IHttpContextAccessor>();
-            //HostEnvironment = (HostEnvironment ?? ServiceProvider.GetRequiredService<IHostEnvironment>()) as IWebHostEnvironment;
-        }
+
 
         /* IServiceCollection */
         /// <summary>
@@ -170,17 +144,36 @@ namespace Tripous.Web
         static public string BinPath { get { return AppContext.BaseDirectory; } }
 
         /// <summary>
+        /// Gets or sets the root <see cref="IServiceProvider"/>
+        /// </summary>
+        static public IServiceProvider RootServiceProvider
+        {
+            get { return fRootServiceProvider; }
+            set
+            {
+                fRootServiceProvider = value;
+                if (fRootServiceProvider != null)
+                {
+                    HttpContextAccessor = RootServiceProvider.GetRequiredService<IHttpContextAccessor>();
+                }
+            }
+        }
+        /// <summary>
+        /// Gets or sets the <see cref="IHttpContextAccessor"/>
+        /// </summary>
+        static public IHttpContextAccessor HttpContextAccessor { get; set; }
+        /// <summary>
         /// Returns the HttpContext
         /// </summary>
-        static public HttpContext HttpContext { get { return HttpContextAccessor.HttpContext; } }
+        static public HttpContext HttpContext { get { return HttpContextAccessor != null? HttpContextAccessor.HttpContext: null; } }
         /// <summary>
-        /// Returns the HostingEnvironment
+        /// Gets or sets the <see cref="IWebHostEnvironment"/>
         /// </summary>
-        static public IWebHostEnvironment HostEnvironment { get; private set; }
+        static public IWebHostEnvironment HostEnvironment { get; set; }
         /// <summary>
-        /// Returns the Configuration
+        /// Gets or sets the <see cref="IConfiguration"/>
         /// </summary>
-        static public IConfiguration Configuration { get; private set; }
+        static public IConfiguration Configuration { get; set; }
         /// <summary>
         /// True when is development environment.
         /// </summary>

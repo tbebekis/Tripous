@@ -314,8 +314,8 @@ namespace DevApp.Web
         /// </summary>
         static internal void Configure(IApplicationBuilder app, IOptionsMonitor<AppSettings> AppSettingsAccessor)
         {
-            // ● HttpContext
-            WSys.SetHttpContextAccessor(app.ApplicationServices);
+            // ● RootServiceProvider
+            WSys.RootServiceProvider = app.ApplicationServices; 
 
             // ● events
             IHostApplicationLifetime appLifetime = WSys.GetService<IHostApplicationLifetime>();
