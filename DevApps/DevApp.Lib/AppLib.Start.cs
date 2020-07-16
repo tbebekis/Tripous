@@ -28,7 +28,6 @@ namespace DevApp.Lib
         static public void ConnectDatabases()
         {
             SqlConnectionInfoList ConnectionInfoList = new SqlConnectionInfoList();
-            ConnectionInfoList.Load();
             Db.Connections = ConnectionInfoList.SqlConnections;
         }
         /// <summary>

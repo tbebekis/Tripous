@@ -1078,7 +1078,7 @@ namespace Tripous.Data
         /// <summary>
         /// Returns true if the database represented by the specified database exists, by checking the connection.
         /// </summary>
-        public bool DatabaseExists(string ConnectionString)
+        public virtual bool DatabaseExists(string ConnectionString)
         {
             bool Result = false;
             try
@@ -1086,8 +1086,9 @@ namespace Tripous.Data
                 EnsureConnection(ConnectionString);
                 Result = true;
             }
-            catch
+            catch (Exception Ex)
             {
+                Sys.SaveToFile(Ex);
             }
 
             return Result;

@@ -492,6 +492,15 @@ namespace Tripous
             return false;
         }
 
+
+        /// <summary>
+        /// Saves an exception to a file
+        /// </summary>
+        static public void SaveToFile(Exception Ex)
+        {
+            string FileName = $"ERROR {DateTime.Now.ToFileName()}.log";
+            File.WriteAllText(FileName, Ex.ToString());
+        }
         /* to/from Base64 */
         /// <summary>
         /// Encodes Value into a Base64 string using the specified Enc.

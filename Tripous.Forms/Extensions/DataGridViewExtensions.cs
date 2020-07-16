@@ -342,6 +342,42 @@ namespace Tripous.Forms
 
 
         /// <summary>
+        /// Sets the visibility of a column
+        /// </summary>
+        static public void SetColumnVisible(this DataGridView Grid, string FieldName, bool Visible)
+        {
+            DataGridViewColumn C = Grid.FindColumn(FieldName);
+            if (C != null)
+                C.Visible = Visible;
+        }
+        /// <summary>
+        /// Sets the visibility of a number of columns
+        /// </summary>
+        static public void SetVisibleColumns(this DataGridView Grid, params string[] FieldNames)
+        {
+            if (FieldNames != null && FieldNames.Length > 0)
+            {
+                foreach (DataGridViewColumn C in Grid.Columns)
+                {
+                    C.Visible = FieldNames.ContainsText(C.DataPropertyName);
+                }
+            }
+        }
+        /// <summary>
+        /// Sets the read-only property of a number of columns
+        /// </summary>
+        static public void SetReadOnlyColumns(this DataGridView Grid, params string[] FieldNames)
+        {
+            if (FieldNames != null && FieldNames.Length > 0)
+            {
+                foreach (DataGridViewColumn C in Grid.Columns)
+                {
+                    C.ReadOnly = FieldNames.ContainsText(C.DataPropertyName);
+                }
+            }
+        }
+
+        /// <summary>
         /// Setups Grid columns based on Table columns
         /// <para>Returns a List of columns set as non-Visible. See: ForceNonVisibleDataGridViewColumns()</para>
         /// </summary>

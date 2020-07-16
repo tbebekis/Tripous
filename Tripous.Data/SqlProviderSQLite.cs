@@ -36,6 +36,15 @@ namespace Tripous.Data
 
         /* public */
         /// <summary>
+        /// Returns true if the database represented by the specified database exists, by checking the connection.
+        /// </summary>
+        public override bool DatabaseExists(string ConnectionString)
+        {
+            ConnectionStringBuilder CSB = new ConnectionStringBuilder(ConnectionString);
+            string FilePath = CSB.Database;
+            return !string.IsNullOrWhiteSpace(FilePath) && File.Exists(FilePath);
+        }
+        /// <summary>
         /// Creates a new database
         /// </summary>
         public override bool CreateDatabase(string ServerName, string DatabaseName, string UserName, string Password)
