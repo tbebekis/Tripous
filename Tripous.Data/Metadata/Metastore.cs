@@ -331,7 +331,7 @@ namespace Tripous.Data.Metadata
         /// <summary>
         /// Returns a string list with the table names in the database.
         /// </summary>
-        public IList<string> GetTableNames()
+        public List<string> GetTableNames()
         {
             List<string> List = new List<string>();
 
@@ -345,7 +345,7 @@ namespace Tripous.Data.Metadata
         /// <summary>
         /// Returns a string list with the field names of the TableName
         /// </summary>
-        public IList<string> GetFieldNames(string TableName)
+        public List<string> GetFieldNames(string TableName)
         {
             List<string> List = new List<string>();
 
@@ -364,7 +364,7 @@ namespace Tripous.Data.Metadata
         /// <summary>
         /// Returns a string list with the index names in the database
         /// </summary>
-        public IList<string> GetIndexNames()
+        public List<string> GetIndexNames()
         {
             List<string> List = new List<string>();
 

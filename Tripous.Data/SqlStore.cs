@@ -863,21 +863,21 @@ namespace Tripous.Data
         /// <summary>
         /// Returns a string list with the table names in the database.
         /// </summary>
-        public IList<string> GetTableNames()
+        public List<string> GetTableNames()
         {
             return this.Metastore.GetTableNames();
         }
         /// <summary>
         /// Returns a string list with the field names of the TableName
         /// </summary>
-        public IList<string> GetFieldNames(string TableName)
+        public List<string> GetFieldNames(string TableName)
         {
             return this.Metastore.GetFieldNames(TableName);
         }
         /// <summary>
         /// Returns a string list with the index names in the database
         /// </summary>
-        public IList<string> GetIndexNames()
+        public List<string> GetIndexNames()
         {
             return this.Metastore.GetIndexNames();
         }
