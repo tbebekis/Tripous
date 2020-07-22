@@ -32,6 +32,7 @@ namespace Tripous.Forms
             this.Text = Title;
 
             Grid.InitializeReadOnly();
+            Grid.DataError += Grid_DataError;
             Grid.DataSource = Table;
             if (Table.Rows.Count <= 5000)
                 Grid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells; // ColumnHeader DisplayedCells Fill AllCells
@@ -48,6 +49,10 @@ namespace Tripous.Forms
             }
 
             btnOK.Enabled = Grid.RowCount > 0;
+        }
+        void Grid_DataError(object sender, DataGridViewDataErrorEventArgs e)
+        {
+            // do nothing
         }
 
         /// <summary>
@@ -111,10 +116,11 @@ namespace Tripous.Forms
 
             DataTable Table = new DataTable(TableName);
             Table.Columns.Add("Ordinal", typeof(int));
-            Table.Columns.Add("Column", typeof(string));
+            Table.Columns.Add("Column", typeof(string));            
             Table.Columns.Add("Caption", typeof(string));
-            Table.Columns.Add("Value", typeof(string));
             Table.Columns.Add("Type", typeof(string));
+            Table.Columns.Add("Value", typeof(string));
+            
 
             DataRow Row;
 

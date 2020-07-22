@@ -865,6 +865,8 @@ namespace Tripous.Data
         /// </summary>
         public List<string> GetTableNames()
         {
+            this.Metastore.Load();
+            this.Metastore.Tables.Load();
             return this.Metastore.GetTableNames();
         }
         /// <summary>
@@ -872,6 +874,8 @@ namespace Tripous.Data
         /// </summary>
         public List<string> GetFieldNames(string TableName)
         {
+            this.Metastore.Load();
+            this.Metastore.Tables.Load();
             return this.Metastore.GetFieldNames(TableName);
         }
         /// <summary>
@@ -879,6 +883,8 @@ namespace Tripous.Data
         /// </summary>
         public List<string> GetIndexNames()
         {
+            this.Metastore.Load();
+            this.Metastore.Tables.Load();
             return this.Metastore.GetIndexNames();
         }
 
