@@ -1,5 +1,3 @@
-@import "tp-Variables.css";
-
 /*
             from            to
 XSmall         0             767
@@ -890,5 +888,5 @@ max-width 	Rules applied for any browser width less than the value defined in th
 }
 
 .tp-Shadow {
-    box-shadow: 5px 5px 16px 0 var(--ShadowColor);
+    box-shadow: 5px 5px 16px 0 rgba(0,0,0,0.25);
 }
