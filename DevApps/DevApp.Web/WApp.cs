@@ -98,11 +98,11 @@ namespace DevApp.Web
             {
                ImageNames = Icons32.GetNamesDictionary();
 
-                LanguageItem LI;
+                Language LI;
                 foreach (DataRow Row in Table.Rows)
                 {
-                    LI = new LanguageItem(Row);
-                    Languages.Add(LI);
+                    LI = new Language(Row);
+                    Tripous.Languages.Add(LI);
 
                     if (!string.IsNullOrWhiteSpace(LI.FlagImage))
                     {
@@ -266,7 +266,7 @@ namespace DevApp.Web
 
             // ● Request Culture Provider
             // SEE: https://teonotebook.wordpress.com/2020/02/22/asp-net-core-3-0-mvc-request-localization-or-how-to-set-the-culture-of-a-user-session/
-            LanguageItem[] LangItems = WApp.LanguageItems;
+            Language[] LangItems = WApp.Languages;
 
             // UseRequestLocalization initializes a RequestLocalizationOptions object. 
             // On every request the list of RequestCultureProvider in the RequestLocalizationOptions is enumerated 
@@ -427,14 +427,14 @@ namespace DevApp.Web
         /// <summary>
         /// The available languages
         /// </summary>
-        static public LanguageItem[] LanguageItems
+        static public Language[] Languages
         {
             get
             {
-                LanguageItem[] Result = Languages.Items;
+                Language[] Result = Tripous.Languages.Items;
                 if (Result.Length == 0)
                     LoadLanguages();
-                return Languages.Items;
+                return Tripous.Languages.Items;
             }
         }
         /// <summary>
@@ -451,7 +451,7 @@ namespace DevApp.Web
             {
                 if (value != Language)
                 {
-                    var Lang = Languages.Find(value);
+                    var Lang = Tripous.Languages.Find(value);
                     if (Lang != null)
                         Session.Language = Lang;
                 }

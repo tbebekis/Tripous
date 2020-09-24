@@ -41,7 +41,7 @@ namespace DevApp.Web.Controllers
 
         public IActionResult SetLanguage(string LanguageCode)
         {
-            LanguageItem Lang = Languages.Find(LanguageCode);
+            Language Lang = Languages.Find(LanguageCode);
             if (Lang != null && Lang.CultureCode != Session.Language.CultureCode)
             {
                 Session.Language = Lang;

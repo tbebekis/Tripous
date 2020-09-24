@@ -6,24 +6,23 @@ using System.Data;
 
 using Newtonsoft.Json;
 
-using Tripous.Data;
 
 
-namespace Tripous.Web
+
+namespace Tripous
 {
 
     /// <summary>
     /// Language information.  Represents a language this application supports, i.e. provides localized resources for.
     /// </summary>
-    public class LanguageItem
-    {
- 
+    public class Language
+    { 
 
         /* construction */
         /// <summary>
         /// Constructor
         /// </summary>
-        public LanguageItem()
+        public Language()
         {
         }
         /// <summary>
@@ -34,7 +33,7 @@ namespace Tripous.Web
         /// <param name="Code">The two letter code of the language, e.g en, el, it, fr, etc.</param>
         /// <param name="CultureCode">The culture code associated to this language, e.g.  e.g en-US, el-GR, etc.</param>
         /// <param name="FlagImage">The image file name, i.e. flag_greece.png</param>
-        public LanguageItem(string Id, string Name, string Code, string CultureCode, string FlagImage = "")
+        public Language(string Id, string Name, string Code, string CultureCode, string FlagImage = "")
         {
             this.Id = Id;
             this.Name = Name;
@@ -43,9 +42,9 @@ namespace Tripous.Web
             this.FlagImage = FlagImage;
         }
         /// <summary>
-        /// Constructor. The specified <see cref="DataRow"/> must have the schema of the <see cref="SysTables.Lang"/> table.
+        /// Constructor. The specified <see cref="DataRow"/> must have the schema of the SysTables.Lang table.
         /// </summary>
-        public LanguageItem(DataRow Row)
+        public Language(DataRow Row)
             : this(Row.AsString("Id"),
                   Row.AsString("Name"),
                   Row.AsString("SeoCode"),
@@ -53,8 +52,7 @@ namespace Tripous.Web
                   Row.AsString("FlagImage"))
         {
         }
-
-
+ 
         /* public */
         /// <summary>
         /// Returns a string representation of this instance
@@ -90,8 +88,17 @@ namespace Tripous.Web
         /// </summary>
         public string FlagImage { get; set; }
 
+        /// <summary>
+        /// User defined information
+        /// </summary>
+        [JsonIgnore]
+        public object Tag { get; set; }
 
+        /// <summary>
+        /// String resources
+        /// </summary>
+        [JsonIgnore]
+        public LanguageResourceStringList Resources { get; } = new LanguageResourceStringList();
 
- 
     }
 }

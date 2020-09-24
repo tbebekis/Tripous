@@ -21,7 +21,7 @@ namespace DevApp.Web.Components
         /// </summary>
         public IViewComponentResult Invoke()
         {
-            var List = WApp.LanguageItems;
+            var List = WApp.Languages;
             return View(List);
         }
     }

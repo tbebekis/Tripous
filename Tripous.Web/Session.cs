@@ -124,17 +124,15 @@ namespace Tripous.Web
         /// Gets or sets the current language of the session.
         /// <para>Represents a language this application supports, i.e. provides localized resources for.</para>
         /// </summary>
-        static public LanguageItem Language
+        static public Language Language
         {
             get
             {
-                LanguageItem Result = Get<LanguageItem>("Language", null);
+                Language Result = Get<Language>("Language", null);
                 return Result != null ? Result : Languages.DefaultLanguage;
             }
             set
             {
-                //LanguageItem Lang = Languages.DefaultLanguage;
-
                 if (value != null)
                 {
                     Set("Language", value);

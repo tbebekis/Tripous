@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Tripous.Web
+namespace Tripous
 {
     /// <summary>
     /// The languages this application supports, i.e. provides localized resources for.
@@ -13,7 +13,7 @@ namespace Tripous.Web
 
         /* private */
         static object syncLock = new LockObject();
-        static List<LanguageItem> fItems = new List<LanguageItem>();
+        static List<Language> fItems = new List<Language>();
 
         /* public */
         /// <summary>
@@ -29,22 +29,22 @@ namespace Tripous.Web
         /// <summary>
         /// Returns a language, specified by a two letter code (en, el, it, fr, etc), if registered, else null.
         /// </summary>
-        static public LanguageItem Find(string TwoLetterLanguageCode)
+        static public Language Find(string TwoLetterLanguageCode)
         {
             lock (syncLock)
             {
-                LanguageItem Item = fItems.FirstOrDefault(item => item.Code.IsSameText(TwoLetterLanguageCode));
+                Language Item = fItems.FirstOrDefault(item => item.Code.IsSameText(TwoLetterLanguageCode));
                 return Item;
             }
         }
         /// <summary>
         /// Returns a language, specified by a two letter code (en, el, it, fr, etc), if registered, else returns the default language (en).
         /// </summary>
-        static public LanguageItem FindOrDefault(string TwoLetterLanguageCode)
+        static public Language FindOrDefault(string TwoLetterLanguageCode)
         {
             lock (syncLock)
             {
-                LanguageItem Item = Find(TwoLetterLanguageCode);
+                Language Item = Find(TwoLetterLanguageCode);
                 if (Item == null)
                     Item = DefaultLanguage;
                 return Item;
@@ -53,11 +53,11 @@ namespace Tripous.Web
         /// <summary>
         /// Returns a language, specified by a two letter code (en, el, it, fr, etc), if registered, else throws an exception.
         /// </summary>
-        static public LanguageItem Get(string TwoLetterLanguageCode)
+        static public Language Get(string TwoLetterLanguageCode)
         {
             lock (syncLock)
             {
-                LanguageItem Item = Find(TwoLetterLanguageCode);
+                Language Item = Find(TwoLetterLanguageCode);
                 if (Item == null)
                     throw new ApplicationException($"Language not registered: {TwoLetterLanguageCode}");
                 return Item;
@@ -67,7 +67,7 @@ namespace Tripous.Web
         /// <summary>
         /// Registers a language
         /// </summary>
-        static public void Add(LanguageItem Item)
+        static public void Add(Language Item)
         {
             lock (syncLock)
             {
@@ -80,12 +80,12 @@ namespace Tripous.Web
         /// <summary>
         /// The default language
         /// </summary>
-        static public LanguageItem DefaultLanguage
+        static public Language DefaultLanguage
         {
             get
             {
-                LanguageItem Result = fItems.FirstOrDefault(item => item.Code.IsSameText("en"));
-                return Result != null? Result : new LanguageItem("", "English", "en", "en-US");
+                Language Result = fItems.FirstOrDefault(item => item.Code.IsSameText("en"));
+                return Result != null? Result : new Language("", "English", "en", "en-US");
             }
         }
         /// <summary>
@@ -95,6 +95,6 @@ namespace Tripous.Web
         /// <summary>
         /// The list of registered languages
         /// </summary>
-        static public LanguageItem[] Items { get {   return fItems.ToArray(); } }
+        static public Language[] Items { get {   return fItems.ToArray(); } }
     }
 }
