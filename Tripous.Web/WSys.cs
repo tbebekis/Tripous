@@ -3,10 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Data.Common;
+using System.Net;
 using System.Text.RegularExpressions;
+
+using Microsoft.Net.Http.Headers;
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http.Features;
 
 using Microsoft.Extensions.Primitives;
 using Microsoft.Extensions.Hosting;
@@ -90,10 +94,26 @@ namespace Tripous.Web
 
         /* miscs */
         /// <summary>
+        /// Returns a query string value by a specified key
+        /// </summary>
+        static public string GetQueryValue(string Key)
+        {
+            string Result = null;
+
+            if (WSys.IsRequestAvailable)
+            {
+                var SV = WSys.HttpContext.Request.Query[Key];
+                if (!StringValues.IsNullOrEmpty(SV))
+                    Result = SV.ToString();
+            }
+
+            return Result;
+        }
+        /// <summary>
         /// Returns the value of a query string parameter.
         /// <para>NOTE: When a parameter is included more than once, e.g. ?page=1&amp;page=2 then the result will be 1,2 hence this function returns an array.</para>
         /// </summary>
-        static public string[] GetQueryParameter(string Key)
+        static public string[] GetQueryValueArray(string Key)
         {
             if (HttpContext != null)
             {
@@ -102,6 +122,148 @@ namespace Tripous.Web
             }
 
             return new string[0];
+        }
+
+        /// <summary>
+        /// Returns the referrer Url if any, else null.
+        /// <para>NOTE: The HTTP referer is an optional HTTP header field that identifies the address of the webpage which is linked to the resource being requested. 
+        /// By checking the referrer, the new webpage can see where the request originated</para>
+        /// </summary>
+        static public string GetReferrerUrl(HttpRequest R = null)
+        {
+            if (R == null && WSys.IsRequestAvailable)
+                R = WSys.HttpRequest;
+
+            if (R != null)
+                return R.Headers[HeaderNames.Referer];
+
+            return null;
+        }
+        /// <summary>
+        /// Returns the client IP address, that is the IP address of the visitor, if any, else null
+        /// </summary>
+        static public string GetClientIpAddress(HttpRequest R = null)
+        {
+            string Result = null;
+
+            if (R == null && WSys.IsRequestAvailable)
+                R = WSys.HttpRequest;
+
+            if (R != null)
+            {
+                // first try to get the IP address from the X-Forwarded-For header
+                // SEE: https://en.wikipedia.org/wiki/X-Forwarded-For
+                var SV = R.Headers["X-Forwarded-For"];
+                if (!StringValues.IsNullOrEmpty(SV))
+                    Result = SV.FirstOrDefault();
+
+                // next try the remote IP address
+                if (string.IsNullOrWhiteSpace(Result) && R.HttpContext.Connection.RemoteIpAddress != null)
+                    Result = R.HttpContext.Connection.RemoteIpAddress.ToString();
+            }
+
+            // check to see if it is the IPv6 Loopback address
+            if (!string.IsNullOrWhiteSpace(Result) && Result.Equals(IPAddress.IPv6Loopback.ToString(), StringComparison.InvariantCultureIgnoreCase))
+                Result = IPAddress.Loopback.ToString();
+
+            // remove the port if there
+            if (!string.IsNullOrWhiteSpace(Result) && Result.Contains(':'))
+                Result = Result.Split(':').FirstOrDefault();
+
+            return Result;
+        }
+        /// <summary>
+        /// Returns true if the RequestScheme is https.
+        /// </summary>
+        static public bool IsHttps(HttpRequest R = null)
+        {
+            if (R == null && WSys.IsRequestAvailable)
+                R = WSys.HttpRequest;
+
+            if (R != null)
+            {
+                return R.Headers["X-Forwarded-Proto"].ToString().Equals("https", StringComparison.OrdinalIgnoreCase)
+                    || R.IsHttps;
+            }
+
+            return false;
+        }
+        /// <summary>
+        /// Returns the domain name of the server and the TCP port number on which the server is listening. 
+        /// The port number may be omitted if the port is the standard port for the service requested. 
+        /// </summary>
+        static public string GetHostDomainName(HttpRequest R = null)
+        {
+            string Result = null;
+
+            if (R == null && WSys.IsRequestAvailable)
+                R = WSys.HttpRequest;
+
+            if (R != null)
+            {
+                Result = R.Headers[HeaderNames.Host];
+            }
+
+            return Result;
+        }
+
+        /// <summary>
+        /// Returns the scheme of the current request, i.e. https or http
+        /// </summary>
+        static public string GetRequestProtocol(HttpRequest R = null)
+        {
+            return IsHttps(R) ? Uri.UriSchemeHttps : Uri.UriSchemeHttp;
+        }
+        /// <summary>
+        /// Gets whether the specified HTTP request URI references the local host.
+        /// </summary>
+        /// <param name="R">HTTP request</param>
+        /// <returns>True, if HTTP request URI references to the local host</returns>
+        static public bool IsLocalRequest(HttpRequest R = null)
+        {
+            if (R == null && WSys.IsRequestAvailable)
+                R = WSys.HttpRequest;
+
+            if (R != null)
+            {
+                // SEE: https://stackoverflow.com/questions/35240586/in-asp-net-core-how-do-you-check-if-request-is-local/
+                ConnectionInfo CI = R.HttpContext.Connection;
+                if (CI.RemoteIpAddress != null)
+                {
+                    return CI.LocalIpAddress != null ? CI.RemoteIpAddress.Equals(CI.LocalIpAddress) : IPAddress.IsLoopback(CI.RemoteIpAddress);
+                }
+            }
+
+
+            return true;
+        }
+        /// <summary>
+        /// Returns the raw Url path and full query string of a specified request
+        /// </summary>
+        static public string GetRawUrl(HttpRequest R = null)
+        {
+            string Result = null;
+
+            if (R == null && WSys.IsRequestAvailable)
+                R = WSys.HttpRequest;
+
+            Result = R.HttpContext.Features.Get<IHttpRequestFeature>()?.RawTarget;
+
+            // if is empty create it manually
+            if (string.IsNullOrWhiteSpace(Result))
+                Result = $"{R.PathBase}{R.Path}{R.QueryString}";
+
+            return Result;
+        }
+        /// <summary>
+        /// Returns true if a specified request is an ajax request
+        /// </summary>
+        static public bool IsAjax(HttpRequest R = null)
+        {
+            if (R == null && WSys.IsRequestAvailable)
+                R = WSys.HttpRequest;
+
+            return R != null ? R.Headers["X-Requested-With"] == "XMLHttpRequest" : false;
         }
 
         /* properties */
@@ -166,6 +328,29 @@ namespace Tripous.Web
         /// Returns the HttpContext
         /// </summary>
         static public HttpContext HttpContext { get { return HttpContextAccessor != null? HttpContextAccessor.HttpContext: null; } }
+        /// <summary>
+        /// Returns the current HTTP request, if any, else null.
+        /// </summary>
+        static public HttpRequest HttpRequest
+        {
+            get
+            {
+                try
+                {
+                    return HttpContextAccessor != null && HttpContextAccessor.HttpContext != null? HttpContextAccessor.HttpContext.Request: null;
+                }
+                catch
+                {                    
+                }
+
+                return null;
+            }
+        }
+        /// <summary>
+        /// Returns true if an HTTP Request is currently available
+        /// </summary>
+        static public bool IsRequestAvailable { get { return HttpRequest != null; } }
+ 
         /// <summary>
         /// Gets or sets the <see cref="IWebHostEnvironment"/>
         /// </summary>
