@@ -11,6 +11,7 @@ using Microsoft.Net.Http.Headers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.Http.Extensions;
 
 using Microsoft.Extensions.Primitives;
 using Microsoft.Extensions.Hosting;
@@ -172,22 +173,7 @@ namespace Tripous.Web
 
             return Result;
         }
-        /// <summary>
-        /// Returns true if the RequestScheme is https.
-        /// </summary>
-        static public bool IsHttps(HttpRequest R = null)
-        {
-            if (R == null && WSys.IsRequestAvailable)
-                R = WSys.HttpRequest;
 
-            if (R != null)
-            {
-                return R.Headers["X-Forwarded-Proto"].ToString().Equals("https", StringComparison.OrdinalIgnoreCase)
-                    || R.IsHttps;
-            }
-
-            return false;
-        }
         /// <summary>
         /// Returns the domain name of the server and the TCP port number on which the server is listening. 
         /// The port number may be omitted if the port is the standard port for the service requested. 
@@ -214,6 +200,72 @@ namespace Tripous.Web
         {
             return IsHttps(R) ? Uri.UriSchemeHttps : Uri.UriSchemeHttp;
         }
+
+        /// <summary>
+        /// Returns the raw Url path and full query string of a specified request
+        /// <note>SEE: https://stackoverflow.com/questions/28120222/get-raw-url-from-microsoft-aspnet-http-httprequest </note>
+        /// </summary>
+        static public string GetRawUrl(HttpRequest R = null)
+        {
+            string Result = null;
+
+            if (R == null && WSys.IsRequestAvailable)
+                R = WSys.HttpRequest;
+
+            Result = R.HttpContext.Features.Get<IHttpRequestFeature>()?.RawTarget;
+
+            // if is empty create it manually
+            if (string.IsNullOrWhiteSpace(Result))
+                Result = $"{R.PathBase}{R.Path}{R.QueryString}";
+
+            return Result;
+        }
+        /// <summary>
+        /// Returns the raw Url path and full query string of a specified request, url-encoded.
+        /// <note>SEE: https://stackoverflow.com/questions/28120222/get-raw-url-from-microsoft-aspnet-http-httprequest </note>
+        /// </summary>
+        static public string GetRawUrlEncoded(HttpRequest R = null)
+        {
+            return GetRawUrl(R).UrlEncode();
+        }
+        /// <summary>
+        /// Returns the combined components of the request URL in a fully escaped form suitable for use in HTTP headers and other HTTP operations.
+        /// </summary>
+        static public string GetFullUrlEncoded(HttpRequest R = null)
+        {
+            if (R == null && WSys.IsRequestAvailable)
+                R = WSys.HttpRequest;
+
+            return R.GetEncodedUrl();
+        }
+        /// <summary>
+        /// Returns the combined components of the request URL in a fully un-escaped form (except for the QueryString) suitable only for display. 
+        /// <para>This format should not be used in HTTP headers or other HTTP operations.</para>
+        /// </summary>
+        static public string GetFullDisplayUrl(HttpRequest R = null)
+        {
+            if (R == null && WSys.IsRequestAvailable)
+                R = WSys.HttpRequest;
+
+            return R.GetEncodedUrl();
+        }
+
+        /// <summary>
+        /// Returns true if the RequestScheme is https.
+        /// </summary>
+        static public bool IsHttps(HttpRequest R = null)
+        {
+            if (R == null && WSys.IsRequestAvailable)
+                R = WSys.HttpRequest;
+
+            if (R != null)
+            {
+                return R.Headers["X-Forwarded-Proto"].ToString().Equals("https", StringComparison.OrdinalIgnoreCase)
+                    || R.IsHttps;
+            }
+
+            return false;
+        }
         /// <summary>
         /// Gets whether the specified HTTP request URI references the local host.
         /// </summary>
@@ -236,24 +288,6 @@ namespace Tripous.Web
 
 
             return true;
-        }
-        /// <summary>
-        /// Returns the raw Url path and full query string of a specified request
-        /// </summary>
-        static public string GetRawUrl(HttpRequest R = null)
-        {
-            string Result = null;
-
-            if (R == null && WSys.IsRequestAvailable)
-                R = WSys.HttpRequest;
-
-            Result = R.HttpContext.Features.Get<IHttpRequestFeature>()?.RawTarget;
-
-            // if is empty create it manually
-            if (string.IsNullOrWhiteSpace(Result))
-                Result = $"{R.PathBase}{R.Path}{R.QueryString}";
-
-            return Result;
         }
         /// <summary>
         /// Returns true if a specified request is an ajax request
