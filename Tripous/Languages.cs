@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace Tripous
@@ -14,6 +15,7 @@ namespace Tripous
         /* private */
         static object syncLock = new LockObject();
         static List<Language> fItems = new List<Language>();
+        static Language fDefaultLanguage;
 
         /* public */
         /// <summary>
@@ -63,7 +65,31 @@ namespace Tripous
                 return Item;
             }
         }
-        
+
+        /// <summary>
+        /// Returns a language, specified by a culture code (en-US, el-GR), if registered, else null.
+        /// </summary>
+        static public Language FindByCultureCode(string CultureCode)
+        {
+            lock (syncLock)
+            {
+                return fItems.FirstOrDefault(item => item.CultureCode.IsSameText(CultureCode));
+            }            
+        }
+        /// <summary>
+        /// Returns a language, specified by a culture code (en-US, el-GR), if registered, else throws an exception.
+        /// </summary>
+        static public Language GetByCultureCode(string CultureCode)
+        {
+            lock (syncLock)
+            {
+                Language Item = FindByCultureCode(CultureCode);
+                if (Item == null)
+                    throw new ApplicationException($"Language not registered: {CultureCode}");
+                return Item;
+            }
+        }
+
         /// <summary>
         /// Registers a language
         /// </summary>
@@ -75,6 +101,14 @@ namespace Tripous
                     fItems.Add(Item);
             }
         }
+        /// <summary>
+        /// Sets the default language by a specified culture code, i.e. en-US.
+        /// <para>Throws an exception if the language is not already registered.</para>
+        /// </summary>
+        static public void SetDefaultLanguage(string CultureCode)
+        {
+            fDefaultLanguage = GetByCultureCode(CultureCode);
+        }
 
         /* properties */
         /// <summary>
@@ -84,8 +118,12 @@ namespace Tripous
         {
             get
             {
-                Language Result = fItems.FirstOrDefault(item => item.Code.IsSameText("en"));
-                return Result != null? Result : new Language("", "English", "en", "en-US");
+                if (fDefaultLanguage == null)
+                {
+                    fDefaultLanguage = fItems.FirstOrDefault(item => item.Code.IsSameText("en"));
+                    return fDefaultLanguage != null ? fDefaultLanguage : new Language("", "English", "en", "en-US");
+                }
+                return fDefaultLanguage;
             }
         }
         /// <summary>

@@ -354,6 +354,21 @@ namespace Tripous
             return DataView.ToTable();
         }
 
+        /// <summary>
+        /// Splits a specified table's rows into chunks. Each chunk may have a specified row count.
+        /// </summary>
+        static public DataRow[][] SplitToChunks(this DataTable Table, int ChunkRowCount)
+        {
+            // copy rows to an array
+            DataRow[] TableRows = new DataRow[Table.Rows.Count];
+            Table.Rows.CopyTo(TableRows, 0);
+
+            // split rows into manageable chunks
+            int i = 0;
+
+            DataRow[][] Chunks = TableRows.GroupBy(s => i++ / ChunkRowCount).Select(g => g.ToArray()).ToArray();
+            return Chunks;
+        }
 
         /// <summary>
         /// Sets Table column captions. Dictionary is a ColumnName=Caption list of pairs. If HideUntitle is true, 
