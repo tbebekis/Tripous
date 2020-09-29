@@ -6465,8 +6465,8 @@ tp.MouseInfo = class {
 
 /**
 Indicates the screen size mode (xsmall, small, medium, large)
-// media all and (max-width :767px)
-// media all and (min-width :768px)
+// media all and (max-width :576px)
+// media all and (min-width :577px)
 // media all and (min-width :992px)
 // media all and (min-width :1200px)
 @class
@@ -6474,8 +6474,8 @@ Indicates the screen size mode (xsmall, small, medium, large)
 */
 tp.ScreenMode = {
     None: 0,
-    XSmall: 1,     //    0 ..  767
-    Small: 2,      //  768 ..  991
+    XSmall: 1,     //    0 ..  576
+    Small: 2,      //  577 ..  991
     Medium: 4,     //  992 .. 1200
     Large: 8       // 1201 .. 
 };
@@ -6568,7 +6568,7 @@ tp.Viewport = {
 
     get Mode() {
         var VS = tp.Viewport.GetSize();
-        if (VS.Width <= 767) {
+        if (VS.Width <= 576) {
             return tp.ScreenMode.XSmall;
         } else if (VS.Width <= 991) {
             return tp.ScreenMode.Small;

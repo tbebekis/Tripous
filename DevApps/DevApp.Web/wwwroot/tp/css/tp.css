@@ -1,12 +1,12 @@
 /*
             from            to
-XSmall         0             767
-Small        768             991
+XSmall         0             576
+Small        577             991
 Medium       992            1199
 Large       1200         
     
-@XSmallMax	:  767px;
-@SmallMin	:  768px;
+@XSmallMax	:  576px;
+@SmallMin	:  577px;
 @SmallMax	:  991px;
 @MediumMin	:  992px;
 @MediumMax	: 1199px;
@@ -207,7 +207,7 @@ max-width 	Rules applied for any browser width less than the value defined in th
 ---------------------------------------------------------------------------------------*/
 
 /* 0 to XSmallMax */ 
-@media (max-width: 767px) {
+@media (max-width: 576px) {
     .xs1  { width: var(--c1 ); }
     .xs2  { width: var(--c2 ); }
     .xs3  { width: var(--c3 ); }
@@ -223,7 +223,7 @@ max-width 	Rules applied for any browser width less than the value defined in th
 }
 
 /* SmallMin to SmallMax */ 
-@media (min-width: 768px) and (max-width: 991px)  {
+@media (min-width: 577px) and (max-width: 991px)  {
     .s1  { width: var(--c1 ); }
     .s2  { width: var(--c2 ); }
     .s3  { width: var(--c3 ); }
@@ -303,7 +303,7 @@ max-width 	Rules applied for any browser width less than the value defined in th
 .p-66  { width:  var(--p-66 ); } 
 
 /* 0 to XSmallMax */ 
-@media (max-width: 767px) {
+@media (max-width: 576px) {
     .xs-1   { width: var(--p-1  ); }
     .xs-2   { width: var(--p-2  ); }
     .xs-3   { width: var(--p-3  ); }
@@ -334,7 +334,7 @@ max-width 	Rules applied for any browser width less than the value defined in th
 }
 
 /* SmallMin to SmallMax */ 
-@media (min-width: 768px) and (max-width: 991px)  {
+@media (min-width: 577px) and (max-width: 991px)  {
     .s-1   { width: var(--p-1  ); }
     .s-2   { width: var(--p-2  ); }
     .s-3   { width: var(--p-3  ); }
@@ -443,13 +443,13 @@ max-width 	Rules applied for any browser width less than the value defined in th
     display: none !important;
 }
 
-@media (max-width: 767px) {
+@media (max-width: 576px) {
     .xs0, .tp-Hide-xs {
         display: none !important;
     }
 }
 
-@media (min-width: 768px) and (max-width: 991px) {
+@media (min-width: 577px) and (max-width: 991px) {
     .s0, .tp-Hide-s {
         display: none !important;
     }
@@ -567,7 +567,7 @@ max-width 	Rules applied for any browser width less than the value defined in th
 }
 
 /* label and control for Extra Small screens */ 
-@media (max-width: 767px) {
+@media (max-width: 576px) {
     .tp-CtrlRow > .tp-CText {
         margin: 4px 2px 4px 6px;
         width: 100%; /* calc(~"99.99999% - 8px"); */ 
@@ -581,7 +581,7 @@ max-width 	Rules applied for any browser width less than the value defined in th
 }
 
 /* label and control for screen larger than Extra Small screens */ 
-@media (min-width: 768px) {
+@media (min-width: 577px) {
     .tp-CtrlRow > .tp-CText {
         /* justify-content: flex-end; */
         margin: 2px 2px;
@@ -606,7 +606,7 @@ max-width 	Rules applied for any browser width less than the value defined in th
 ---------------------------------------------------------------------------------------*/
  
 
-@media (max-width: 767px) {
+@media (max-width: 576px) {
     .tp-Ctrls .tp-CText {
         justify-content: flex-start;
         margin: 4px 2px 4px 6px;
@@ -621,7 +621,7 @@ max-width 	Rules applied for any browser width less than the value defined in th
     }
 }
 
-@media (min-width: 768px) {
+@media (min-width: 577px) {
 
     .tp-Ctrls:not(.tp-TextTop) .tp-Ctrl {
         width: 50%;
@@ -643,7 +643,7 @@ max-width 	Rules applied for any browser width less than the value defined in th
 
 
 /* control widths for Small screens */ 
-@media (min-width: 768px) {
+@media (min-width: 576px) {
     .tp-Ctrls.sc-10:not(.tp-TextTop) .tp-Ctrl {
         width: 10%;
     }
