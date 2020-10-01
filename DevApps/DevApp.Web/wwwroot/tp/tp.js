@@ -3221,7 +3221,14 @@ tp.Css = {
 //#endregion
 
 //#region Url handling
-
+/**
+ * Navigates to a specified url
+ * @param {string} Url Url to navigate to
+ */
+tp.NavigateTo = function (Url) {
+    if (!tp.IsBlank(Url))
+        window.location.href = Url;
+};
 /**
 Returns the base url, e.g http://server.com/
 @returns {string} Returns the base url
