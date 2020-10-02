@@ -3429,9 +3429,9 @@ Returns true when an element is contained directly or indirectly by a parent ele
 @returns {boolean} -
 */
 tp.ContainsElement = function (Parent, el) {
-    if ('contains' in Parent) {
+    if (tp.IsValid(Parent) && 'contains' in Parent) {
         return Parent.contains(el);
-    } else {
+    } else if (tp.IsValid(el)) {
         var Node = el.parentNode;
         while (!tp.IsEmpty(Node)) {
             if (Node === Parent) {
@@ -3439,8 +3439,9 @@ tp.ContainsElement = function (Parent, el) {
             }
             Node = Node.parentNode;
         }
-        return false;
     }
+
+    return false;
 };
 /**
 Returns true if the target (sender) of an event is a specified element or any other element contained by the specified element as direct or nested child.
