@@ -550,13 +550,16 @@ namespace Tripous
         /// </summary>
         static public Image Base64ToImage(string Text)
         {
-            byte[] Bytes = Convert.FromBase64String(Text);
-
-            if ((Bytes != null) && (Bytes.Length > 0))
+            if (!string.IsNullOrWhiteSpace(Text))
             {
-                MemoryStream MS = new MemoryStream(Bytes, 0, Bytes.Length);
-                MS.Write(Bytes, 0, Bytes.Length);
-                return Image.FromStream(MS, true);
+                byte[] Bytes = Convert.FromBase64String(Text);
+
+                if ((Bytes != null) && (Bytes.Length > 0))
+                {
+                    MemoryStream MS = new MemoryStream(Bytes, 0, Bytes.Length);
+                    MS.Write(Bytes, 0, Bytes.Length);
+                    return Image.FromStream(MS, true);
+                }
             }
 
             return null;
