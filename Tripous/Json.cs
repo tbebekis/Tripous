@@ -143,7 +143,7 @@ namespace Tripous
             }
         }
         /// <summary>
-        /// Converts json text to a typed object
+        /// Converts json text to an object of a specified type
         /// </summary>
         static public T FromJson<T>(string JsonText, JsonSerializerSettings Settings = null)
         {
@@ -155,6 +155,20 @@ namespace Tripous
             }
 
             return default(T);
+        }
+        /// <summary>
+        /// Converts json text to an object of a specified type
+        /// </summary>
+        static public T ToObject<T>(string JsonText, JsonSerializerSettings Settings = null)
+        {
+            return FromJson<T>(JsonText, Settings);
+        }
+        /// <summary>
+        /// Converts a json text to a Dictionary instance.
+        /// </summary>
+        static public Dictionary<string, string> ToDictionary(string JsonText)
+        {
+            return JsonConvert.DeserializeObject<Dictionary<string, string>>(JsonText);
         }
 
         /// <summary>
@@ -254,6 +268,10 @@ namespace Tripous
 
             return new Dictionary<string, dynamic>();
         }
+
+
+
+
 
 
         /// <summary>
