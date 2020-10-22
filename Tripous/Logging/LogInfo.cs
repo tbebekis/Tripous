@@ -32,7 +32,7 @@ namespace Tripous.Logging
             this.Properties = Logger.FormatParams(ref Text, Params);
             if (this.Properties == null)
                 this.Properties = new Dictionary<string, object>();
-            this.Text = !string.IsNullOrWhiteSpace(Text) ? Text : string.Empty;
+            this.Text = !string.IsNullOrWhiteSpace(Text) ? Text : (Exception == null ? string.Empty: Exception.Message);
             this.ExceptionData = Exception == null ? string.Empty : ExceptionEx.GetExceptionText(Exception);
         }
 
