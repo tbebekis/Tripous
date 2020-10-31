@@ -1347,12 +1347,12 @@ tp.IsSameText = function (A, B) {
 @returns {boolean} Returns true if a substring is contained in the other string.
 */
 tp.ContainsText = function (SubString, Text, CI = true) {
-    if (tp.IsEmpty(CI)) {
-        CI = true;
+    CI = CI === true;
+    if (tp.IsString(Text) && !tp.IsBlank(Text)) {
+        return CI ? Text.toLowerCase().includes(SubString.toLowerCase()) : Text.includes(SubString);
     }
 
-    var rx = CI ? new RegExp(Text, "i") : new RegExp(Text);
-    return rx.test(SubString);
+    return false;
 };
 /**
 Inserts a sub-string in another string at a specified index and returns the new string.
