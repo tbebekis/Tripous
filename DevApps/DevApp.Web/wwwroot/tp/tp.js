@@ -1,7 +1,7 @@
 ﻿
 /* eslint no-constant-condition: ["error", { "checkLoops": false }] */
- 
- 
+
+
 
 if (!window.log) {
     window.log = function (v) {
@@ -18,7 +18,7 @@ if (!window.log) {
     };
 }
 
- 
+
 /**
 * Selects an element specified by a selector.
 * If Selector is a string, then it returns the first found element in document, if any, else null.
@@ -97,7 +97,7 @@ tp.ExceptionText = function (e) {
                     } else {
                         o.Reason = e.reason.toString();
                     }
-                }                    
+                }
             }
 
         } catch (e) {
@@ -231,6 +231,35 @@ tp.NotificationBoxes = (function () {
          */
         Remove: function (el) { tp.ListRemove(Boxes, el); },
 
+        Place: function (Box) {
+            let R, T;
+
+            let RefBox = Boxes.length > 0 ? Boxes[Boxes.length - 1] : null;
+
+
+            if (tp.NotificationBoxSetup.ToTop === true) {
+                T = 5;
+                if (RefBox) {
+                    R = tp.BoundingRect(RefBox);
+                    T = T + R.Y + R.Height + 5;
+                }
+            }
+            else {
+                let ViewPortSize = tp.Viewport.GetSize();
+                T = ViewPortSize.Height - 10;
+                if (RefBox) {
+                    R = tp.BoundingRect(RefBox);
+                    T = R.Y - 10;
+                }
+
+                R = tp.BoundingRect(Box);
+                T -= R.Height;
+            }
+
+            Box.style.top = tp.px(T);
+        },
+
+
         /** Returns the value of the bottom property, as a number, of the next notification box. 
          @return {number} Returns the value of the bottom property, as a number, of the next notification box.
          @memberof tp.NotificationBoxes
@@ -291,7 +320,7 @@ Displays a notification message to the user.
 */
 tp.NotifyFunc = function (Message, Type) {
     let Width = tp.Viewport.IsXSmall ? '100%' : tp.px(tp.NotificationBoxSetup.Width);
-    let Height = tp.px(tp.NotificationBoxSetup.Height); 
+    let Height = tp.px(tp.NotificationBoxSetup.Height);
 
     let Title = tp.EnumNameOf(tp.NotificationType, Type);
     let BackColor = tp.NotificationBoxSetup.Colors[Title].BackColor;
@@ -310,15 +339,7 @@ tp.NotifyFunc = function (Message, Type) {
         //'transition': tp.Format('opacity {0}s ease-in 0s', tp.NotificationBoxSetup.DurationSecs)  //   google : css transition fade out
     };
 
-    if (tp.NotificationBoxSetup.ToTop === true) {
-        CssStyle['top'] = tp.px(tp.NotificationBoxes.Top);
-    }
-    else {
-        CssStyle['bottom'] = tp.px(tp.NotificationBoxes.Bottom);
-    }
-
     let divNote = tp.Div(document.body);
-
     tp.SetStyle(divNote, CssStyle);
 
     let btnCloseNoteId = tp.SafeId('btnCloseNote');
@@ -335,7 +356,9 @@ tp.NotifyFunc = function (Message, Type) {
 
     tp.Append(divNote, HtmlText);
 
+    tp.NotificationBoxes.Place(divNote);
     tp.NotificationBoxes.Add(divNote);
+
     function Remove() {
         tp.NotificationBoxes.Remove(divNote);
         tp.Remove(divNote);
@@ -526,7 +549,7 @@ tp.IsNumber = function (v) { return typeof v === 'number'; };
  * @param {any} v The value to check
  * @returns {boolean} Returns true if the specified value passes the check.
  */
-tp.IsInteger = function(v) { return typeof v === 'number' && v % 1 === 0; }
+tp.IsInteger = function (v) { return typeof v === 'number' && v % 1 === 0; }
 /** Type checking function
  * @param {any} v The value to check
  * @returns {boolean} Returns true if the specified value passes the check.
@@ -592,7 +615,7 @@ tp.IsJson = function (Text) {
 
     return false;
 };
- 
+
 
 /** Type checking function for a DOM Node
  * @param {any} v The value to check
@@ -715,22 +738,22 @@ Invokes a constructor and returns the new instance
 */
 tp.CreateInstance = function (Ctor, ...args) {
     return new Ctor(args);
-/*
-     switch (args.length) {
-        case 0: return new Ctor();
-        case 1: return new Ctor(args[0]);
-        case 2: return new Ctor(args[0], args[1]);
-        case 3: return new Ctor(args[0], args[1], args[2]);
-        case 4: return new Ctor(args[0], args[1], args[2], args[3]);
-        case 5: return new Ctor(args[0], args[1], args[2], args[3], args[4]);
-        case 6: return new Ctor(args[0], args[1], args[2], args[3], args[4], args[5]);
-        case 7: return new Ctor(args[0], args[1], args[2], args[3], args[4], args[5], args[6]);
-        case 8: return new Ctor(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7]);
-
-        default:
-            throw 'Unsupported number of Constructor arguments';
-    }
- */
+    /*
+         switch (args.length) {
+            case 0: return new Ctor();
+            case 1: return new Ctor(args[0]);
+            case 2: return new Ctor(args[0], args[1]);
+            case 3: return new Ctor(args[0], args[1], args[2]);
+            case 4: return new Ctor(args[0], args[1], args[2], args[3]);
+            case 5: return new Ctor(args[0], args[1], args[2], args[3], args[4]);
+            case 6: return new Ctor(args[0], args[1], args[2], args[3], args[4], args[5]);
+            case 7: return new Ctor(args[0], args[1], args[2], args[3], args[4], args[5], args[6]);
+            case 8: return new Ctor(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7]);
+    
+            default:
+                throw 'Unsupported number of Constructor arguments';
+        }
+     */
 
 };
 //#endregion
@@ -756,7 +779,7 @@ tp.PropertyInfo = function () {
     this.Pointer = null;
 };
 
- 
+
 /**
  * Returns the property descriptor of a specified property, if any, else null.  
  Can be used also for calling inherited property getters/setters. 
@@ -936,7 +959,7 @@ tp.GetObjectDefText = function (o) {
 /** Returns an array of the parameter names of any function passed in. 
 @param {function} func The function to operate on
 @returns {string[]} Returns an array of the parameter names of any function passed in.
-*/ 
+*/
 tp.GetFunctionParams = function (func) {
     // http://stackoverflow.com/questions/1007981/how-to-get-function-parameter-names-values-dynamically-from-javascript
     return (func + '').replace(/\s+/g, '')
@@ -1047,7 +1070,7 @@ tp.MergeQuick = function (Dest, Source) {
     }
     return Dest;
 };
- 
+
 //#endregion
 
 //#region Format, FormatNumber, FormatDateTime
@@ -1315,7 +1338,7 @@ tp.IsBlank = function (v) {
 @returns {boolean}  Returns true if the string is null, undefined or it just contains white space chars
 */
 tp.IsNullOrWhitespace = function (v) { return tp.IsBlank(v); };
- 
+
 /** True if a specified character is a white space char (space, tab, etc)  
 @param {character} c - A character value. 
 @returns {boolean} Returns True if a specified character is a white space char (space, tab, etc)
@@ -1387,7 +1410,7 @@ Trims a string by removing blank characters from the end of the string and retur
 */
 tp.TrimEnd = function (v) {
     return tp.IsBlank(v) ? "" : v.replace(/\s+$/, "");
-}; 
+};
 
 /**
   True if a string starts with a sub-string.
@@ -1405,7 +1428,7 @@ tp.StartsWith = function (v, Text, CI = true) {
     }
 
     return CI === true ? v.substring(0, Text.length).toUpperCase() === Text.toUpperCase() : v.substring(0, Text.length) === Text;
-}; 
+};
 /**
  True if a string ends with a sub-string.
 @param {string} v - The sub-string, the string to search for.
@@ -1645,10 +1668,10 @@ tp.LineBreaksToHtml = function (v) {
     return v;
 };
 tp.ReplaceLineBreaks = function (v, sep) {
-    if (!tp.IsBlank(v)) {   
+    if (!tp.IsBlank(v)) {
         v = tp.ReplaceAll(v, '\r\n', sep);
-        v = tp.ReplaceAll(v, '\r', sep);      
-        v = tp.ReplaceAll(v, '\n', sep);      
+        v = tp.ReplaceAll(v, '\r', sep);
+        v = tp.ReplaceAll(v, '\n', sep);
     }
     return v;
 };
@@ -1787,7 +1810,7 @@ tp.NumberConvertionResult = class {
         this.Value = Value;
         this.Result = Result;
     }
- 
+
 };
 /** The value after the convertion
  @type {number}
@@ -2103,7 +2126,7 @@ tp.ToDateString = function (v, CultureCode = null) {
  * @param   {boolean} [Milliseconds=false] Defaults to false. When true, then seconds and milliseconds are included in the returned string.
  * @returns  {string} The formatted string
  */
-tp.ToTimeString = function(v, Seconds = false, Milliseconds = false)  {
+tp.ToTimeString = function (v, Seconds = false, Milliseconds = false) {
     let format = 'HH:mm';
 
     if (Milliseconds == true)
@@ -2694,7 +2717,7 @@ tp.ListSort = function (List, SortInfos) {
             b = Info.GetValueFunc(B, Info);
 
             // compare
-            Result = a === b? 0 : (Info.Reverse ? (a > b ? -1 : 1) : (a < b ? -1 : 1));
+            Result = a === b ? 0 : (Info.Reverse ? (a > b ? -1 : 1) : (a < b ? -1 : 1));
 
             if (Result !== 0) {
                 break;
@@ -2708,14 +2731,14 @@ tp.ListSort = function (List, SortInfos) {
     // prepare the sort info items
     let i, ln, Info;
 
-    for (i = 0, ln = SortInfos.length; i < ln; i++) {        
+    for (i = 0, ln = SortInfos.length; i < ln; i++) {
         if (tp.IsNumber(SortInfos[i]) || tp.IsString(SortInfos[i])) {       // it's string or integer, so 
             Info = {                                                        // create a SortInfo instance
                 Prop: SortInfos[i],
                 Reverse: false,
                 GetValueFunc: GetValueFunc
             };
- 
+
         } else {
             Info = SortInfos[i];
             if (!tp.IsFunction(Info.GetValueFunc)) {
@@ -3002,9 +3025,9 @@ tp.GroupBy = function (List, PropNames, AlwaysIncludeDataLists = false) {
             Key = Keys[i];
             Node = {
                 Key: Key,
-                NodeList: PropNameIndex === PropNames.length - 1? null: [],
+                NodeList: PropNameIndex === PropNames.length - 1 ? null : [],
                 DataList: PropNameIndex === PropNames.length - 1 || AlwaysIncludeDataLists === true ? Groups[Key] : null
-            }; 
+            };
 
             ParentNode.NodeList.push(Node);
         }
@@ -3124,7 +3147,7 @@ tp.Css = {
      * @param {string} Id The id of the new sheet
      * @returns {StyleSheet} Returns the sheet
      */
-    CreateSheet: function (Id)  {
+    CreateSheet: function (Id) {
 
         // Create the <style> tag
         var style = document.createElement("style");
@@ -3148,7 +3171,7 @@ tp.Css = {
      * @returns {StyleSheet} Returns the sheet
      */
     SheetById: function (Id) {
- 
+
         var Sheets = document.styleSheets;
         var NodeId;
         for (var i = 0; i < Sheets.length; i++) {
@@ -3169,25 +3192,25 @@ tp.Css = {
     CreateClass: function (Sheet, ClassName, ClassDef) {
         if (Sheet.insertRule) {   // all browsers, except IE before version 9
             var S = tp.Format("{0} {{ 1}}", ClassName, ClassDef);
-                Sheet.insertRule(S, 0);
-         }
-            /*
-        else {  // Internet Explorer before version 9
-            if (Sheet.addRule) {
-                    Sheet.addRule(ClassName, ClassDef);
-                }
+            Sheet.insertRule(S, 0);
+        }
+        /*
+    else {  // Internet Explorer before version 9
+        if (Sheet.addRule) {
+                Sheet.addRule(ClassName, ClassDef);
             }
-            */
+        }
+        */
     },
     /**
      * Returns the definition of a css class
      * @param {string} ClassName The name of the class
      * @returns {string} Returns the definition of a css class
      */
-    GetClassDef: function (ClassName) { 
+    GetClassDef: function (ClassName) {
         for (let i = 0; i < document.styleSheets.length; i++) {
             let sheet = document.styleSheets[i];
-            let classes  = sheet.rules || sheet.cssRules;
+            let classes = sheet.rules || sheet.cssRules;
             for (let x = 0; x < classes.length; x++) {
                 if (classes[x].selectorText && -1 !== classes[x].selectorText.indexOf(ClassName)) {
                     return classes[x].cssText || classes[x].style.cssText;
@@ -3204,7 +3227,7 @@ tp.Css = {
      */
     IsClassDefined: function (ClassName) {
         let Sheets = document.styleSheets;
-        
+
         for (let i = 0; i < Sheets.length; i++) {
             let sheet = Sheets[i];
             let classes = sheet.rules || sheet.cssRules;
@@ -3288,7 +3311,7 @@ tp.GetParams = function (Url = null) {
 //#endregion
 
 //#region Selecting and finding elements
- 
+
 /**
 Selects and returns a direct or non-direct child element, if any, or null, in a specified parent or the document. <br />
 NOTE: If only a single parameter is passed then it is considered as the element selector to select in the whole document.
@@ -3541,7 +3564,7 @@ tp.Break = function (ParentOrSelector) {
     if (tp.IsHTMLElement(ParentOrSelector))
         tp.Append(ParentOrSelector, '');
 };
-  
+
 /**
 Gets or sets the value of an element. 
 To be used mainly with input, select and textarea elements.
@@ -4039,7 +4062,7 @@ tp.Display = function (el, v = null) {
 
     return '';
 };
- 
+
 /**
  * Type guard function. Returns true if a specified element provides a disabled property.
  * @param {string|Element} el Selector or element
@@ -4089,7 +4112,7 @@ tp.Enabled = function (el, v = null) {
                 return v;
             }
         }
-    }    
+    }
 };
 /**
 Get or sets the visibility state of an element according to a specified flag, by settting a proper value to the visibility style property 
@@ -4566,7 +4589,7 @@ Returns the max z-index in a container element.
 @returns {number} Returns the maximum z-index.
 */
 tp.MaxZIndexOf = function (Container = null) {
-    Container = tp.IsString(Container)? tp.Select(Container): Container || document;
+    Container = tp.IsString(Container) ? tp.Select(Container) : Container || document;
 
     var Result, List, el, i, ln, v;
 
@@ -4634,8 +4657,8 @@ tp.BringToFront = function (el) {
             el.style.zIndex = v.toString();
         } else {
             v = v2;
-        }       
-       
+        }
+
         return v;
     }
     return 0;
@@ -4773,19 +4796,19 @@ A full static class for comparing the position of a node against another node.
 tp.DocumentPosition = {
 
     /** Elements are identical. */
-    Identical: 0,               
+    Identical: 0,
     /** The nodes are in different documents (or one is outside of a document). */
-    Disconnected: 1,            
+    Disconnected: 1,
     /** B is before A (could be its ancestor too, though) */
-    Preceding: 2,                
+    Preceding: 2,
     /** A is before B (could be its ancestor too, though)  */
-    Following: 4,                
+    Following: 4,
     /** Ancestor */
-    Ancestor: 8,                
+    Ancestor: 8,
     /** Descendant */
-    Descendant: 16,              
+    Descendant: 16,
     /** For private use by the browser. */
-    ImplementationSpecific: 32,   
+    ImplementationSpecific: 32,
 
     /**
     Compares the position of a node against another node in any other document and returns a bit-mask. 
@@ -4954,7 +4977,7 @@ tp.Alignment = {
             return 'center';
         }
     }
- 
+
 };
 
 /**
@@ -5075,8 +5098,8 @@ tp.TextSizeInfo = {
  */
 tp.EventGroup = {
     None: 0,
-    Click: 1,                
-    Mouse: 2,                
+    Click: 1,
+    Mouse: 2,
     Keyboard: 4,
     Focus: 8,
     //Size: 0x10,
@@ -5225,14 +5248,14 @@ tp.Events.ToTripous = function (DomEventName) {
 Object.freeze(tp.Events);
 
 
- 
+
 /**
  * Gets and returns the event target (sender) of a specified argument.
  * @param {string|EventTarget} Sender The sender (event target) to check.
  * @returns {EventTarget} Returns the actual event target.
  */
 tp.GetEventTarget = function (Sender) {
- 
+
     let target = null;
 
     if (tp.IsString(Sender)) {
@@ -5426,11 +5449,11 @@ tp.EventArgs.prototype.el = null;               // HTMLElement;
 /** The event name
  @type {string}
  */
-tp.EventArgs.prototype.EventName = '';  
+tp.EventArgs.prototype.EventName = '';
 /** The sender of the event, if any, else null 
  @type {object}
  */
-tp.EventArgs.prototype.Sender = null; 
+tp.EventArgs.prototype.Sender = null;
 /** 
  Indicates whether the event is handled by an event handler function.
  @type {boolean}
@@ -5445,7 +5468,7 @@ tp.EventArgs.prototype.Cancel = false;
  @type {string}
  */
 tp.EventArgs.prototype.Command = '';
- 
+
 
 //#endregion
 
@@ -5623,7 +5646,7 @@ tp.ContainerToModel = function (ElementOrSelector, Model = null) {
     var parent = tp.Select(ElementOrSelector);
 
     if (parent instanceof HTMLElement) {
-        var i, ln, el, elements = parent.nodeName.toLowerCase() === 'form'? parent.elements : tp.SelectAll(parent, 'input, select, textarea, button');
+        var i, ln, el, elements = parent.nodeName.toLowerCase() === 'form' ? parent.elements : tp.SelectAll(parent, 'input, select, textarea, button');
         for (i = 0, ln = elements.length; i < ln; i++) {
             el = elements[i];
             if (!tp.IsBlank(el.name || el.id))
@@ -6107,7 +6130,7 @@ tp.Edge = {
     IsTop(v) { return tp.Bf.In(v, tp.Edge.Top); },
     IsRight(v) { return tp.Bf.In(v, tp.Edge.Right); },
     IsBottom(v) { return tp.Bf.In(v, tp.Edge.Bottom); },
- 
+
     /**
     * Converts one of the Edge constants to a cursor value
     * @param {number} v - One of the tp.Edge numeric constants
@@ -6206,7 +6229,7 @@ tp.Mouse = {
     /** Button constant. The wheel button.
      * @type {number}
      */
-    MID: 4,    
+    MID: 4,
 
     /** Gets or sets the mouse cursor. <br />
      {@link https://developer.mozilla.org/en-US/docs/Web/CSS/cursor|MDN}
@@ -6270,7 +6293,7 @@ tp.Mouse = {
     @param {MouseEvent} e - A mouse event
     @returns {tp.Point} Returns an tp.Point with mouse position relative to the Top/Left of the fully rendered page (document)
     */
-    ToDocument: function(e) {
+    ToDocument: function (e) {
         e = e || window.event;
         var doc = e.target.ownerDocument;
 
@@ -6299,7 +6322,7 @@ tp.Mouse = {
      @param {MouseEvent} e - A mouse event
      @returns {tp.Point} Returns an tp.Point with mouse position relative to the Top/Left of the physical screen
      */
-    ToScreen: function(e) {
+    ToScreen: function (e) {
         let X = e.screenX || 0;
         let Y = e.screenY || 0;
 
@@ -6312,7 +6335,7 @@ tp.Mouse = {
     @param {Element} [el=null] - Optional. If not passed then the target (sender) of the event is used.
     @returns {tp.Point} Returns a tp.Point with mouse position relative to the Top/Left of an element (sender of the event)
     */
-    ToElement: function(e, el = null) {
+    ToElement: function (e, el = null) {
         el = el || e.target || e.srcElement;
         var R = el.getBoundingClientRect();
         var X = tp.Truncate(e.clientX - R.left);
@@ -6326,7 +6349,7 @@ tp.Mouse = {
     @param {Element} el The element to check
     @returns {boolean} Returns true if the mouse pointer is inside an element
     */
-    IsInElement: function(e, el) {
+    IsInElement: function (e, el) {
         var P = tp.Mouse.ToElement(e, el);
         var R = tp.Rect.FromClientRect(el);
         R.X = 0;
@@ -6338,7 +6361,7 @@ tp.Mouse = {
      @param {MouseEvent} e - A mouse event
      @returns {Node} Returns the topmost element at the specified position relative to the Top/Left of the browser window (viewport).
      */
-    ElementUnderMouse: function(e) {
+    ElementUnderMouse: function (e) {
         return tp.Mouse.ElementAt(e.clientX, e.clientY);
     },
     /**
@@ -6347,7 +6370,7 @@ tp.Mouse = {
      @param   {number}   Y   The Y coordinate relative to the Top/Left of the browser window (viewport)
      @returns {Node} Returns the topmost element at the specified position relative to the Top/Left of the browser window (viewport).
      */
-    ElementAt: function(X, Y) {
+    ElementAt: function (X, Y) {
         var Result = null;
         if (document.elementFromPoint) {
             Result = document.elementFromPoint(X, Y);
@@ -6604,12 +6627,12 @@ tp.ScreenOverlay = class {
      * @param {HTMLElement} [Parent=null] Optional. The parent of the DIV overlay.
      */
     constructor(Parent = null) {
- 
+
         Parent = tp.IsHTMLElement(Parent) ? Parent : tp.Doc.body;
         this.Handle = tp.Div(Parent); // Parent.ownerDocument.createElement('div');
 
         this.Handle.id = tp.SafeId('tp-ScreenOverlay');
- 
+
         let OverlayStyle = `display: flex;    
 position: absolute;
 top: 2px;
@@ -6619,12 +6642,12 @@ bottom: 2px;
 justify-content: center;
 align-items: center;
 background: rgba(0, 0, 0, 0.07);
-`; 
+`;
 
-        tp.StyleText(this.Handle, OverlayStyle); 
+        tp.StyleText(this.Handle, OverlayStyle);
 
         Parent.appendChild(this.Handle);
-        tp.BringToFront(this.Handle);    
+        tp.BringToFront(this.Handle);
     }
 
     /**
@@ -6649,7 +6672,7 @@ background: rgba(0, 0, 0, 0.07);
             } else {
                 this.Handle.style.display = 'none';
             }
-        } 
+        }
     }
 
 
@@ -6657,7 +6680,7 @@ background: rgba(0, 0, 0, 0.07);
      @returns {HTMLDivElement} Returns the DIV.
      */
     Show() {
-        this.Visible = true;    
+        this.Visible = true;
         return this.Handle;
     }
     Hide() {
@@ -6712,7 +6735,7 @@ tp.Spinner = (function () {
     100% { transform: rotate(360deg); }
 }
 `;
- 
+
 
     let DefaultSpinner = {
         Initialized: false,
@@ -6721,7 +6744,7 @@ tp.Spinner = (function () {
         divSpinner: null,
 
         Initialize: function () {
-            if (!this.Initialized) { 
+            if (!this.Initialized) {
                 this.Initialized = true;
                 var style = document.createElement('style');
                 style.type = 'text/css';
@@ -6740,10 +6763,10 @@ tp.Spinner = (function () {
             this.Overlay.Show();
 
             this.divContainer = tp.Div(this.Overlay.Handle);
-            tp.StyleText(this.divContainer, SpinnerContainerStyle); 
+            tp.StyleText(this.divContainer, SpinnerContainerStyle);
 
             this.divSpinner = tp.Div(this.divContainer);
-            tp.StyleText(this.divSpinner, SpinnerStyle); 
+            tp.StyleText(this.divSpinner, SpinnerStyle);
         },
         Hide: function () {
             this.Overlay.Dispose();
@@ -6779,7 +6802,7 @@ tp.Spinner = (function () {
         if (fCounter === 0) {
             if (tp.ImplementsInterface(fInstance, ['Show', 'Hide'])) {
                 fInstance.Hide();
-            }            
+            }
             fInstance = null;
         }
     };
@@ -6818,7 +6841,7 @@ tp.Spinner = (function () {
         SetSpinnerImplementation: function (Implementation) {
             if (tp.ImplementsInterface(Implementation, ['Show', 'Hide', 'Dispose'])) {
                 fInstance = Implementation;
-            } 
+            }
         },
         /**
         Returns true while the spinner is visible
@@ -7108,7 +7131,7 @@ tp.Colors = (function () {
 //#endregion
 
 //#region Misc functions
- 
+
 
 /**
 Calls a function, if specified, using a context if not null, passing the specified arguments.
@@ -7160,7 +7183,7 @@ tp.CreateMutationObserver = function (callback) {
         return new window['WebKitMutationObserver'](callback);
 
     return null;
-}; 
+};
 /**
 Returns the name (string) of an enumeration value of an enum type.
 @example
@@ -7228,7 +7251,7 @@ tp.Overload = function (Args, IncludeEmpty = false) {
  @returns {boolean} True if the specified instance implements all interface members
  */
 tp.ImplementsInterface = function (Instance, MemberNames) {
- 
+
     if (tp.IsValid(Instance)) {
 
         if (tp.IsString(MemberNames)) {
@@ -7239,7 +7262,7 @@ tp.ImplementsInterface = function (Instance, MemberNames) {
 
         if (tp.IsArray(MemberNames)) {
 
-            for (let i = 0, ln = MemberNames.length; i < ln; i++) {           
+            for (let i = 0, ln = MemberNames.length; i < ln; i++) {
                 if (!(MemberNames[i] in Instance)) {
                     return false;
                 }
@@ -7248,7 +7271,7 @@ tp.ImplementsInterface = function (Instance, MemberNames) {
             return true;
         }
 
-    } 
+    }
 
     return false;
 };
@@ -7262,11 +7285,11 @@ tp.RandomColor = function () {
     S += tp.ToHex(tp.Random(0, 0xFF));
     S += tp.ToHex(tp.Random(0, 0xFF));
     return S;
-}; 
+};
 //#endregion
 
 
- 
+
 //---------------------------------------------------------------------------------------
 // Classes
 //---------------------------------------------------------------------------------------
@@ -7319,9 +7342,9 @@ tp.StringBuilder = class StringBuilder {
     AppendLine(v) {
         if (tp.IsString(v)) {
             this.fData += v.toString();
-        }      
+        }
 
-        this.fData += this.LineBreak; 
+        this.fData += this.LineBreak;
     }
     /**
     Inserts a value at a specified index in the internal string
@@ -8007,7 +8030,7 @@ tp.Rect = class {
         this.Width = X2 - X1;
         this.Height = Y2 - Y1;
     }
- 
+
     /**
     Returns a string representation of this instance
     @returns {string} Returns a string representation of this instance
@@ -8035,7 +8058,7 @@ tp.Size = class {
     /** Field */
     //Width: number;
     /** Field */
-   // Height: number;
+    // Height: number;
 
 
     /* public */
@@ -8370,7 +8393,7 @@ tp.Environment = {
         }
     },
 
-    Match: function(regex) {
+    Match: function (regex) {
         var m = tp.Environment.ua.match(regex);
         return m && m.length > 1 && m[1] || '';
     },
@@ -8487,7 +8510,7 @@ tp.Broadcaster = (function () {
      * @param {object} [Args=null] The event args
      * @returns {tp.EventArgs} Returns a <code>tp.EventArgs</code> object.
      */
-    let PrepareEventArgs = function(EventName, Sender = null, Args = null) {
+    let PrepareEventArgs = function (EventName, Sender = null, Args = null) {
         if (typeof Sender === tp.Undefined) { Sender = null; }
         if (typeof Args === tp.Undefined) { Args = null; }
 
@@ -8509,7 +8532,7 @@ tp.Broadcaster = (function () {
          * @memberof tp.Broadcaster
          * @static
          */
-        IsBroadcasterListener(v) { return !tp.IsEmpty(v) && tp.IsFunction(v['BroadcasterFunc']);   },
+        IsBroadcasterListener(v) { return !tp.IsEmpty(v) && tp.IsFunction(v['BroadcasterFunc']); },
         /**
         Adds a broadcaster listener in the internal subscribers list
         @param {object} Listener An object that provides a <code>BroadcasterFunc(Args: tp.EventArgs)</code> method.
@@ -8573,7 +8596,7 @@ tp.Debug.AsText = function (o) { return tp.IsEmpty(o) ? "..." : JSON.stringify(o
 tp.Debug.Show = function (o) {
     var S = "NULL";
     if (!tp.IsEmpty(o)) {
-        S = tp.IsSimple(o) ? o.toString() : tp.Debug.AsText(o); 
+        S = tp.IsSimple(o) ? o.toString() : tp.Debug.AsText(o);
     }
     alert(S);
 };
@@ -8608,14 +8631,14 @@ tp.Log = class {
     }
 
     /** Clears the log div */
-    static Clear()  {
+    static Clear() {
         tp.LogDiv.innerHTML = '';
     };
     /**
      Appends a text line to the log div
      @param {string} Text The text line to append
      */
-    static Line(Text)  {
+    static Line(Text) {
         var S = tp.LogDiv.innerHTML ? tp.LogDiv.innerHTML : '';
         tp.LogDiv.innerHTML = S + Text + '<br />';
     };
@@ -8623,7 +8646,7 @@ tp.Log = class {
      Replaces the content of the log div with a specified text
      @param {string} Text The text
      */
-    static Text(Text)  {
+    static Text(Text) {
         tp.LogDiv.innerHTML = Text;
     };
 };
@@ -8929,7 +8952,7 @@ tp.List = class extends Array {
             var InvocationList = this.GetInvocationList(EventName);
             if (InvocationList && InvocationList.length > 0) {
 
-                Args = Args instanceof tp.EventArgs? Args : new tp.EventArgs(Args);
+                Args = Args instanceof tp.EventArgs ? Args : new tp.EventArgs(Args);
                 Args.EventName = sEventName;
                 Args.Sender = this;
                 var Listener;
@@ -9140,7 +9163,7 @@ tp.List = class extends Array {
     */
     get Count() {
         return this.length;
-    }  
+    }
     /**
     Gets or sets a boolean value indicating whether events are enabled or not.
     When false, the default,, calling Trigger() does NOT inform any listener. 
@@ -9168,7 +9191,7 @@ tp.List = class extends Array {
             this.fUpdateCounter = 0;
         }
     }
- 
+
 };
 /* fields */
 tp.List.prototype.fEventsEnabledCounter = 0;
@@ -9194,7 +9217,7 @@ tp.List.prototype.fUpdateCounter = 0;
 /** 
  *  A collection item class. Represents an object that is a collection item. It provides a single Collection field. 
  * */
-tp.CollectionItem = class  {
+tp.CollectionItem = class {
     constructor() {
         this.Collection = null;
     }
@@ -9235,7 +9258,7 @@ tp.Collection = class extends tp.List {
         if (Source)
             this.Assign(Source);
     }
- 
+
     /* protected */
     /** 
     Creates and returns a new item.    
@@ -9256,7 +9279,7 @@ tp.Collection = class extends tp.List {
         if (tp.IsCollectionItem(Item))
             Item.Collection = this;
     }
- 
+
     /* public */
     /**
     Adds an item. Returns the added item.
@@ -9291,7 +9314,7 @@ tp.Collection = class extends tp.List {
     @override
     */
     AddRange(Items) {
-        
+
         if (Items) {
             let SourceItem, Item;
 
@@ -9312,7 +9335,7 @@ tp.Collection = class extends tp.List {
     @returns {object} Returns a new item which is a copy of a specified source item.
     */
     CopyItem(SourceItem) {
-        var Item = null; 
+        var Item = null;
 
         if (tp.IsCloneable(SourceItem)) {
             Item = SourceItem.Clone();
@@ -9362,7 +9385,7 @@ tp.NamedItem = class extends tp.CollectionItem {
     /**
     Gets or sets the name of this instance
     */
-    get Name()  { return this.get_Name(); }
+    get Name() { return this.get_Name(); }
     set Name(v) { this.set_Name(v); }
 
     /**
@@ -9396,14 +9419,14 @@ tp.NamedItems = class extends tp.Collection {
     @param {string} [Name=null] - Optional. The name of the new item
     @returns {tp.NamedItem} Returns the new item.
     */
-     CreateItem(Name = null) {
+    CreateItem(Name = null) {
         let Item = super.CreateItem();
         if (Name) {
             Item.Name = Name;
         }
         return Item;
     }
- 
+
     /* public */
     /**
     Adds an item
@@ -9448,7 +9471,7 @@ tp.NamedItems = class extends tp.Collection {
     @returns {number} Returns the index of the item in this collection.
     */
     IndexOf(NameOrItem) {
-        return typeof NameOrItem === 'string'? this.IndexBy('Name', NameOrItem) : super.IndexOf(NameOrItem);
+        return typeof NameOrItem === 'string' ? this.IndexBy('Name', NameOrItem) : super.IndexOf(NameOrItem);
     }
     /**
     Finds and returns an item by name, if any, else null
@@ -10074,7 +10097,7 @@ tp.AjaxArgs = class {
     get ResponseText() {
         return this.XHR ? this.XHR.responseText : '';
     }
- 
+
 
     /** Returns a string representation of this instance 
      @returns {string} Returns a string representation of this instance
@@ -10222,7 +10245,7 @@ tp.AjaxResponseDefaultHandler = function (Args) {
 };
 
 //#region Ajax
- 
+
 /**
 Ajax static function.
 Executes ajax requests.
@@ -10277,7 +10300,7 @@ tp.Ajax = function (Args) {
             tp.Call(Args.OnFailure, Context, Args);
         else
             tp.Throw(Args.ErrorText);
- 
+
     };
 
 
@@ -10372,7 +10395,7 @@ tp.Ajax.Async = async function (Args) {
     return Result;
 };
 
- 
+
 /* tp.Ajax standard calls */
 
 /**
@@ -10498,9 +10521,9 @@ Executes a list of tp.AjaxArgs simultaneously, using Promise.all() and returns a
 */
 tp.Ajax.AllAsync = async function (ShowSpinner, ArgsList) {
     let Result = tp.Async.All(ShowSpinner, ArgsList, tp.Ajax.Async);
-    return  Result;
+    return Result;
 };
- 
+
 /**
 Executes a list of tp.AjaxArgs sequentially, one by one. The next item executes only when the previous is done executing. 
 A user provided break callback function can be used to interrupt the execution, just like a break statement in a loop. 
@@ -10909,7 +10932,7 @@ tp.tpObject = class {
 
         if (!tp.IsBlank(EventName) && tp.IsFunction(Func)) {
             if (!this.fEvents)
-                this.fEvents = { };
+                this.fEvents = {};
 
             EventName = EventName.toUpperCase();
 
@@ -10993,8 +11016,8 @@ tp.tpObject = class {
      */
     handleEvent(e) {
     }
- 
- 
+
+
     /**
     Binds a specified Function to this, if not already bound, and returns the result. 
     Useful in passing methods of this instance as callbacks and event handlers.
@@ -11042,10 +11065,10 @@ tp.tpObject = class {
         return null;
 
     }
- 
+
 };
 
- 
+
 tp.tpObject.prototype.tpClass = '';                         // treat it as read-only class field (static)
 tp.tpObject.prototype.fEventsEnabledCounter = 0;
 tp.tpObject.prototype.fJsonExcludes = null;                 // string[]
@@ -11132,7 +11155,7 @@ NOTE: To be used from inside event handler methods in order to find the right tp
  * @returns {tp.tpObject} Returns a tp.tpObject or null
  */
 tp.GetContainerByClass = function (el, ElementClass) {
- 
+
     let o;
 
     while (true) {
@@ -11336,7 +11359,7 @@ tp.tpElement = class extends tp.tpObject {
     After that only null is allowed which ends up calling the DestroyHandle() method.
     @type {HTMLElement}  
     */
-    get Handle() { return this.fHandle; } 
+    get Handle() { return this.fHandle; }
     set Handle(v) {
         if (tp.IsEmpty(this.fHandle) && tp.IsHTMLElement(v)) {
             this.fHandle = v;
@@ -11398,7 +11421,7 @@ tp.tpElement = class extends tp.tpObject {
     Gets or sets the innerHTML property of the element
     @type {string}
     */
-    get Html()  { return this.Handle ? this.Handle.innerHTML : ''; }
+    get Html() { return this.Handle ? this.Handle.innerHTML : ''; }
     set Html(v) {
         if (tp.IsString(v) && this.Handle)
             this.Handle.innerHTML = v;
@@ -11456,7 +11479,7 @@ tp.tpElement = class extends tp.tpObject {
     Shows or hides the element by setting the display style property.
      @type {boolean}
     */
-    get Visible()  { return this.Handle ? this.Handle.style.display === '' : false; }
+    get Visible() { return this.Handle ? this.Handle.style.display === '' : false; }
     set Visible(v) {
         if (this.Handle) {
             v = v === true;
@@ -11863,7 +11886,7 @@ tp.tpElement = class extends tp.tpObject {
         }
         return Default;
     }
- 
+
     /**
     Notification sent by tp.Viewport when the screen (viewport) size changes. 
     This method is called only if this.IsScreenResizeListener is true.
@@ -11882,7 +11905,7 @@ tp.tpElement = class extends tp.tpObject {
     Handles any DOM event
     @param {Event} e The Event object
     */
-    OnAnyDOMEvent(e) { } 
+    OnAnyDOMEvent(e) { }
     /**
     Handles any event. Even DOM events are send in this method.
     @param {tp.EventArgs} Args The event args.
@@ -11951,7 +11974,7 @@ tp.tpElement = class extends tp.tpObject {
         this.Trigger('Resized', {});
     }
 
- 
+
     //---------------------------------------------------------------------------------------
     // public
     //---------------------------------------------------------------------------------------
@@ -12140,7 +12163,7 @@ tp.tpElement = class extends tp.tpObject {
                     else if (this.fAutoId === true)
                         el.id = this.ConstructId(el);
                 }
- 
+
                 // name
                 if (!tp.IsEmpty(this.fCreateParams.Name) && !tp.IsBlank(this.fCreateParams.Name) && 'name' in el && tp.IsBlank(el['name']))
                     el['name'] = this.fCreateParams.Name;
@@ -12148,7 +12171,7 @@ tp.tpElement = class extends tp.tpObject {
                 // Html
                 if (!tp.IsEmpty(this.fCreateParams.Html) && !tp.IsBlank(this.fCreateParams.Html))
                     el.innerHTML = this.fCreateParams.Html;
- 
+
 
                 // link to tripous object
                 tp.SetObject(el, this);
@@ -12162,7 +12185,7 @@ tp.tpElement = class extends tp.tpObject {
                     }
                 }
 
-                
+
 
                 this.OnHandleCreated();                             // notification
 
@@ -12180,7 +12203,7 @@ tp.tpElement = class extends tp.tpObject {
      @returns {string[]} Returns and array of property names the ProcessCreateParams() should NOT set
      */
     GetAvoidParams() {
-        return ['Id', 'Name', 'Handle', 'Parent', 'Html', 'CssClasses', 'CssText'];  
+        return ['Id', 'Name', 'Handle', 'Parent', 'Html', 'CssClasses', 'CssText'];
     }
     /**
     Processes the this.CreateParams by applying its properties to the properties of this instance
@@ -12191,7 +12214,7 @@ tp.tpElement = class extends tp.tpObject {
 
         let AvoidParams = this.GetAvoidParams();
 
- 
+
         let Allowed = false;
         let HasSetter = false;
         let IsWritable = false;
@@ -12205,7 +12228,7 @@ tp.tpElement = class extends tp.tpObject {
                 if (Allowed && (HasSetter || IsWritable)) {
                     this[Prop] = o[Prop];
                 }
-            } 
+            }
         }
     }
     /**
@@ -12226,7 +12249,7 @@ tp.tpElement = class extends tp.tpObject {
             this.fIsDisposed = true;
         }
     }
- 
+
     /**
     Adds a listener to an event of this instance and returns the listener object. 
     The caller specifies the event name, a callback function and a context for the callback.  
@@ -12746,7 +12769,7 @@ tp.tpElement = class extends tp.tpObject {
     @param {number} Index The index to use
     @returns {HTMLElement} Returns a direct child (DOM element) found at a specified index, if any, else null
     */
-    ChildAt(Index)  {
+    ChildAt(Index) {
         let List = this.GetChildren();
         if (tp.InRange(List, Index)) {
             return List[Index];
@@ -12868,12 +12891,12 @@ tp.tpElement = class extends tp.tpObject {
     Adds a div to this instance, creates a tp.tpElement on that div and returns the tp.tpElement
     @returns {tp.tpElement} Returns a tp.tpElement.
     */
-    AddDiv()  { return this.AddControl('div'); }
+    AddDiv() { return this.AddControl('div'); }
     /**
     Adds a span to this instance, creates a tp.tpElement on that span and returns the tp.tpElement
     @returns {tp.tpElement} Returns a tp.tpElement.
     */
-    AddSpan()  { return this.AddControl('span'); }
+    AddSpan() { return this.AddControl('span'); }
 
     /**
     Creates, sets-up and returns a textarea tp.tpElement
@@ -13024,7 +13047,7 @@ tp.GetElements = function (ParentElementOrSelector) {
  @param {string|Node} [ParentElementOrSelector=null] - The container of controls. If null/undefined/empty the document is used.
  @returns {tp.tpElement} Returns the tp.tpElement or null.
  */
-tp.FindControlById = function (Id, ParentElementOrSelector = null)  {
+tp.FindControlById = function (Id, ParentElementOrSelector = null) {
     ParentElementOrSelector = ParentElementOrSelector || tp.Doc.body;
     var List = tp.GetElements(ParentElementOrSelector);
 
@@ -13095,7 +13118,7 @@ tp.HasElementInfo = function (el) { return tp.GetElementInfo(el) !== null; };
 
 
 // Command association -----------------------------------------------------------------
- 
+
 
 /** Returns a command name out of a specified value, if any, else empty string.
  * @param {HTMLElement|Event|string|tp.EventArgs} v The value to get the command from. Could be:
@@ -13184,7 +13207,7 @@ tp.GetCommand = function (v) {
     return Result;
 };
 
- 
+
 
 //#endregion
 
@@ -13578,7 +13601,7 @@ tp.DragContext = class {
     Returns mouse information regarding the last mouse event handled by this instance. Valid only while dragging.
     @type {tp.MouseInfo}
     */
-    get MouseInfo()  { return this.fMouseInfo; }
+    get MouseInfo() { return this.fMouseInfo; }
     /**
     Returns true after the Dispose() is called indicating that this instance is no longer usable.
     @type {boolean}
@@ -13667,8 +13690,8 @@ tp.DragContext = class {
     }
 
 };
- 
-tp.DragContext.prototype.fIsMouseDown = false; 
+
+tp.DragContext.prototype.fIsMouseDown = false;
 tp.DragContext.prototype.fDragging = false;
 tp.DragContext.prototype.fListener = null;              // : tp.IDragContextListener
 tp.DragContext.prototype.fElement = null;               // Element
@@ -13905,7 +13928,7 @@ tp.Dragger = class extends tp.tpObject {
         this.SetCursor(this.fOldCursor);
         this.OnDragEnd(e);
     }
- 
+
     /* public */
     /**
      * Event handler
@@ -13927,7 +13950,7 @@ tp.Dragger = class extends tp.tpObject {
                 if (tp.Mouse.IsLeft(e)) {
 
                     Edge = tp.Edge.ResizeHitTest(e, this.fHandle, this.HandleSize);
-                    if (this.IsDraggable && (Edge === tp.Edge.None) && (e.target === this.fDragHandle)) {
+                    if (this.IsDraggable && (Edge === tp.Edge.None) && tp.ContainsEventTarget(this.fDragHandle, e.target)) {
                         this.fDragging = true;
                         this.SetCursor(tp.Cursors.Move);
                         Flag = true;
@@ -14019,14 +14042,14 @@ tp.Dragger.prototype.fActive = false;                      // when false no resi
 tp.Dragger.prototype.fMode = tp.DraggerMode.Both;          // tp.DraggerMode
 tp.Dragger.prototype.fDragging = false;
 tp.Dragger.prototype.fResizing = false;
- 
+
 tp.Dragger.prototype.fHandle = null;                        // HTMLElement
 tp.Dragger.prototype.fDragHandle = null;                    // HTMLElement
 
 tp.Dragger.prototype.fOldCursor = '';                       // tp.Cursors constant
 tp.Dragger.prototype.fEdge = tp.Edge.None;                  // resize edge
 tp.Dragger.prototype.fDelta = null;                         // tp.Point
- 
+
 tp.Dragger.prototype.fMouseInfo = null;                     // tp.MouseInfo;
 
 tp.Dragger.prototype.InMove = false;
@@ -14058,7 +14081,7 @@ tp.Dragger.prototype.HandleSize = 8;
 //#region tp.WindowSettings
 
 tp.WindowSettings = {
-    BackColor: 'white',  
+    BackColor: 'white',
     Border: '1px solid #CCC',
     CaptionHeight: '30px',
     TextPadding: '2px 4px'
@@ -14101,7 +14124,7 @@ tp.WindowArgs = class extends tp.CreateParams {
 };
 
 /* properties */
- 
+
 /** Window initial left position. Ignored with small screens. */
 tp.WindowArgs.prototype.X = 100;
 /** Window initial top position. Ignored with small screens. */
@@ -14130,18 +14153,18 @@ tp.WindowArgs.prototype.ResizeEdges = tp.Edge.All;                              
 tp.WindowArgs.prototype.Movable = true;
 
 /** An object. Context for the CloseFunc */
-tp.WindowArgs.prototype.Creator = null;                                    
+tp.WindowArgs.prototype.Creator = null;
 /** Callback to call when the window closes. A function as function(Args: tp.WindowArgs) */
-tp.WindowArgs.prototype.CloseFunc = null;           
+tp.WindowArgs.prototype.CloseFunc = null;
 
 /** The tp.tpWindow window after the creation.
 @type {tp.tpWindow}
 */
-tp.WindowArgs.prototype.Window = null;   
+tp.WindowArgs.prototype.Window = null;
 /** Element or selector with html content. An element that becomes the content of the window. 
 @type {string|HTMLElement}
 */
-tp.WindowArgs.prototype.Content = null;                       
+tp.WindowArgs.prototype.Content = null;
 
 /** Modal indication flag for the inheritors. For the window to function as a modal one the ShowDialog() must be used. */
 tp.WindowArgs.prototype.AsModal = false;
@@ -14153,7 +14176,7 @@ tp.WindowArgs.prototype.DefaultDialogResult = tp.DialogResult.Cancel;
 //#endregion
 
 //#region tp.tpWindow (🗖 🗗 🗕🗙      × _ □ )
- 
+
 /**
 The ultimate ancestor of all windows and dialog boxes
 @class
@@ -14165,7 +14188,7 @@ tp.tpWindow = class extends tp.tpElement {
     */
     constructor(Args) {
         Args.Parent = tp.Doc.body;
- 
+
         Args.CssText = `
 box-sizing: border-box;
 position: absolute;
@@ -14177,9 +14200,9 @@ border: ${tp.WindowSettings.Border};
 overflow: hidden;
 outline: none;
 `;
- 
+
         Args.Id = tp.SafeId('tp-Window');
-        super(null, Args); 
+        super(null, Args);
     }
 
     /**
@@ -14364,11 +14387,11 @@ outline: none;
                 this.CenterInScreen();
             }
         }
- 
+
     }
-    CenterInScreen() {        
+    CenterInScreen() {
         var vpSize = tp.Viewport.GetSize();
-        var Size = this.OffsetSize;        
+        var Size = this.OffsetSize;
 
         this.X = Math.round(((vpSize.Width - Size.Width) / 2));
         this.Y = Math.round(((vpSize.Height - Size.Height) / 2));
@@ -14388,7 +14411,7 @@ outline: none;
             }
         }
     }
-    CreateOverlay() { 
+    CreateOverlay() {
         this.fOverlay = new tp.ScreenOverlay();
         this.ZIndex = this.fOverlay.ZIndex + 1;
         this.fOverlay.Visible = false;
@@ -14426,18 +14449,18 @@ margin: 0 1px;
         CP.CssClasses = 'tp-Button';
         CP.CssText = Style;
 
-        var Result = new tp.tpElement('button', CP);   
+        var Result = new tp.tpElement('button', CP);
 
         Result['Command'] = Command;
         Result['DialogResult'] = DialogResult;
         //Result.StyleProp('margin', '0 1px');
         Result.On(tp.Events.Click, this.AnyClick, this);
- 
+
         if (ToLeft === true)
             Result.InsertAt(0, this.Footer);
         else
             Result.AppendTo(this.Footer);
- 
+
 
         return Result;
     }
@@ -14462,7 +14485,7 @@ height: 100%;
 
             // content
             this.Content = new tp.tpElement(null, CP); // , CssClasses: tp.tpWindow.CSS_CLASS_WindowContent
-       
+
 
         }
         return this.Content;
@@ -14483,13 +14506,13 @@ height: ${tp.WindowSettings.CaptionHeight};
 border-bottom: ${tp.WindowSettings.Border};
 user-select: none;
 `;
- 
+
         // 🗖 🗖 🗗 🗕🗙 × _ □ 
         let Type = '🗙'; // 'Close';
         if (Command === 'Maximize')
             Type = '🗖';
         else if (Command === 'Restore')
-            Type = '🗗'; 
+            Type = '🗗';
 
         var Result = this.Document.createElement('span');
         this.HeaderButtonBar.appendChild(Result);
@@ -14508,7 +14531,7 @@ user-select: none;
      * Creates all controls of this window. 
      * */
     CreateControls() {
-         
+
         let Style;
 
         this.fMaximizeButton = null;
@@ -14595,7 +14618,7 @@ flex-grow: 1;
         CP.Parent = this;
         //CP.CssClasses = tp.ConcatClasses(tp.tpWindow.CSS_CLASS_WindowFooter, 'tp-UnSelectable');
 
-        this.Footer = this.Document.createElement('div'); 
+        this.Footer = this.Document.createElement('div');
         this.Footer.id = tp.SafeId('tp-Window-Footer');
         this.Handle.appendChild(this.Footer);
         Style = `
@@ -14612,7 +14635,7 @@ user-select: none;
         let divElement = this.Document.createElement('div');
         this.Footer.appendChild(divElement);
         divElement.style.cssText = 'position: relative; flex-grow: 1;';
- 
+
         if (this.Args.ShowFooter === false) {
             this.Footer.style.display = 'none';
         }
@@ -14631,17 +14654,17 @@ user-select: none;
     Maximize() {
         if (!tp.Viewport.IsSmall && !this.IsMaximized) {
             this.fLastRect = this.OffsetRect;  // save current position/size to restore later
- 
+
             var h = window.innerHeight;
             if (this.Document.documentElement.scrollWidth > this.Document.documentElement.clientWidth) {
                 h = h - tp.Environment.ScrollbarSize.Height;
-            }       
+            }
 
             this.X = 1;
             this.Y = 1;
-            this.Width = this.Document.documentElement.clientWidth - 3;  
-            this.Height = h - 3;                       
- 
+            this.Width = this.Document.documentElement.clientWidth - 3;
+            this.Height = h - 3;
+
 
             if (this.fMaximizeButton) {
                 this.fMaximizeButton.style.display = 'none';
@@ -14804,7 +14827,7 @@ tp.tpWindow.prototype.fCloseButton = null;        // HTMLImageElement;
 
 tp.tpWindow.prototype.fLastRect = new tp.Rect(0, 0, 0, 0);
 tp.tpWindow.prototype.fMaximized = false;
- 
+
 tp.tpWindow.prototype.fModal = false;
 tp.tpWindow.prototype.fDialogResult = tp.DialogResult.None;
 
@@ -15023,7 +15046,7 @@ padding: 4px;
             rows: 5
         });
 
- 
+
 
 
         this.edtMemo.Text = this.MessageText;
@@ -15031,7 +15054,7 @@ padding: 4px;
         this.edtMemo.Focus();
     }
 
-/* static */
+    /* static */
     /**
      * Shows the dialog modally.
      * @param {string} MessageText The text to display
@@ -15103,7 +15126,7 @@ Displays an information dialog and returns a promise.
 @param {string} MessageText - The message to display to the user.
 @returns {tp.WindowArgs} Returns a {@link Promise} with the modal window {@link tp.WindowArgs} Args.
 */
-tp.InfoBoxAsync = async function (MessageText)  {
+tp.InfoBoxAsync = async function (MessageText) {
     return new Promise((Resolve, Reject) => {
         tp.InfoBox(MessageText, (Args) => {
             Resolve(Args);
@@ -15136,7 +15159,7 @@ tp.YesNoBoxAsync = async function (MessageText) {
     });
 };
 
- 
+
 //#endregion
 
 //#region  FrameBox functions
@@ -15229,7 +15252,7 @@ tp.FrameBoxPromise = function (Text, ContentHtml) {
         });
     });
 };
- 
+
 //#endregion
 
 
@@ -15237,7 +15260,7 @@ tp.FrameBoxPromise = function (Text, ContentHtml) {
 // NotificationBox
 //---------------------------------------------------------------------------------------
 
- //#region  NotificationBox
+//#region  NotificationBox
 
 /** NotificationBox. Displays a notification message to the user.
  */
@@ -15315,13 +15338,6 @@ NotificationBox = class extends tp.tpElement {
             'user-select': 'none'
         };
 
-        if (tp.NotificationBoxSetup.ToTop === true) {
-            CssStyle['top'] = tp.px(tp.NotificationBoxes.Top);
-        }
-        else {
-            CssStyle['bottom'] = tp.px(tp.NotificationBoxes.Bottom);
-        }
-
         if (tp.Viewport.IsXSmall) {
             CssStyle['left'] = '2px';
             CssStyle['right'] = '2px';
@@ -15394,6 +15410,7 @@ background-color: ${BorderColor};
         this.edtMessage.value = Message;
 
         // add to the notification boxes
+        tp.NotificationBoxes.Place(this.Handle);
         tp.NotificationBoxes.Add(this.Handle);
 
         // set a close timeout
@@ -16005,7 +16022,7 @@ tp.Culture.prototype.CurrencyDecimals = 0;
 A static helper class with a list of cultures ({@link tp.Culture}) 
 @static
 */
-tp.Cultures = class {    
+tp.Cultures = class {
 
     /**
      * Finds and returns a {@link tp.Culture} by a specified culture code, i.e. en-US, if any, else null.
@@ -16048,7 +16065,7 @@ tp.Cultures = class {
     }
     static set Current(v) {
         if (v instanceof tp.Culture && v !== this.fCurrent) {
-            this.fCurrent = v; 
+            this.fCurrent = v;
         }
     }
 };
@@ -16132,7 +16149,7 @@ tp.GetDateFormat = (CultureCode) => {
 };
 
 //#endregion
- 
+
 //#region Culture related properties and variables 
 
 
@@ -16141,7 +16158,7 @@ tp.GetDateFormat = (CultureCode) => {
  */
 tp.CurrencySymbol = null; // '$'; // '€'; 
 Object.defineProperty(tp, 'CurrencySymbol', {
-    get() { return tp.Cultures.Current.CurrencySymbol; }  
+    get() { return tp.Cultures.Current.CurrencySymbol; }
 });
 /** The current decimal separator. According to current culture (locale)
  @type {string}
@@ -16171,7 +16188,7 @@ Object.defineProperty(tp, 'DateSeparator', {
  */
 tp.DateFormat = null; // 'yyyy/MM/dd';
 Object.defineProperty(tp, 'DateFormat', {
-    get() { return tp.Cultures.Current.DateFormat; } 
+    get() { return tp.Cultures.Current.DateFormat; }
 });
 /** The ISO date format pattern
  @type {string}
@@ -16184,14 +16201,14 @@ Object.defineProperty(tp, 'DateFormatISO', {
 /** Array of day names. According to current culture (locale)
  @type {string[]}
  */
-tp.DayNames = null;  
+tp.DayNames = null;
 Object.defineProperty(tp, 'DayNames', {
     get() { return tp.Cultures.Current.DayNames; }
 });
 /** Array of monthe names. According to current culture (locale)
  @type {string[]}
  */
-tp.MonthNames = null; 
+tp.MonthNames = null;
 Object.defineProperty(tp, 'MonthNames', {
     get() { return tp.Cultures.Current.MonthNames; }
 });
@@ -16239,9 +16256,9 @@ Object.defineProperty(tp, 'CultureCode', {
                     tp.Cultures.Add(C);
                     tp.Cultures.Current = C;
                 }
-            }   
-        }  
- 
+            }
+        }
+
     }
 });
 
@@ -16251,7 +16268,7 @@ Object.defineProperty(tp, 'CultureCode', {
 // initialization
 //---------------------------------------------------------------------------------------
 
- 
+
 
 //#region document ready state
 
@@ -16301,7 +16318,7 @@ tp.AddLanguagesFunc = null;
     let InitializeLanguages = function () {
         tp.Languages.En = new tp.Language('English', 'en', 'en-US');
         tp.Languages.Gr = new tp.Language('Greek', 'el', 'el-GR');
-        tp.Languages.Items.push(tp.Languages.En, tp.Languages.Gr); 
+        tp.Languages.Items.push(tp.Languages.En, tp.Languages.Gr);
         tp.Languages.fCurrent = tp.Languages.En;
 
         tp.Call(tp.AddLanguagesFunc);
@@ -16378,9 +16395,9 @@ tp.AddLanguagesFunc = null;
                 Lang = tp.Languages.Add("unknown", Parts[0], CultureCode);
             }
 
-            tp.Languages.fCurrent = tp.Languages.Lang; 
+            tp.Languages.fCurrent = tp.Languages.Lang;
         }
- 
+
     };
 
     let ReadyFunc = function () {
@@ -16402,7 +16419,7 @@ tp.AddLanguagesFunc = null;
         var list = tp.ReadyListeners;
         var listener;
         for (var i = 0, ln = list.length; i < ln; i++) {
-            listener = list[i];           
+            listener = list[i];
             listener.Func.call(listener.Context);
         }
 
@@ -16410,7 +16427,7 @@ tp.AddLanguagesFunc = null;
         if (tp.IsFunction(tp.Main)) {
             tp.Call(tp.Main);
         }
-            
+
     };
 
     if (tp.IsReady) {
@@ -16424,10 +16441,10 @@ tp.AddLanguagesFunc = null;
     }
 
 })();
- 
 
 
 
 
- 
+
+
 //#endregion
