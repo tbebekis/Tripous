@@ -6513,7 +6513,12 @@ tp.ScreenMode = {
 Object.freeze(tp.ScreenMode);
 
 /**
-A static class helper for the viewport size and the screen mode (xsmall, small, medium, large)
+A static class helper for the viewport size and the screen mode (xsmall, small, medium, large) <br />
+CAUTION: There are two viewports. <br />
+Layout Viewport: What is available to be seen
+Visual Viewport: What is currently visible
+@see {@link https://developer.mozilla.org/en-US/docs/Glossary/layout_viewport}
+@see {@link https://developer.mozilla.org/en-US/docs/Glossary/visual_viewport}
 @class
 */
 tp.Viewport = {
