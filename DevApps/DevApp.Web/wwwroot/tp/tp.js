@@ -103,6 +103,7 @@ tp.ExceptionText = function (e) {
         } catch (e) {
             //
         }
+
         for (var Prop in o) {
             if (tp.IsSimple(o[Prop])) {
                 S = tp.Format('{0}: {1}', Prop, o[Prop]);
@@ -6519,6 +6520,7 @@ Layout Viewport: What is available to be seen
 Visual Viewport: What is currently visible
 @see {@link https://developer.mozilla.org/en-US/docs/Glossary/layout_viewport}
 @see {@link https://developer.mozilla.org/en-US/docs/Glossary/visual_viewport}
+@see {@link https://www.quirksmode.org/mobile/viewports.html}
 @class
 */
 tp.Viewport = {
@@ -6545,10 +6547,10 @@ tp.Viewport = {
     @returns {tp.Size}  Returns the size of the viewport
     */
     GetSize() {
-        var w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
-        var h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
-
-        return new tp.Size(w, h);
+        //var w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+        //var h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+        //return new tp.Size(w, h);
+        return new tp.Size(this.Width, this.Height);
     },
     /**
     Returns the the Top/Left of the viewport regarding the fully rendered document.
@@ -6558,6 +6560,27 @@ tp.Viewport = {
         var X = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
         var Y = window.pageXOffset || document.documentElement.scrollLeft || document.body.scrollLeft;
         return new tp.Point(X, Y);
+    },
+
+    /**
+     * Centers an element (i.e. a dialog box) in the window. <br />
+     * The element's position should be fixed or absolute.
+     * @param {string|Element} el Element or selector of the element to center in the window
+     */
+    CenterInWindow(el) {
+        el = tp(el);
+        if (tp.IsHTMLElement(el)) {
+           
+            let R = tp.BoundingRect(el);
+            let L = (this.Width / 2) - (R.Width / 2);
+            let T = (this.Height / 2) - (R.Height / 2);
+            let Style = tp.ComputedStyle(el);
+            if (Style.position === 'absolute')
+                T += window.pageYOffset;
+
+            el.style.top = tp.px(T);
+            el.style.left = tp.px(L);
+        }
     },
 
     /**
@@ -6617,7 +6640,23 @@ tp.Viewport = {
     get IsXSmall() { return tp.Viewport.Mode === tp.ScreenMode.XSmall; },
     get IsSmall() { return tp.Viewport.Mode === tp.ScreenMode.Small; },
     get IsMedium() { return tp.Viewport.Mode === tp.ScreenMode.Medium; },
-    get IsLarge() { return tp.Viewport.Mode === tp.ScreenMode.Large; }
+    get IsLarge() { return tp.Viewport.Mode === tp.ScreenMode.Large; },
+
+    get Width() {
+        return  window.innerWidth && document.documentElement.clientWidth ?
+                Math.min(window.innerWidth, document.documentElement.clientWidth) :
+                window.innerWidth ||
+                document.documentElement.clientWidth ||
+                document.getElementsByTagName('body')[0].clientWidth;
+    },
+
+    get Height() {
+        return window.innerHeight && document.documentElement.clientHeight ?
+            Math.min(window.innerHeight, document.documentElement.clientHeight) :
+            window.innerHeight ||
+            document.documentElement.clientHeight ||
+            document.getElementsByTagName('body')[0].clientHeight;
+    }
 };
 
 //#endregion
