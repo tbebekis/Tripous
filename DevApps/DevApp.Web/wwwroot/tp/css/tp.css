@@ -504,16 +504,28 @@ max-width 	Rules applied for any browser width less than the value defined in th
 /*---------------------------------------------------------------------------------------
 // tp-CtrlRow - label text and control
 // --------------------------------------------------------------------------------------
-//  <div class="tp-Row tp-CtrlRow">
-//      <div class="tp-CText"><span>User Name</span></div>
-//      <div class="tp-Ctrl"><input type="text" class="TextBox" data-setup="{DataField:'UserName', Width:'100%'}" /></div>
-//  </div>
+
+<div class="tp-Row tp-CtrlRow" id="control_row_Name">
+	<div class="tp-CText">
+		<label for="Name">TITLE GOES HERE</label>
+		<span class="tp-RequiredMark">*</span>
+	</div>
+	<div class="tp-Ctrl">
+		<input class="tp-TextBox" id="Name" name="Name" type="text" value="" data-setup="{ DataField:'UserName', .... } >
+	</div>
+</div>
 // --------------------------------------------------------------------------------------
 // tp-CheckBoxRow
 // --------------------------------------------------------------------------------------
-// <div class="tp-Row tp-CheckBoxRow">
-//      <label><input type='checkbox'>Here goes the check-box label text</label>
-// </div>
+<div class="tp-Row tp-CheckBoxRow">
+	<label class="tp-CheckBox">
+		<span style="display: none;">*</span>
+		<span class="tp-Text">TEXT GOES HERE</span>
+		<input name="SAME_NAME" type="checkbox" value="1">
+		<span class="checkmark"></span> 
+	</label>
+    <input name="SAME_NAME" type="hidden" value="0">
+</div>
 ---------------------------------------------------------------------------------------*/
  
 
@@ -529,14 +541,6 @@ max-width 	Rules applied for any browser width less than the value defined in th
     display: flex;
     margin-top: 4px;
     padding: 0 10px 0 15px
-}
-
-.tp-CheckBoxRow {
-    align-items: center;     
-}
-
-.tp-CheckBoxRow > label {
-    padding-left: 4px;
 }
 
 /* the text container */ 
@@ -559,6 +563,75 @@ max-width 	Rules applied for any browser width less than the value defined in th
     width: 100%;
 }
 
+/* check-box */
+.tp-CheckBox {
+	display: flex;
+	position: relative;  
+	cursor: pointer;  
+	user-select: none;  
+	padding-left: 28px;	
+    min-height: 32px; /* to fit the check-box */
+}
+
+.tp-CheckBox > .tp-Text {
+	font-size: 14px;	
+	padding: 4px;
+ }
+ 
+ /* hide checkbox */
+ .tp-CheckBox input {
+   position: absolute;
+   opacity: 0;
+   cursor: pointer;
+   height: 0;
+   width: 0;
+ }
+ 
+ /* custom checkbox */
+ .tp-CheckBox .checkmark {
+   position: absolute;
+   top: 0;
+   left: 0;
+   height: 25px;
+   width: 25px;
+   border-radius: 50%; /*  rounded */
+   border: 1px solid gray;
+   margin: 1px 0 0 0;
+ }
+ 
+ /* background color on hover 
+ .tp-CheckBox:hover input ~ .checkmark {
+   background-color: #ccc;
+ }
+ */
+
+ /* background color on checked 
+ .tp-CheckBox input:checked ~ .checkmark {
+   background-color: #F8D31D;
+   border: 2px solid #F8D31D;
+ }
+ */
+ /* checkmark:after */
+ .tp-CheckBox .checkmark:after {
+   content: "";
+   position: absolute;
+   display: none;
+   left: 9px;
+   top: 5px;
+   width: 5px;
+   height: 10px;
+   border-style: solid;
+   border-color: darkslategrey;
+   border-width: 0 3px 3px 0;
+   transform: rotate(45deg);  
+ }
+ 
+ /* display checkmark when checked  */
+ .tp-CheckBox input:checked ~ .checkmark:after {
+   display: block;
+ }
+
+/* grid control row */
 .tp-GridCtrlRow {
     position: relative;
     display: flex;
