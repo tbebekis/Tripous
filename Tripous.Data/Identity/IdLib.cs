@@ -15,47 +15,7 @@ namespace Tripous.Identity
     static public class IdLib
     {
         static PasswordHasher fPasswordHasher;
-
  
-
-        /// <summary>
-        /// Generates and returns a password of a specified length.
-        /// <para>Adapted from: https://codeshare.co.uk/blog/how-to-create-a-random-password-generator-in-c/ </para>
-        /// </summary>
-        static public string GeneratePassword(int Length = 10, string PasswordCharSet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^*()_-+=[{]};:>|./?")
-        {
-            const int MinLength = 8;
-            const int MaxLength = 128;
-            const int MaxIdenticalConsecutiveChars = 2;
-
-            if (Length < MinLength || Length > MaxLength)
-            {
-                return "Password length must be between 8 and 128.";
-            }
-
-            string Data = PasswordCharSet;
-
-            char[] Password = new char[Length];
-            int DataLength = Data.Length;
-
-            bool Flag;
-            Random Random = new Random();
-            for (int CharPos = 0; CharPos < Length; CharPos++)
-            {
-                Password[CharPos] = Data[Random.Next(DataLength - 1)];
-
-                Flag = CharPos > MaxIdenticalConsecutiveChars && Password[CharPos] == Password[CharPos - 1] && Password[CharPos - 1] == Password[CharPos - 2];
-
-                if (Flag)
-                {
-                    CharPos--;
-                }
-            }
-
-            return string.Join(null, Password);
-        }
-
-
         /// <summary>
         /// Encrypts a byte buffer with MD5 and returns the string
         /// </summary>

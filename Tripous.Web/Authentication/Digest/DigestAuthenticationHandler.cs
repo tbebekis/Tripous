@@ -337,7 +337,7 @@ namespace Tripous.Web.Authentication.Digest
 
             if (string.IsNullOrWhiteSpace(Options.NonceSecret))
             {
-                Options.NonceSecret = IdLib.GeneratePassword(10);
+                Options.NonceSecret = Sys.GeneratePassword(10);
             }
 
             return Task.CompletedTask;
