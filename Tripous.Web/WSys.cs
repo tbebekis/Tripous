@@ -4,7 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Data.Common;
 using System.Net;
+using System.Text;
 using System.Text.RegularExpressions;
+using System.Web;
 
 using Microsoft.Net.Http.Headers;
 
@@ -21,7 +23,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 
 using Tripous;
 using Tripous.Data;
- 
+
 
 namespace Tripous.Web
 {
@@ -80,6 +82,7 @@ namespace Tripous.Web
             Services.Replace(descriptor);
         }
 
+        /* Db */
         /// <summary>
         /// <para>After calling this method the <see cref="Db.Connections"/> is loaded from the appsettings.json file with Sql database connection information. </para>
         /// </summary>
@@ -93,7 +96,33 @@ namespace Tripous.Web
             Db.Connections = Connections;
         }
 
-        /* miscs */
+        /* google maps */
+        /// <summary>
+        /// Returns a Google Maps Url for a specified Query, for either a normal Map view or Sattelite view and a specified Zoom (1 to 20)
+        /// <para>Query could be a full address or just a City or a Company name and City or any other combination.</para>
+        /// <para>EXAMPLE: 1600 Pennsylvania Avenue; NW Washington, D.C. 20500 </para>
+        /// <para>EXAMPLE: White House, Washington</para>
+        /// <para>EXAMPLE: Baufox, Ηπείρου, Καλοχώρι, Θεσσαλονίκη, TK 57009 </para>
+        /// <para>EXAMPLE: Baufox, Αθήνα</para>
+        /// <para>Query could also have the format loc:LATITUDE+LONGTITUDE </para>
+        /// <para>EXAMPLE: loc:40.62641513792309+22.948322824856376 </para>
+        /// </summary>
+        static public string GetGoogleMapQueryUrl(string Query, bool SatelliteView = false, int Zoom = 0)
+        {
+            StringBuilder SB = new StringBuilder();
+            SB.Append(@"https://maps.google.com/maps?");
+            SB.Append("q=");
+            if (!Query.Contains("loc:"))
+                Query = HttpUtility.UrlEncode(Query, Encoding.UTF8);
+            SB.Append(Query);
+            SB.Append(SatelliteView ? "&t=k" : "&t=m");
+            if (Zoom > 0 && Zoom <= 20)
+                SB.Append($"&z={Zoom}");
+            string Url = SB.ToString();
+            return Url;
+        }
+
+        /* query string */
         /// <summary>
         /// Returns a query string value by a specified key
         /// </summary>
@@ -125,6 +154,7 @@ namespace Tripous.Web
             return new string[0];
         }
 
+        /* miscs */
         /// <summary>
         /// Returns the referrer Url if any, else null.
         /// <para>NOTE: The HTTP referer is an optional HTTP header field that identifies the address of the webpage which is linked to the resource being requested. 
