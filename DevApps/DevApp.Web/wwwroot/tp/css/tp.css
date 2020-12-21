@@ -702,7 +702,7 @@ max-width 	Rules applied for any browser width less than the value defined in th
 
     .tp-Ctrls.tp-TextTop .tp-CText {
         justify-content: flex-start;
-        margin: 4px 2px 4px 6px;
+        margin: 4px;
         width: 100%;
         align-items: center;
         flex-grow: 0;
