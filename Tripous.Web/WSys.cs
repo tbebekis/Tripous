@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Data.Common;
+using System.IO;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
@@ -14,6 +16,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Http.Extensions;
+
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.AspNetCore.StaticFiles;
 
 using Microsoft.Extensions.Primitives;
 using Microsoft.Extensions.Hosting;
@@ -82,6 +89,26 @@ namespace Tripous.Web
             Services.Replace(descriptor);
         }
 
+        /// <summary>
+        /// Returns the current <see cref="ActionContext"/>.
+        /// <para>WARNING: It should be called only when a valid <see cref="Microsoft.AspNetCore.Http.HttpRequest"/> exists. </para>
+        /// </summary>
+        static public ActionContext GetActionContext()
+        {
+            IActionContextAccessor service = GetService<IActionContextAccessor>();
+            return (service != null) ? service.ActionContext : null;
+        }
+        /// <summary>
+        /// Returns an <see cref="IUrlHelper"/>.
+        /// <para>WARNING: It should be called only when a valid <see cref="Microsoft.AspNetCore.Http.HttpRequest"/> exists. </para>
+        /// </summary>
+        static public IUrlHelper GetUrlHelper()
+        {
+            ActionContext context = GetActionContext();
+            IUrlHelperFactory factory = GetService<IUrlHelperFactory>();
+            return (context != null && factory != null) ? factory.GetUrlHelper(context) : null;
+        }
+
         /* Db */
         /// <summary>
         /// <para>After calling this method the <see cref="Db.Connections"/> is loaded from the appsettings.json file with Sql database connection information. </para>
@@ -124,21 +151,30 @@ namespace Tripous.Web
 
         /* query string */
         /// <summary>
-        /// Returns a query string value by a specified key
+        /// Returns a value from query string, if any, else returns a default value.
         /// </summary>
-        static public string GetQueryValue(string Key)
+        static public string GetQueryValue(string Key, string Default = "")
         {
-            string Result = null;
-
-            if (WSys.IsRequestAvailable)
-            {
-                var SV = WSys.HttpContext.Request.Query[Key];
-                if (!StringValues.IsNullOrEmpty(SV))
-                    Result = SV.ToString();
-            }
-
-            return Result;
+            IQueryCollection QS = Query;
+            return QS != null && QS.ContainsKey(Key) ? QS[Key].ToString() : Default;
         }
+        /// <summary>
+        /// Returns a value from query string, if any, else returns a default value.
+        /// </summary>
+        static public int GetQueryValue(string Key, int Default = 0)
+        {
+            string S = GetQueryValue(Key, "");
+            return !string.IsNullOrWhiteSpace(S) ? Convert.ToInt32(S) : Default;
+        }
+        /// <summary>
+        /// Returns a value from query string, if any, else returns a default value.
+        /// </summary>
+        static public bool GetQueryValue(string Key, bool Default = false)
+        {
+            string S = GetQueryValue(Key, "");
+            return !string.IsNullOrWhiteSpace(S) ? Convert.ToBoolean(S) : Default;
+        }
+
         /// <summary>
         /// Returns the value of a query string parameter.
         /// <para>NOTE: When a parameter is included more than once, e.g. ?page=1&amp;page=2 then the result will be 1,2 hence this function returns an array.</para>
@@ -155,6 +191,48 @@ namespace Tripous.Web
         }
 
         /* miscs */
+        /// <summary>
+        /// Creates and returns a <see cref="HttpClient"/> using a <see cref="IHttpClientFactory"/>
+        /// </summary>
+        static public HttpClient CreateHttpClient()
+        {
+            IHttpClientFactory Factory = GetService<IHttpClientFactory>();
+            return Factory.CreateClient();
+        }
+
+        /// <summary>
+        /// Returns a <see cref="FileContentResult"/> for downloading a file or null if the file is not found.
+        /// <para>NOTE: If no binary Data is specified then the function tries to load the binary data from the specified file path. </para>
+        /// <para>CAUTION: FilePath is mandatory.</para>
+        /// </summary>
+        static public FileContentResult GetFileContentResult(string FilePath, byte[] Data = null)
+        {
+            FileContentResult Result = null;
+
+            if (!string.IsNullOrWhiteSpace(FilePath))
+            {
+                if (Data == null)
+                { 
+                    if (File.Exists(FilePath))
+                        Data = File.ReadAllBytes(FilePath);
+                }
+
+                if (Data != null && Data.Length > 0)
+                {
+                    string FileName = Path.GetFileName(FilePath);
+                    string ContentType;
+                    new FileExtensionContentTypeProvider().TryGetContentType(FileName, out ContentType);
+                    ContentType = ContentType ?? "application/octet-stream";
+
+                    Result = new FileContentResult(Data, ContentType);
+                    Result.FileDownloadName = FileName;
+                }
+            }
+
+            return Result;
+
+        }
+
         /// <summary>
         /// Returns the referrer Url if any, else null.
         /// <para>NOTE: The HTTP referer is an optional HTTP header field that identifies the address of the webpage which is linked to the resource being requested. 
@@ -232,10 +310,10 @@ namespace Tripous.Web
         }
 
         /// <summary>
-        /// Returns the raw Url path and full query string of a specified request
+        /// Returns the raw relative Url path and query string of a specified request
         /// <note>SEE: https://stackoverflow.com/questions/28120222/get-raw-url-from-microsoft-aspnet-http-httprequest </note>
         /// </summary>
-        static public string GetRawUrl(HttpRequest R = null)
+        static public string GetRelativeRawUrl(HttpRequest R = null)
         {
             string Result = null;
 
@@ -251,17 +329,18 @@ namespace Tripous.Web
             return Result;
         }
         /// <summary>
-        /// Returns the raw Url path and full query string of a specified request, url-encoded.
+        /// Returns the relative Url of a request, along with the Query String, url-encoded.
         /// <note>SEE: https://stackoverflow.com/questions/28120222/get-raw-url-from-microsoft-aspnet-http-httprequest </note>
         /// </summary>
-        static public string GetRawUrlEncoded(HttpRequest R = null)
+        static public string GetRelativeRawUrlEncoded(HttpRequest R = null)
         {
-            return GetRawUrl(R).UrlEncode();
+            return GetRelativeRawUrl(R).UrlEncode();
         }
         /// <summary>
-        /// Returns the combined components of the request URL in a fully escaped form suitable for use in HTTP headers and other HTTP operations.
+        /// Returns the absolute Url of a request, along with the Query String, url-encoded.
+        /// <para>Suitable for use in HTTP headers and other HTTP operations.</para>
         /// </summary>
-        static public string GetFullUrlEncoded(HttpRequest R = null)
+        static public string GetAbsoluteUrlEncoded(HttpRequest R = null)
         {
             if (R == null && WSys.IsRequestAvailable)
                 R = WSys.HttpRequest;
@@ -272,12 +351,54 @@ namespace Tripous.Web
         /// Returns the combined components of the request URL in a fully un-escaped form (except for the QueryString) suitable only for display. 
         /// <para>This format should not be used in HTTP headers or other HTTP operations.</para>
         /// </summary>
-        static public string GetFullDisplayUrl(HttpRequest R = null)
+        static public string GetAbsoluteDisplayUrl(HttpRequest R = null)
         {
             if (R == null && WSys.IsRequestAvailable)
                 R = WSys.HttpRequest;
 
-            return R.GetEncodedUrl();
+            return R.GetDisplayUrl();
+        }
+
+        /// <summary>
+        /// Returns the absolute Url (e.g. containing scheme and host name) of a specified Route name
+        /// </summary>
+        static public string GetAbsoluteRouteUrl(IUrlHelper UrlHelper, string RouteName, object RouteValues = null)
+        {
+            string Scheme = HttpRequest.Scheme;
+            return UrlHelper.RouteUrl(RouteName, RouteValues, Scheme);
+        }
+
+        /// <summary>
+        /// Encodes a URL string.
+        /// </summary>
+        static public string UrlEncode(string Url)
+        {
+            return System.Web.HttpUtility.UrlEncode(Url);
+        }
+
+        /// <summary>
+        /// Escapes a url using the <see cref="Uri.EscapeUriString(string)"/>.
+        /// <para>The <see cref="Uri.EscapeUriString(string)"/> escapes unreserved characters only..</para>
+        /// <para>The <see cref="Uri.EscapeDataString(string)"/> escapes unreserved AND reserved charactes.</para>
+        /// <para>Reserved Characters: :/?#[]@!$&amp;'()*+,;=  </para>
+        /// <para>Unreserved Characters: alphanumeric and -._~ </para>
+        /// <para>SEE: https://tools.ietf.org/html/rfc3986#section-2 </para>
+        /// </summary>
+        static public string UrlEscape(string Url)
+        {
+            return Uri.EscapeUriString(Url);
+        }
+        /// <summary>
+        /// Escapes a url using the <see cref="Uri.EscapeDataString(string)"/>.
+        /// <para>The <see cref="Uri.EscapeUriString(string)"/> escapes unreserved characters only..</para>
+        /// <para>The <see cref="Uri.EscapeDataString(string)"/> escapes unreserved AND reserved charactes.</para>
+        /// <para>Reserved Characters: :/?#[]@!$&amp;'()*+,;= </para>
+        /// <para>Unreserved Characters: alphanumeric and -._~ </para>
+        /// <para>SEE: https://tools.ietf.org/html/rfc3986#section-2 </para>
+        /// </summary>
+        static public string UrlEscapeAll(string Url)
+        {
+            return Uri.EscapeDataString(Url);
         }
 
         /// <summary>
@@ -414,7 +535,11 @@ namespace Tripous.Web
         /// Returns true if an HTTP Request is currently available
         /// </summary>
         static public bool IsRequestAvailable { get { return HttpRequest != null; } }
- 
+        /// <summary>
+        /// The query string as a collection of key-value pairs
+        /// </summary>
+        static public IQueryCollection Query => HttpRequest.Query;
+
         /// <summary>
         /// Gets or sets the <see cref="IWebHostEnvironment"/>
         /// </summary>
