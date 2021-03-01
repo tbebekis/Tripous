@@ -451,6 +451,8 @@ namespace Tripous.Web
             return R != null ? R.Headers["X-Requested-With"] == "XMLHttpRequest" : false;
         }
 
+
+
         /* properties */
         /// <summary>
         /// Returns the base url of this application.
@@ -535,6 +537,28 @@ namespace Tripous.Web
         /// Returns true if an HTTP Request is currently available
         /// </summary>
         static public bool IsRequestAvailable { get { return HttpRequest != null; } }
+        /// <summary>
+        /// Indicates whether the client is being redirected to a new location.
+        /// </summary>
+        static public bool IsRequestBeingRedirected
+        {
+            get
+            {
+                /* NOTE:
+                 * The HttpContext.Response of the old ASP.NET MVC had the boolean property IsRequestBeingRedirected
+                 * which indicated whether a redirection is done.
+                 * 
+                 * Asp.Net Core has no such a property. 
+                 * So we check the HttpResponse.StatusCode to detect a redirection.
+                 * 
+                 * SEE: https://en.wikipedia.org/wiki/HTTP_301
+                 * SEE: https://en.wikipedia.org/wiki/HTTP_302
+                 */
+                int HttpResponseStatusCode = HttpContext.Response.StatusCode;
+                int[] RedirectionStatusCodes = { StatusCodes.Status301MovedPermanently, StatusCodes.Status302Found };
+                return RedirectionStatusCodes.Contains(HttpResponseStatusCode);
+            }
+        }
         /// <summary>
         /// The query string as a collection of key-value pairs
         /// </summary>
