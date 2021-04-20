@@ -10153,7 +10153,7 @@ Url: "${this.Url}"
 AjaxResult: "${this.Result}"
 ErrorText: "${this.ErrorText}"
 ResponseText: "${this.ResponseText}"
-ResponseResult: "${this.ResponseData.Result}"
+ResponseResult: "${this.ResponseData.IsSuccess}"
 ResponseErrorText: "${this.ResponseData.ErrorText}" `;
 
         return S;
@@ -10417,7 +10417,7 @@ tp.Ajax.Async = async function (Args) {
                 // if there is an onsuccess callback, then call it and check the results
                 tp.Call(OnSuccess, Context, Args);
 
-                if (!tp.IsEmpty(Args.ResponseData) && Args.ResponseData.Result === false && !tp.IsBlank(Args.ResponseData.ErrorText)) {
+                if (!tp.IsEmpty(Args.ResponseData) && Args.ResponseData.IsSuccess === false && !tp.IsBlank(Args.ResponseData.ErrorText)) {
                     Reject(tp.ExceptionText(Args));
                 } else {
                     Resolve(Args);
