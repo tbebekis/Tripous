@@ -3830,6 +3830,52 @@ tp.InsertNode = function (ParentOrSelector, Index, Node) {
 };
 
 /**
+ * Adds a list of items as options to a list control (HTMLSelectElement)
+ * @param {string|HTMLSelectElement} ListControl Selector or HTMLSelectElement
+ * @param {object[]} List The list of items to add as options. Could be a list of <code>{ Text: , Value: }</code> items. In such a case no call-back is needed.
+ * @param {object} [FirstItem=null] Optional. Defaults to null. When not null then it is added as the first option to the element. Must be a  <pre>{ Text: , Value: }</pre> object.
+ * @param {string} [SelectedValue=null] Optional. The combobox selected value.
+ * @param {function} [ItemFunc=null] Optional. A callback to be called on every item of <code> function(Item) { Text: , Value: }</code> <br />
+ * When the callback returns an object of <pre>{ Text: , Value: }</pre> this function adds the option element to the list control. <br />
+ * When the callback returns null/undefined, then the callback should add the option element.
+ */
+tp.AddOptionList = function (ListControl, List, FirstItem = null, SelectedValue = null, ItemFunc = null) {
+
+    ListControl = tp(ListControl);
+
+    let i, ln, Item, Data;
+
+    ListControl.options.length = 0;
+
+    function AddOption(Text, Value) {
+        let o = ListControl.ownerDocument.createElement('option');
+        o.text = Text;
+        o.value = Value;
+        ListControl.add(o);
+    }
+
+    if (tp.IsValid(FirstItem)) {
+        AddOption(FirstItem.Text, FirstItem.Value);
+    }
+
+    for (i = 0, ln = List.length; i < ln; i++) {
+        Item = List[i];
+        if (tp.IsFunction(ItemFunc)) {
+            Data = tp.Call(ItemFunc, null, Item);
+            if (tp.IsValid(Data))
+                AddOption(Data.Text, Data.Value);
+        }
+        else {
+            AddOption(Item.Text, Item.Value);
+        }
+    }
+
+    if (tp.IsValid(SelectedValue)) {
+        ListControl.value = SelectedValue;
+    }
+};
+
+/**
 Sets multiple mutliple attributes of an element, at once, based on a specified object
 @example
 tp.SetAttributes(el, { id: 'img0', src: 'image.jpg' );   // set multiple attributes at once
