@@ -95,5 +95,7 @@ namespace Tripous.Forms.Standard
         {
             InitializeComponent();
         }
+
+        public override FormType FormMode { get { return FormType.Master; } }
     }
 }
