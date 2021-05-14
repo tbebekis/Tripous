@@ -7,6 +7,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
+using System.Data;
+using System.ComponentModel;
+using System.Reflection;
 
 
 
@@ -240,7 +243,29 @@ namespace Tripous
             }
         }
 
+        /// <summary>
+        /// Converts a generic list to DataTable.
+        /// <para>Property names of the list element type become column names in the DataTable.</para>
+        /// </summary>
+        static public DataTable ToDataTable<T>(this IList<T> SourceList)
+        {
+            PropertyDescriptorCollection PropList = TypeDescriptor.GetProperties(typeof(T));
 
+            DataTable Result = new DataTable();
+            foreach (PropertyDescriptor PropDes in PropList)
+                Result.Columns.Add(PropDes.Name, Nullable.GetUnderlyingType(PropDes.PropertyType) ?? PropDes.PropertyType);
+
+            DataRow Row;
+            foreach (T Item in SourceList)
+            {
+                Row = Result.NewRow();
+                foreach (PropertyDescriptor PropDes in PropList)
+                    Row[PropDes.Name] = PropDes.GetValue(Item) ?? DBNull.Value;
+                Result.Rows.Add(Row);
+            }
+
+            return Result;
+        }
 
     }
 }

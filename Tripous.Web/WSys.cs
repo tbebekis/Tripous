@@ -201,7 +201,8 @@ namespace Tripous.Web
         }
 
         /// <summary>
-        /// Returns a <see cref="FileContentResult"/> for downloading a file or null if the file is not found.
+        /// Returns a <see cref="FileContentResult"/> for downloading a file or null.
+        /// <para>Null is returned when no data is passed (null or length = 0) and the file does not exist.</para>
         /// <para>NOTE: If no binary Data is specified then the function tries to load the binary data from the specified file path. </para>
         /// <para>CAUTION: FilePath is mandatory.</para>
         /// </summary>
@@ -211,7 +212,7 @@ namespace Tripous.Web
 
             if (!string.IsNullOrWhiteSpace(FilePath))
             {
-                if (Data == null)
+                if (Data == null || Data.Length <= 0)
                 { 
                     if (File.Exists(FilePath))
                         Data = File.ReadAllBytes(FilePath);
@@ -231,6 +232,17 @@ namespace Tripous.Web
 
             return Result;
 
+        }
+        /// <summary>
+        /// Returns a <see cref="FileContentResult"/> for downloading a file or null.
+        /// <para>Null is returned when no data is passed (null or length = 0) and the file does not exist.</para>
+        /// <para>NOTE: If no binary Data is specified then the function tries to load the binary data from the specified file path. </para>
+        /// <para>CAUTION: FilePath is mandatory.</para>
+        /// </summary>
+        static public FileContentResult GetFileContentResult(string FilePath, Stream Stream)
+        {
+            byte[] Data = Streams.ToArray(Stream);
+            return GetFileContentResult(FilePath, Data);
         }
 
         /// <summary>
