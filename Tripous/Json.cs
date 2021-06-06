@@ -14,6 +14,7 @@ using Newtonsoft.Json.Linq;
 
 namespace Tripous
 {
+    // BEFORE REPLACING NewtonSoft.Json
 
     /// <summary>
     /// Helper json static class
