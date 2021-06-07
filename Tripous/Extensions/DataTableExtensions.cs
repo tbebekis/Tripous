@@ -9,8 +9,8 @@ using System.Linq;
 using System.Collections.Generic;
 using System.IO;
 
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+//using Newtonsoft.Json;
+//using Newtonsoft.Json.Linq;
 
 namespace Tripous
 {

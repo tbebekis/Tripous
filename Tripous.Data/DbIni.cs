@@ -6,10 +6,7 @@ using System;
 using System.Data;
 using System.Data.Common;
 using System.IO;
-using System.Text;
-
-using Newtonsoft.Json;
- 
+using System.Text; 
 
 
 namespace Tripous.Data
@@ -282,7 +279,7 @@ create table {TableName} (
  
             if (!string.IsNullOrWhiteSpace(JsonText))
             {
-                JsonConvert.PopulateObject(JsonText, Instance);
+                Json.PopulateObject(Instance, JsonText);
                 return true;
             }
 
@@ -294,7 +291,7 @@ create table {TableName} (
         public void WriteInstance(string Entry, object Instance)
         {
             // save to db ini
-            string JsonText = JsonConvert.SerializeObject(Instance);
+            string JsonText = Json.Serialize(Instance);
             byte[] Buffer = Encoding.UTF8.GetBytes(JsonText);
  
             using (MemoryStream MS = new MemoryStream())

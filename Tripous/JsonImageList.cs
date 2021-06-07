@@ -9,19 +9,61 @@ using System.Linq;
 using System.Text;
 using System.Drawing;
 
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-
- 
-
 namespace Tripous
 {
+ 
+    /// <summary>
+    /// For serialization
+    /// </summary>
+    public class JsonImage 
+    {
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public JsonImage()
+        {
+        }
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public JsonImage(Image Image)
+        {
+            Mime = ImageUtls.MimeOf(Image);
+            Width = Image.Width;
+            Height = Image.Height;
+            Data = Sys.ImageToBase64(Image, false);
+        }
+
+
+        /// <summary>
+        /// Mime type
+        /// </summary>
+        public string Mime { get; set; }
+        /// <summary>
+        /// Base64 string
+        /// </summary>
+        public string Data { get; set; }
+        /// <summary>
+        /// Width
+        /// </summary>
+        public int Width { get; set; }
+        /// <summary>
+        /// Height
+        /// </summary>
+        public int Height { get; set; }
+        /// <summary>
+        /// Used when it is an icon
+        /// </summary>
+        public int Size => Width;
+    }
+ 
+
     /// <summary>
     /// A list of images for json serialization
     /// </summary>
     public class JsonImageList
     {
-        JObject list;
+        Dictionary<string, JsonImage> List = new Dictionary<string, JsonImage>();
 
         /* construction */
         /// <summary>
@@ -29,40 +71,25 @@ namespace Tripous
         /// </summary>
         public JsonImageList()
         {
-            list = new JObject();
         }
 
         /* static */
         /// <summary>
-        /// Creates and returns a JObject containing and "Image", that is and image where Width may not equals to Height
+        /// Creates and returns a <see cref="JsonImage"/> containing and "Image", that is and image where Width may not equals to Height
         /// <para>ENTRY FORMAT: {"Mime": "image/png", "Width": 200, "Height": 100, "Data": [Data Url here ] }</para>
         /// </summary>
-        static public JObject CreateImage(string Name, Image Image)
+        static public JsonImage CreateImage(Image Image)
         {
-            JObject JO = new JObject();
-            dynamic jImage = JO;
-
-            jImage.Mime = ImageUtls.MimeOf(Image);
-            jImage.Width = Image.Width;
-            jImage.Height = Image.Height;
-            jImage.Data = Sys.ImageToBase64(Image, false);
-
-            return JO;
+            JsonImage Result = new JsonImage(Image);
+            return Result;
         }
         /// <summary>
-        /// Creates and returns a JObject containing and "Ico", that is an image where Width equals to Height
+        /// Creates and returns a <see cref="JsonImage"/> containing and "Ico", that is an image where Width equals to Height
         /// <para>ENTRY FORMAT: {"Mime": "image/png", "Size": 32, "Data": [Data Url here ] }</para>
         /// </summary>
-        static public JObject CreateIcon(string Name, Image Ico)
+        static public JsonImage CreateIcon(Image Ico)
         {
-            JObject JO = new JObject();
-            dynamic jIco = JO;
-
-            jIco.Mime = ImageUtls.MimeOf(Ico);
-            jIco.Size = Ico.Width;
-            jIco.Data = Sys.ImageToBase64(Ico, false);
-
-            return JO;
+            return CreateImage(Ico);
         }
 
 
@@ -72,9 +99,9 @@ namespace Tripous
         /// <para>ENTRY FORMAT for general image: {"Mime": "image/png", "Width": 200, "Height": 100, "Data": [Data Url here ] }</para>
         /// <para>ENTRY FORMAT for icon: {"Mime": "image/png", "Size": 32, "Data": [Data Url here ] }</para>
         /// </summary>
-        public void Add(string Name, JObject JO)
+        public void Add(string Name, JsonImage Image)
         {
-            list[Name] = JO;
+            List[Name] = Image;
         }
         /// <summary>
         /// Adds and "Image" (that is and image where Width may not equals to Height) to the list under Name
@@ -82,7 +109,7 @@ namespace Tripous
         /// </summary>
         public void AddImage(string Name, Image Image)
         {
-            list[Name] = CreateImage(Name, Image);
+            List[Name] = CreateImage(Image);
         }
         /// <summary>
         /// Adds an "Ico" (that is an image where Width equals to Height) to the list under Name
@@ -90,18 +117,15 @@ namespace Tripous
         /// </summary>
         public void AddIcon(string Name, Image Ico)
         {
-            list[Name] = CreateIcon(Name, Ico);
+            List[Name] = CreateIcon(Ico);
         }
-
-
-
 
         /// <summary>
         /// Returns the json text
         /// </summary>
         public string ToJson()
         {
-            return list.ToString();
+            return Json.Serialize(List);
         }
     }
 }

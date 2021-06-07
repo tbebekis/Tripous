@@ -12,6 +12,8 @@ using System.Xml;
 using System.Reflection;
 using System.Data;
 
+using Newtonsoft.Json;
+
 namespace Tripous.Data
 {
 
@@ -676,7 +678,7 @@ from
         /// <summary>
         /// Gets or sets the SELECT clause.
         /// </summary>
-        [Newtonsoft.Json.JsonIgnore]
+        [JsonIgnore]
         public string Select
         {
             get { return string.IsNullOrEmpty(fSelect) ? string.Empty : fSelect; }
@@ -685,7 +687,7 @@ from
         /// <summary>
         /// Gets or sets the FROM clause.
         /// </summary>
-        [Newtonsoft.Json.JsonIgnore]
+        [JsonIgnore]
         public string From
         {
             get { return string.IsNullOrEmpty(fFrom) ? string.Empty : fFrom; }
@@ -694,7 +696,7 @@ from
         /// <summary>
         /// Gets or sets the WHERE clause.
         /// </summary>
-        [Newtonsoft.Json.JsonIgnore]
+        [JsonIgnore]
         public string Where
         {
             get { return string.IsNullOrEmpty(fWhere) ? string.Empty : fWhere; }
@@ -703,7 +705,7 @@ from
         /// <summary>
         /// Gets or sets the WHERE clause, that part that is considered user where.
         /// </summary>
-        [Newtonsoft.Json.JsonIgnore]
+        [JsonIgnore]
         public string WhereUser
         {
             get { return string.IsNullOrEmpty(fWhereUser) ? string.Empty : fWhereUser; }
@@ -712,7 +714,7 @@ from
         /// <summary>
         /// Gets or sets the GROUP BY clause.
         /// </summary>
-        [Newtonsoft.Json.JsonIgnore]
+        [JsonIgnore]
         public string GroupBy
         {
             get { return string.IsNullOrEmpty(fGroupBy) ? string.Empty : fGroupBy; }
@@ -721,7 +723,7 @@ from
         /// <summary>
         /// Gets or sets the HAVING clause.
         /// </summary>
-        [Newtonsoft.Json.JsonIgnore]
+        [JsonIgnore]
         public string Having
         {
             get { return string.IsNullOrEmpty(fHaving) ? string.Empty : fHaving; }
@@ -730,7 +732,7 @@ from
         /// <summary>
         /// Gets or sets the ORDER BY clause.
         /// </summary>
-        [Newtonsoft.Json.JsonIgnore]
+        [JsonIgnore]
         public string OrderBy
         {
             get { return string.IsNullOrEmpty(fOrderBy) ? string.Empty : fOrderBy; }
@@ -740,7 +742,7 @@ from
         /// <summary>
         /// Returns true if the statement is empty
         /// </summary>
-        [Newtonsoft.Json.JsonIgnore]
+        [JsonIgnore]
         public bool IsEmpty { get { return string.IsNullOrWhiteSpace(Text); } }
         /// <summary>
         /// Gets or sets a value indicating whether this object
@@ -945,33 +947,33 @@ from
         /// <summary>
         /// True if DisplayLabels is not null or empty
         /// </summary>
-        [Newtonsoft.Json.JsonIgnore]
+        [JsonIgnore]
         public bool HasDisplayLabels { get { return !string.IsNullOrWhiteSpace(this.DisplayLabels); } }
         /// <summary>
         /// True if ColumnSettings is NOT null and contains items
         /// </summary>
-        [Newtonsoft.Json.JsonIgnore]
+        [JsonIgnore]
         public bool HasColumnSettings { get { return (fColumnSettings != null) && (fColumnSettings.Count > 0); } }
         /// <summary>
         /// True if CriterionDescriptors is NOT null and contains items
         /// </summary>
-        [Newtonsoft.Json.JsonIgnore]
+        [JsonIgnore]
         public bool HasSqlFilters { get { return (fSqlFilters != null) && (fSqlFilters.Count > 0); } }
 
         /// <summary>
         /// When true then the current user has the right to execute that select
         /// </summary>
-        [Newtonsoft.Json.JsonIgnore]
+        [JsonIgnore]
         public bool IsAccessible { get; set; }
         /// <summary>
         /// The DataTable that results after the select execution
         /// </summary>
-        [Newtonsoft.Json.JsonIgnore]
+        [JsonIgnore]
         public MemTable Table { get; set; }
         /// <summary>
         /// A user defined value.
         /// </summary>
-        [Newtonsoft.Json.JsonIgnore]
+        [JsonIgnore]
         public object Tag { get; set; }
     }
 }

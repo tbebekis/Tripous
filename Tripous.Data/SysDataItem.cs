@@ -7,6 +7,8 @@ using System.Data;
 using System.Data.Common;
 using System.Text;
 using System.IO;
+
+using Newtonsoft.Json;
  
 
 namespace Tripous.Data
@@ -429,7 +431,7 @@ namespace Tripous.Data
         /// <summary>
         /// Gets or "sets" (assigns) the definition stream.
         /// </summary>
-        [Newtonsoft.Json.JsonIgnore]
+        [JsonIgnore]
         public virtual Stream DefStream
         {
             get { return GetDataStream(DEF_STREAM_INDEX); }
@@ -440,7 +442,7 @@ namespace Tripous.Data
         /// <para>WARNING: If RigidDataType is not null or empty then by default the 
         /// DataType property returns that RigidDataType</para>
         /// </summary>
-        [Newtonsoft.Json.JsonIgnore]
+        [JsonIgnore]
         public virtual string RigidDataType { get; protected set; }
 
         /// <summary>

@@ -13,7 +13,7 @@ using System.Threading;
 using System.Globalization;
 using System.Reflection;
 
-using Newtonsoft.Json;
+//using Newtonsoft.Json;
 
 namespace Tripous
 {
@@ -1081,36 +1081,17 @@ namespace Tripous
             if (ReferenceEquals(Source, null))
                 return default(T);
 
-            string JsonText = JsonConvert.SerializeObject(Source);
-            T Dest = (T)Source.GetType().Create();
-            JsonConvert.PopulateObject(JsonText, Dest);
-
-            return Dest;
-
-            /*
-            // see: https://msdn.microsoft.com/en-us/library/system.type.isserializable(v=vs.110).aspx
-            if (!typeof(T).IsSerializable)
-                throw new ArgumentException("The type must be serializable.", "Instance");
-
-            if (ReferenceEquals(Source, null))
-                return default(T);
-
-            var F = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
-            using (var MS = new MemoryStream())
-            {
-                F.Serialize(MS, Source);
-                MS.Seek(0, SeekOrigin.Begin);
-                return (T)F.Deserialize(MS);
-            } 
-            */
+            string JsonText = Json.Serialize(Source);
+            T Dest = Json.Deserialize<T>(JsonText);
+            return Dest; 
         }
         /// <summary>
         /// Assigns a source object properties to a dest object
         /// </summary>
         static public void AssignObject<T, T2>(T Source, T2 Dest)
         {
-            string JsonText = JsonConvert.SerializeObject(Source);
-            JsonConvert.PopulateObject(JsonText, Dest);
+            string JsonText = Json.Serialize(Source);
+            Json.PopulateObject(Dest, JsonText);
         }
 
         /* Culture */

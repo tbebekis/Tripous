@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Threading.Tasks; 
-
+using System.Threading.Tasks;
+ 
 using System.Net;
 using System.Net.Http;
 
@@ -49,7 +49,7 @@ namespace Tripous
         public virtual T Deserialize<T>()
         {
             if (!string.IsNullOrWhiteSpace(ResponseJsonText))
-                return Json.FromJson<T>(ResponseJsonText);
+                return Json.Deserialize<T>(ResponseJsonText);
             return default(T);
         }
 

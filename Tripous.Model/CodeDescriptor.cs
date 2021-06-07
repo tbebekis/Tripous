@@ -276,8 +276,8 @@ namespace Tripous.Model
                 Dyn.Title = v.Title;
                 Dyn.TitleKey = v.TitleKey;
 
-                Dyn.Pivot = Tripous.Json.AsDynamic(Tripous.Json.ToJson(v.Pivot));
-                Dyn.Prefix = Tripous.Json.AsDynamic(Tripous.Json.ToJson(v.Prefix));
+                Dyn.Pivot = Tripous.Json.ToDynamic(Tripous.Json.ToJson(v.Pivot));
+                Dyn.Prefix = Tripous.Json.ToDynamic(Tripous.Json.ToJson(v.Prefix));
 
                 JArray JItems = new JArray();
                 JO.Add("Items", JItems);

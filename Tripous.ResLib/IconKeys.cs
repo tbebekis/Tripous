@@ -121,9 +121,9 @@ namespace Tripous
             return Result;
         }
         /// <summary>
-        /// Creates and returns a JObject containing an Ico 
+        /// Creates and returns a <see cref="JsonImage"/> containing an Ico 
         /// </summary>
-        static public JObject CreateIcon(string Key, string ImageResourcePath)
+        static public JsonImage CreateIcon(string ImageResourcePath)
         {
             Image Ico = Icons32.GetImage(ImageResourcePath);
             if (Ico == null)
@@ -131,7 +131,7 @@ namespace Tripous
                 Ico = DefaultIco;
             }
 
-            return JsonImageList.CreateIcon(Key, Ico);
+            return JsonImageList.CreateIcon(Ico);
         }
 
         /// <summary>
@@ -152,7 +152,7 @@ namespace Tripous
             foreach (string ImageResourcePath in ImageResourcePaths)
             {
                 Key = FindConstantName(ImageResourcePath);
-                List.Add(Key, CreateIcon(Key, ImageResourcePath));
+                List.Add(Key, CreateIcon(ImageResourcePath));
             }
 
             return List; 
@@ -168,7 +168,7 @@ namespace Tripous
             foreach (string Key in Keys)
             {
                 ImageResourcePath = Icons32.GetImageResourcePath(Key);
-                List.Add(Key, CreateIcon(Key, ImageResourcePath));
+                List.Add(Key, CreateIcon(ImageResourcePath));
             }
 
             return List; 

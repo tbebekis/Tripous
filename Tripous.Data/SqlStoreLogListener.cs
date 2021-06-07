@@ -123,7 +123,7 @@ insert into {0} (
                 {
                     SB.AppendLine();
                     SB.AppendLine("Properties");
-                    SB.AppendLine(Newtonsoft.Json.JsonConvert.SerializeObject(Info.Properties));
+                    SB.AppendLine(Json.Serialize(Info.Properties));
                 }
 
                 if (!string.IsNullOrWhiteSpace(Info.ExceptionData))

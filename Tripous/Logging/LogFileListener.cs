@@ -120,7 +120,7 @@ namespace Tripous.Logging
             string Text = Info.Text;
             if (Info.Properties != null && Info.Properties.Count > 0)
             {
-                Text = Text + " Properties = " + Newtonsoft.Json.JsonConvert.SerializeObject(Info.Properties);
+                Text = Text + " Properties = " + Json.Serialize(Info.Properties);
             }
 
             if (!string.IsNullOrWhiteSpace(Text))

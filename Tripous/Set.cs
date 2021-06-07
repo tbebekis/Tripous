@@ -8,9 +8,6 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Linq;
 
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-
 namespace Tripous
 {
     /// <summary>
@@ -244,9 +241,9 @@ namespace Tripous
                         .ToDictionary(enumValue => enumValue.ToString(), enumValue => (int)enumValue);
 
             if (OmitEnumTypeName)
-                return string.Format("{{ {0} }}", Newtonsoft.Json.JsonConvert.SerializeObject(Values));
+                return string.Format("{{ {0} }}", Json.Serialize(Values));
             else
-                return string.Format("{{ \"{0}\" : {1} }}", EnumType.Name, Newtonsoft.Json.JsonConvert.SerializeObject(Values));
+                return string.Format("{{ \"{0}\" : {1} }}", EnumType.Name, Json.Serialize(Values));
 
         }
  

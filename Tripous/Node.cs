@@ -6,7 +6,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-
+using Newtonsoft.Json;
 
 namespace Tripous
 {
@@ -324,7 +324,7 @@ namespace Tripous
         /// <summary>
         /// Gets an object that can be used to synchronize access to this collection
         /// </summary>
-        [Newtonsoft.Json.JsonIgnore]
+        [JsonIgnore]
         public virtual object SyncRoot
         {
             get { return (list as ICollection).SyncRoot; }
@@ -355,12 +355,12 @@ namespace Tripous
         /// <summary>
         /// Indexer
         /// </summary>
-        [Newtonsoft.Json.JsonIgnore]
+        [JsonIgnore]
         public Node this[int Index] { get { return list[Index]; } }
         /// <summary>
         /// Returns the root of the tree this Node may belong to.
         /// </summary>
-        [Newtonsoft.Json.JsonIgnore]
+        [JsonIgnore]
         public Node Root
         {
             get
@@ -384,7 +384,7 @@ namespace Tripous
         /// <summary>
         /// Returns the parent of this Node, if any, else null.
         /// </summary>
-        [Newtonsoft.Json.JsonIgnore]
+        [JsonIgnore]
         public Node Parent { get { return fParent; } }
         /// <summary>
         /// Returns true if this Node has child nodes.
@@ -424,7 +424,7 @@ namespace Tripous
         /// <summary>
         /// Gets or sets the collection this item belongs to.
         /// </summary>
-        [Newtonsoft.Json.JsonIgnore]
+        [JsonIgnore]
         public IList Collection
         {
             get { return fCollection == null ? Parent : fCollection; }

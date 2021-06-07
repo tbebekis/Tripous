@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 
+using Newtonsoft.Json;
 
 namespace Tripous.Data
 {
@@ -66,7 +67,7 @@ namespace Tripous.Data
         /// Returns the DataSet. It may be null. This DataSet is given as the DataSet
         /// to any added Table which has not DataSet defined.
         /// </summary>
-        [Newtonsoft.Json.JsonIgnore]
+        [JsonIgnore]
         public DataSet DataSet { get; protected set; }
     }
 }
