@@ -5,6 +5,7 @@
         <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
         <SuppressNETCoreSdkPreviewMessage>true</SuppressNETCoreSdkPreviewMessage>
         <RootNamespace>Tripous.Data</RootNamespace>
+        <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     </PropertyGroup> 
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

@@ -90,28 +90,34 @@ namespace Tripous.Data
         /// Selects relational properties
         /// </summary>
         protected virtual async Task SelectRelationals(DbConnection Con, DataEntity MasterEntity, EntityDescriptor Descriptor)
-        {
-            
+        {            
             if (Descriptor.Relationals.Count > 0)
             {
-                CheckForCompoundKey(Descriptor);
-
                 string SqlText;
-                object MasterId = Descriptor.GetPrimaryKeyValue(MasterEntity);
 
                 foreach (var Relational in Descriptor.Relationals)
                 {
                     CheckForCompoundKey(Relational.ForeignTableDescriptor);
 
                     var Params = new DynamicParameters();
-                    Params.Add(Relational.ForeignTableDescriptor.PrimaryKeyList[0].FieldName, MasterId);
 
-                    SqlText = Relational.ForeignTableDescriptor.SelectRowSql;
-                    var Result = await Con.QuerySingleOrDefaultAsync(Relational.RelationalProperty.PropertyType, SqlText, Params);
+                    var KeyField = Relational.KeyField;
+                    if (KeyField != null)
+                    {
+                        var KeyValue = KeyField.GetValue(MasterEntity);
 
-                    Trim(Result as DataEntity, Relational.ForeignTableDescriptor);
+                        if (KeyValue != null)
+                        {
+                            Params.Add(Relational.ForeignTableDescriptor.PrimaryKeyList[0].FieldName, KeyValue);
 
-                    Relational.RelationalProperty.SetValue(MasterEntity, Result);
+                            SqlText = Relational.ForeignTableDescriptor.SelectRowSql;
+                            var Result = await Con.QuerySingleOrDefaultAsync(Relational.RelationalProperty.PropertyType, SqlText, Params);
+
+                            Trim(Result as DataEntity, Relational.ForeignTableDescriptor);
+
+                            Relational.RelationalProperty.SetValue(MasterEntity, Result);
+                        }
+                    }
                 }
             }
         }

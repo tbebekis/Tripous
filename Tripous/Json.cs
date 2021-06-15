@@ -158,16 +158,7 @@ namespace Tripous
         {
             string JsonText = ToJson(Instance);
             return JObject.Parse(JsonText);
-        }
-
-        /// <summary>
-        /// Converts an object to JObject
-        /// </summary>
-        static public ExpandoObject ObjectToExpando(object Instance)
-        {
-            string JsonText = Serialize(Instance);
-            return !string.IsNullOrWhiteSpace(JsonText) ? Deserialize<ExpandoObject>(JsonText): null; // JObject.Parse(JsonText);
-        }
+        } 
 
 
         /// <summary>
@@ -206,7 +197,7 @@ namespace Tripous
         /// </summary>
         static public dynamic ToDynamic(string JsonText)
         {
-            return !string.IsNullOrWhiteSpace(JsonText) ? Deserialize<ExpandoObject>(JsonText) : null;
+            return !string.IsNullOrWhiteSpace(JsonText) ? JsonConvert.DeserializeObject(JsonText) as dynamic : null;
         }
 
         /// <summary>

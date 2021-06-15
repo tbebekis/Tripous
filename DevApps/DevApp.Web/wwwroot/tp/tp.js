@@ -6559,6 +6559,12 @@ tp.ScreenMode = {
 };
 Object.freeze(tp.ScreenMode);
 
+tp.ScreenWidthsMax = {
+    XSmall: 576,
+    Small: 992,
+    Medium: 1200
+};
+
 /**
 A static class helper for the viewport size and the screen mode (xsmall, small, medium, large) <br />
 CAUTION: There are two viewports. <br />
@@ -6673,11 +6679,11 @@ tp.Viewport = {
 
     get Mode() {
         var VS = tp.Viewport.GetSize();
-        if (VS.Width <= 576) {
+        if (VS.Width <= tp.ScreenWidthsMax.XSmall) {
             return tp.ScreenMode.XSmall;
-        } else if (VS.Width <= 991) {
+        } else if (VS.Width <= tp.ScreenWidthsMax.Small) {
             return tp.ScreenMode.Small;
-        } else if (VS.Width <= 1200) {
+        } else if (VS.Width <= tp.ScreenWidthsMax.Medium) {
             return tp.ScreenMode.Medium;
         } else {
             return tp.ScreenMode.Large;
