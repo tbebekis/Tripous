@@ -9,6 +9,7 @@ namespace Tripous
     /// </summary>
     public class HttpActionResult
     {
+ 
 
         /* construction */
         /// <summary>
@@ -17,13 +18,38 @@ namespace Tripous
         public HttpActionResult()
         {
         }
+        /*
+                /// <summary>
+                /// Constructor
+                /// </summary>
+                public HttpActionResult(object Packet, bool IsSuccess = true)
+                {
+                    SerializePacket(Packet);
+                    this.IsSuccess = IsSuccess;
+                } 
+         */
+
         /// <summary>
-        /// Constructor
+        /// Creates and returns a result.
+        /// <para>Use this when the caller waits the Packet to be serialized as JSON text.</para>
         /// </summary>
-        public HttpActionResult(object Packet, bool IsSuccess = true)
+        static public HttpActionResult SetPacket(object Packet, bool IsSuccess = true)
         {
-            SerializePacket(Packet);
-            this.IsSuccess = IsSuccess;
+            HttpActionResult Result = new HttpActionResult();
+            Result.SerializePacket(Packet);
+            Result.IsSuccess = IsSuccess;
+            return Result;
+        }
+        /// <summary>
+        /// Creates and returns a result.
+        /// Use this when the caller waits for the Entity to be part of the whole JSON returned.
+        /// </summary>
+        static public HttpActionResult SetEntity(object Entity, bool IsSuccess = true)
+        {
+            HttpActionResult Result = new HttpActionResult();
+            Result.Entity = Entity;
+            Result.IsSuccess = IsSuccess;
+            return Result;
         }
 
         /* public */
@@ -49,6 +75,10 @@ namespace Tripous
         /// A text or json text. This is the actual information returned to the caller.
         /// </summary>
         public string Packet { get; set; }
+        /// <summary>
+        /// An object that is serialized along with this result as a whole.
+        /// </summary>
+        public object Entity { get; set; }
         /// <summary>
         /// Contains error information or is null or empty
         /// </summary>
