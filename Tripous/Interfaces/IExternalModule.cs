@@ -9,9 +9,16 @@ using System.Collections.Generic;
 namespace Tripous
 {
     /// <summary>
+    /// Represents a dynamically loadable (plugin) external module (assembly).
+    /// </summary>
+    public interface IExternalModuleBase
+    {
+    }
+
+    /// <summary>
     /// Represents a plug in external module (assembly), that is loaded dynamically by the application
     /// </summary>
-    public interface IExternalModule
+    public interface IExternalModule: IExternalModuleBase
     {
         /* methods */
         /// <summary>
