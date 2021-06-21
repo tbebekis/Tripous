@@ -497,7 +497,7 @@ namespace Tripous.Data
         /// Returns all the entities from the database table.
         /// <para>CAUTION: Not all Entities support this call.</para>
         /// </summary>
-        public virtual async Task<IList<T>> GetAllAsync()
+        public virtual async Task<List<T>> GetAllAsync()
         {
             List<T> Result = null;
 
@@ -531,7 +531,7 @@ namespace Tripous.Data
         /// Returns all the entities from the database table that are details of another Entity specified by an id.
         /// <para>CAUTION: Not all Entities support this call.</para>
         /// </summary>
-        public virtual async Task<IList<T>> GetByMasterIdAsync(object MasterId)
+        public virtual async Task<List<T>> GetByMasterIdAsync(object MasterId)
         {
             List<T> Result = null;
 
@@ -567,7 +567,7 @@ namespace Tripous.Data
         /// <summary>
         /// Returns all entities from the database table, based on a specified entity filter.
         /// </summary>
-        public virtual async Task<IList<T>> GetByFilterAsync(EntityFilter Filter)
+        public virtual async Task<List<T>> GetByFilterAsync(EntityFilter Filter)
         {
             List<T> Result = null;
 
@@ -820,12 +820,23 @@ namespace Tripous.Data
 
         }
         /// <summary>
+        /// Deletes an entity from the database, based on a specified key
+        /// </summary>
+        public virtual async Task DeleteByIdAsync(object Id)
+        {
+            T Entity = await GetByIdAsync(Id);
+            if (Entity != null)
+            {
+                await DeleteAsync(Entity);
+            }
+        }
+        /// <summary>
         /// Deletes an entity from the database, based on a specified key (which may be a compound one).
         /// <para>NOTE: Nothing happens if the entity is not found.</para>
         /// </summary>
-        public virtual async Task DeleteAsync(params object[] Ids)
+        public virtual async Task DeleteByIdsAsync(params object[] Ids)
         {
-            T Entity = await GetByIdAsync(Ids);
+            T Entity = await GetByIdsAsync(Ids);
             if (Entity != null)
             {
                 await DeleteAsync(Entity);
