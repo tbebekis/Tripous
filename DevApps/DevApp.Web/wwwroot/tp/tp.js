@@ -418,71 +418,68 @@ tp.SuccessNote = function (Message) { tp.Notify(Message, tp.NotificationType.Suc
 /** A static class that informs registered listeners on Information, Warning, Error and Success events. <br />
  * This class does not persist messages to any medium. It just informs its registered listeners.
  */
-tp.Logger = class {
+tp.Logger = {};
+tp.Logger._Propagate = function (v, Type) {
+    if (v) {
+        try {
+            let Text = '';
+            if (Type === tp.NotificationType.Error && (v instanceof Error || v instanceof ErrorEvent || v instanceof PromiseRejectionEvent || v instanceof tp.AjaxArgs))
+                Text = tp.ExceptionText(v);
+            else
+                Text = v.toString();
 
-    static _Propagate(v, Type) {
-        if (v) {
-            try {
-                let Text = '';
-                if (Type === tp.NotificationType.Error && (v instanceof Error || v instanceof ErrorEvent || v instanceof PromiseRejectionEvent || v instanceof tp.AjaxArgs))
-                    Text = tp.ExceptionText(v);
-                else
-                    Text = v.toString();
+            if (this.DisplayNotificationBoxes === true)
+                tp.NotifyFunc(Text, Type);
 
-                if (this.DisplayNotificationBoxes === true)
-                    tp.NotifyFunc(Text, Type);
-
-                let listener;
-                for (var i = 0, ln = this.Listeners.length; i < ln; i++) {
-                    listener = this.Listeners[i];
-                    listener.Func.call(listener.Context, Text, Type);
-                }
-            } catch (e) {
-                //
+            let listener;
+            for (var i = 0, ln = this.Listeners.length; i < ln; i++) {
+                listener = this.Listeners[i];
+                listener.Func.call(listener.Context, Text, Type);
             }
+        } catch (e) {
+            //
         }
-
     }
 
-    /**
+};
+/**
      * Info
      * @param {string} Text The text
      */
-    static Info(Text) {
-        this._Propagate(Text, tp.NotificationType.Information);
-    }
-    /**
-     * Warning
-     * @param {string} Text The text
-     */
-    static Warning(Text) {
-        this._Propagate(Text, tp.NotificationType.Warning);
-    }
-    /**
-    * Error
-    * @param {Error|ErrorEvent|tp.AjaxArgs} ExceptionOrText The error object
-    */
-    static Error(ExceptionOrText) {
-        this._Propagate(ExceptionOrText, tp.NotificationType.Error);
-    }
-    /**
-    * Success
+tp.Logger.Info = function (Text) {
+    this._Propagate(Text, tp.NotificationType.Information);
+};
+/**
+    * Warning
     * @param {string} Text The text
     */
-    static Success(Text) {
-        this._Propagate(Text, tp.NotificationType.Success);
-    }
-
-    /**
-     * Registers a listener to the logger
-     * @param {Function} Func A function as <code>void Func(Text: string, Type: tp.NotificationType) </code>
-     * @param {Object} [Context] Optional. The this context of the function.
-     */
-    static AddListener(Func, Context = null) {
-        var Listener = new tp.Listener(Func, Context);
-        this.Listeners.push(Listener);
-    }
+tp.Logger.Warning = function (Text) {
+    this._Propagate(Text, tp.NotificationType.Warning);
 };
+/**
+* Error
+* @param {Error|ErrorEvent|tp.AjaxArgs} ExceptionOrText The error object
+*/
+tp.Logger.Error = function (ExceptionOrText) {
+    this._Propagate(ExceptionOrText, tp.NotificationType.Error);
+};
+/**
+* Success
+* @param {string} Text The text
+*/
+tp.Logger.Success = function (Text) {
+    this._Propagate(Text, tp.NotificationType.Success);
+};
+/**
+    * Registers a listener to the logger
+    * @param {Function} Func A function as <code>void Func(Text: string, Type: tp.NotificationType) </code>
+    * @param {Object} [Context] Optional. The this context of the function.
+    */
+tp.Logger.AddListener = function (Func, Context = null) {
+    var Listener = new tp.Listener(Func, Context);
+    this.Listeners.push(Listener);
+};
+
 
 /** Field
  * @private
@@ -6622,7 +6619,7 @@ tp.Viewport = {
     CenterInWindow(el) {
         el = tp(el);
         if (tp.IsHTMLElement(el)) {
-           
+
             let R = tp.BoundingRect(el);
             let L = (this.Width / 2) - (R.Width / 2);
             let T = (this.Height / 2) - (R.Height / 2);
@@ -6695,11 +6692,11 @@ tp.Viewport = {
     get IsLarge() { return tp.Viewport.Mode === tp.ScreenMode.Large; },
 
     get Width() {
-        return  window.innerWidth && document.documentElement.clientWidth ?
-                Math.min(window.innerWidth, document.documentElement.clientWidth) :
-                window.innerWidth ||
-                document.documentElement.clientWidth ||
-                document.getElementsByTagName('body')[0].clientWidth;
+        return window.innerWidth && document.documentElement.clientWidth ?
+            Math.min(window.innerWidth, document.documentElement.clientWidth) :
+            window.innerWidth ||
+            document.documentElement.clientWidth ||
+            document.getElementsByTagName('body')[0].clientWidth;
     },
 
     get Height() {
@@ -7583,83 +7580,76 @@ tp.Listener.prototype.Context = null;
  * A full static helper class for the local storage. 
     Data stored in localStorage has no expiration time
  */
-tp.Local = class {
+tp.Local = {};
 
-    constructor() {
-        throw 'Can not create an instance of a full static class';
+/**
+ * Clear the storage
+ */
+tp.Local.Clear = function () {
+    if (typeof Storage !== tp.Undefined) {
+        localStorage.clear();
     }
+};
+/**
+ * Remove an entry from the storage
+ * @param {string} Key A key denoting the entry
+ */
+tp.Local.Remove = function (Key) {
+    if (typeof Storage !== tp.Undefined) {
+        localStorage.removeItem(Key);
+    }
+};
+/**
+ * Get a value under a key from storage, if any, else return a default value.
+ * @param {string} Key A key denoting the entry
+ * @param {string} [Default=null] A default value to return if the specified key is not found.
+ * @returns {string} Returns the value.
+ */
+tp.Local.Get = function (Key, Default = null) {
+    var Result = null;
+    if (typeof Storage !== tp.Undefined) {
+        Result = localStorage.getItem(Key);
+    }
+    if (tp.IsBlank(Result))
+        Result = Default;
+    return Result;
+};
+/**
+ * Set a value under a key in storage
+ * @param {string} Key A key denoting the entry
+ * @param {string} v A value
+ */
+tp.Local.Set = function (Key, v) {
+    if (typeof Storage !== tp.Undefined) {
+        localStorage.setItem(Key, v);
+    }
+};
+/**
+ * Get an object value under a key from storage, if any, else return a default value.
+ * @param {string} Key A key denoting the entry
+ * @param {object} [Default=null] A default value to return if the specified key is not found.
+ * @returns {object} Returns the value.
+ */
+tp.Local.GetObject = function (Key, Default = null) {
 
+    var Result = Default;
 
-    /**
-     * Clear the storage
-     */
-    static Clear() {
-        if (typeof Storage !== tp.Undefined) {
-            localStorage.clear();
-        }
+    var Text = tp.Local.Get(Key, null);
+    if (tp.IsString(Text)) {
+        Result = JSON.parse(Text);
     }
-    /**
-     * Remove an entry from the storage
-     * @param {string} Key A key denoting the entry
-     */
-    static Remove(Key) {
-        if (typeof Storage !== tp.Undefined) {
-            localStorage.removeItem(Key);
-        }
+    return Result;
+};
+/**
+* Set an object value under a key in storage
+* @param {string} Key A key denoting the entry
+* @param {object} v A value
+*/
+tp.Local.SetObject = function (Key, v) {
+    if (!tp.IsEmpty(v)) {
+        var S = JSON.stringify(v);
+        tp.Local.Set(Key, S);
     }
-    /**
-     * Get a value under a key from storage, if any, else return a default value.
-     * @param {string} Key A key denoting the entry
-     * @param {string} [Default=null] A default value to return if the specified key is not found.
-     * @returns {string} Returns the value.
-     */
-    static Get(Key, Default = null) {
-        var Result = null;
-        if (typeof Storage !== tp.Undefined) {
-            Result = localStorage.getItem(Key);
-        }
-        if (tp.IsBlank(Result))
-            Result = Default;
-        return Result;
-    }
-    /**
-     * Set a value under a key in storage
-     * @param {string} Key A key denoting the entry
-     * @param {string} v A value
-     */
-    static Set(Key, v) {
-        if (typeof Storage !== tp.Undefined) {
-            localStorage.setItem(Key, v);
-        }
-    }
-    /**
-     * Get an object value under a key from storage, if any, else return a default value.
-     * @param {string} Key A key denoting the entry
-     * @param {object} [Default=null] A default value to return if the specified key is not found.
-     * @returns {object} Returns the value.
-     */
-    static GetObject(Key, Default = null) {
-
-        var Result = Default;
-
-        var Text = tp.Local.Get(Key, null);
-        if (tp.IsString(Text)) {
-            Result = JSON.parse(Text);
-        }
-        return Result;
-    }
-    /**
-    * Set an object value under a key in storage
-    * @param {string} Key A key denoting the entry
-    * @param {object} v A value
-    */
-    static SetObject(Key, v) {
-        if (!tp.IsEmpty(v)) {
-            var S = JSON.stringify(v);
-            tp.Local.Set(Key, S);
-        }
-    }
-
 };
 //#endregion
 
@@ -7671,84 +7661,79 @@ tp.Local = class {
  * @static
  * @hideconstructor
  */
-tp.Session = class {
+tp.Session = {};
 
-    constructor() {
-        throw 'Can not create an instance of a full static class';
+/**
+ * Clear the storage
+ */
+tp.Session.Clear = function () {
+    if (typeof Storage !== tp.Undefined) {
+        sessionStorage.clear();
     }
-
-
-    /**
-     * Clear the storage
-     */
-    static Clear() {
-        if (typeof Storage !== tp.Undefined) {
-            sessionStorage.clear();
-        }
-    }
-    /**
-     * Remove an entry from the storage
-     * @param {string} Key A key denoting the entry
-     */
-    static Remove(Key) {
-        if (typeof Storage !== tp.Undefined) {
-            sessionStorage.removeItem(Key);
-        }
-    }
-    /**
-     * Get a value under a key from storage, if any, else return a default value.
-     * @param {string} Key A key denoting the entry
-     * @param {string} [Default=null] A default value to return if the specified key is not found.
-     * @returns {string} Returns the value.
-     */
-    static Get(Key, Default = null) {
-        var Result = null;
-        if (typeof Storage !== tp.Undefined) {
-            Result = sessionStorage.getItem(Key);
-        }
-        if (tp.IsBlank(Result))
-            Result = Default;
-        return Result;
-    }
-    /**
-     * Set a value under a key in storage
-     * @param {string} Key A key denoting the entry
-     * @param {string} v A value
-     */
-    static Set(Key, v) {
-        if (typeof Storage !== tp.Undefined) {
-            sessionStorage.setItem(Key, v);
-        }
-    }
-    /**
-     * Get an object value under a key from storage, if any, else return a default value.
-     * @param {string} Key A key denoting the entry
-     * @param {object} [Default=null] A default value to return if the specified key is not found.
-     * @returns {object} Returns the value.
-     */
-    static GetObject(Key, Default = null) {
-
-        var Result = Default;
-
-        var Text = tp.Session.Get(Key, null);
-        if (tp.IsString(Text)) {
-            Result = JSON.parse(Text);
-        }
-        return Result;
-    }
-    /**
-    * Set an object value under a key in storage
-    * @param {string} Key A key denoting the entry
-    * @param {object} v A value
-    */
-    static SetObject(Key, v) {
-        if (!tp.IsEmpty(v)) {
-            var S = JSON.stringify(v);
-            tp.Session.Set(Key, S);
-        }
-    }
-
 };
+/**
+ * Remove an entry from the storage
+ * @param {string} Key A key denoting the entry
+ */
+tp.Session.Remove = function (Key) {
+    if (typeof Storage !== tp.Undefined) {
+        sessionStorage.removeItem(Key);
+    }
+};
+/**
+ * Get a value under a key from storage, if any, else return a default value.
+ * @param {string} Key A key denoting the entry
+ * @param {string} [Default=null] A default value to return if the specified key is not found.
+ * @returns {string} Returns the value.
+ */
+tp.Session.Get = function (Key, Default = null) {
+    var Result = null;
+    if (typeof Storage !== tp.Undefined) {
+        Result = sessionStorage.getItem(Key);
+    }
+    if (tp.IsBlank(Result))
+        Result = Default;
+    return Result;
+};
+/**
+ * Set a value under a key in storage
+ * @param {string} Key A key denoting the entry
+ * @param {string} v A value
+ */
+tp.Session.Set = function (Key, v) {
+    if (typeof Storage !== tp.Undefined) {
+        sessionStorage.setItem(Key, v);
+    }
+};
+/**
+ * Get an object value under a key from storage, if any, else return a default value.
+ * @param {string} Key A key denoting the entry
+ * @param {object} [Default=null] A default value to return if the specified key is not found.
+ * @returns {object} Returns the value.
+ */
+tp.Session.GetObject = function (Key, Default = null) {
+
+    var Result = Default;
+
+    var Text = tp.Session.Get(Key, null);
+    if (tp.IsString(Text)) {
+        Result = JSON.parse(Text);
+    }
+    return Result;
+};
+/**
+* Set an object value under a key in storage
+* @param {string} Key A key denoting the entry
+* @param {object} v A value
+*/
+tp.Session.SetObject = function (Key, v) {
+    if (!tp.IsEmpty(v)) {
+        var S = JSON.stringify(v);
+        tp.Session.Set(Key, S);
+    }
+};
+
+
 //#endregion
 
 //#region  tp.Point
@@ -7838,17 +7823,19 @@ tp.Point = class {
      *  @return {string} Returns a string representation of this instance 
      * */
     toString() { return tp.Format("x={0}, y={1}", this.X, this.Y); }
-    /** Returns true if a point is contained by a rectangle
-     * @param {tp.Point} P - The point to test
-     * @param {tp.Rect} R - The rectangle to check
-     * @returns {boolean} Returns true if a point is contained by a rectangle
-     */
-    static PointInRect(P, R) {
-        return P.X >= R.X &&
-            P.X <= R.X + R.Width &&
-            P.Y >= R.Y &&
-            P.Y <= R.Y + R.Height;
-    }
+
+
+};
+/** Returns true if a point is contained by a rectangle
+ * @param {tp.Point} P - The point to test
+ * @param {tp.Rect} R - The rectangle to check
+ * @returns {boolean} Returns true if a point is contained by a rectangle
+ */
+tp.Point.PointInRect = function (P, R) {
+    return P.X >= R.X &&
+        P.X <= R.X + R.Width &&
+        P.Y >= R.Y &&
+        P.Y <= R.Y + R.Height;
 };
 //#endregion
 
@@ -7892,26 +7879,6 @@ tp.Rect = class {
 
 
     /* public */
-    /**
-     Creates and returns a tp.Rect based on the bounding client rectangle of a specified element or based on a specified DOM ClientRect.
-     The specified argument could be either a DOM ClientRect instance or a HTMLElement instance.
-     @param {ClientRect|Element} ElementOrClientRect HTMLElement or DOM ClientRect
-     @returns {tp.Rect} Returns a tp.Rect based on the specified argument.
-     */
-    static FromClientRect(ElementOrClientRect) {
-        if (ElementOrClientRect instanceof HTMLElement) {
-            let R = ElementOrClientRect.getBoundingClientRect();
-            return new tp.Rect(R.left, R.top, R.width, R.height);
-        }
-
-        if (tp.ImplementsInterface(ElementOrClientRect, ['left', 'top', 'width', 'height'])) {
-            return new tp.Rect(ElementOrClientRect.left, ElementOrClientRect.top, ElementOrClientRect.width, ElementOrClientRect.height);
-        }
-
-        return new tp.Rect();
-    }
-
-
     /**
      * Clears this instance
      */
@@ -8132,6 +8099,24 @@ tp.Rect = class {
     @returns {string} Returns a string representation of this instance
     */
     toString() { return tp.Format("x={0}, y={1}, width={2}, height={3}", this.X, this.Y, this.Width, this.Height); }
+};
+/**
+ Creates and returns a tp.Rect based on the bounding client rectangle of a specified element or based on a specified DOM ClientRect.
+ The specified argument could be either a DOM ClientRect instance or a HTMLElement instance.
+ @param {ClientRect|Element} ElementOrClientRect HTMLElement or DOM ClientRect
+ @returns {tp.Rect} Returns a tp.Rect based on the specified argument.
+ */
+tp.Rect.FromClientRect = function (ElementOrClientRect) {
+    if (ElementOrClientRect instanceof HTMLElement) {
+        let R = ElementOrClientRect.getBoundingClientRect();
+        return new tp.Rect(R.left, R.top, R.width, R.height);
+    }
+
+    if (tp.ImplementsInterface(ElementOrClientRect, ['left', 'top', 'width', 'height'])) {
+        return new tp.Rect(ElementOrClientRect.left, ElementOrClientRect.top, ElementOrClientRect.width, ElementOrClientRect.height);
+    }
+
+    return new tp.Rect();
 };
 //#endregion
 
@@ -8720,31 +8705,25 @@ tp.Debug.Log = function (o) {
 /**
  * A static helper class for displaying debug messages to a div with id='LogDiv'.
  */
-tp.Log = class {
-
-    constructor() {
-        throw 'Can not create an instance of a full static class';
-    }
-
-    /** Clears the log div */
-    static Clear() {
-        tp.LogDiv.innerHTML = '';
-    };
-    /**
-     Appends a text line to the log div
-     @param {string} Text The text line to append
-     */
-    static Line(Text) {
-        var S = tp.LogDiv.innerHTML ? tp.LogDiv.innerHTML : '';
-        tp.LogDiv.innerHTML = S + Text + '<br />';
-    };
-    /**
-     Replaces the content of the log div with a specified text
-     @param {string} Text The text
-     */
-    static Text(Text) {
-        tp.LogDiv.innerHTML = Text;
-    };
+tp.Log = {};
+/** Clears the log div */
+tp.Log.Clear = function () {
+    tp.LogDiv.innerHTML = '';
+};
+/**
+ Appends a text line to the log div
+ @param {string} Text The text line to append
+ */
+tp.Log.Line = function (Text) {
+    var S = tp.LogDiv.innerHTML ? tp.LogDiv.innerHTML : '';
+    tp.LogDiv.innerHTML = S + Text + '<br />';
+};
+/**
+ Replaces the content of the log div with a specified text
+ @param {string} Text The text
+ */
+tp.Log.Text = function (Text) {
+    tp.LogDiv.innerHTML = Text;
 };
 
 //#endregion
@@ -9624,23 +9603,27 @@ tp.Descriptor = class extends tp.NamedItem {
         this.TitleKey = Source.TitleKey;
         this.Alias = Source.Alias;
     }
-    /**
-    Finds and returns a descriptor in a list, by its Alias
-    @param {string} Alias The alias to search for.
-    @param {any[]} List The list to search in.
-    @returns {tp.Descriptor} Returns the found object, if any, else null.
-    */
-    static FindByAlias(Alias, List) {
-        for (var i = 0, ln = List.length; i < ln; i++) {
-            if (tp.IsSameText(Alias, List[i].Alias))
-                return List[i];
-        }
-        return null;
-    }
+
 };
+
 tp.Descriptor.prototype.fAlias = '';
 tp.Descriptor.prototype.fTitle = '';
 tp.Descriptor.prototype.fTitleKey = '';
+
+/**
+Finds and returns a descriptor in a list, by its Alias
+@param {string} Alias The alias to search for.
+@param {any[]} List The list to search in.
+@returns {tp.Descriptor} Returns the found object, if any, else null.
+*/
+tp.Descriptor.FindByAlias = function (Alias, List) {
+    for (var i = 0, ln = List.length; i < ln; i++) {
+        if (tp.IsSameText(Alias, List[i].Alias))
+            return List[i];
+    }
+    return null;
+};
+
 //#endregion
 
 //#region tp.Dictionary
@@ -9818,7 +9801,6 @@ tp.NameValueStringList = class {
 
 
     /* public */
-
     /**
     Clears the content of this instance
     */
@@ -12994,35 +12976,7 @@ tp.tpElement = class extends tp.tpObject {
     */
     AddSpan() { return this.AddControl('span'); }
 
-    /**
-    Creates, sets-up and returns a textarea tp.tpElement
-    @param {HTMLElement|tp.tpElement} [Parent=null] - Optional.
-    @returns {tp.tpElement} Returns a tp.tpElement.
-    */
-    static CreateMemo(Parent = null) {
-        let CP = new tp.CreateParams();
-        CP.Parent = Parent;
-        CP.CssClasses = 'tp-Memo';
 
-        let Result = new tp.tpElement('textarea', CP);
-
-        Result.SetAttributes({
-            cols: 10,
-            rows: 5
-        });
-        Result.SetStyle({
-            width: 'calc(100% - 6px)',
-            height: 'calc(100% - 6px)',
-            fontFamily: 'monospace',
-            'white-space': 'pre',
-            'overflow': 'auto',
-            'border': 'none',
-            'outline': 'none',
-            'resize': 'none'
-        });
-
-        return Result;
-    }
 
     /**
     Attaches this element as a direct child to document.body
@@ -13095,6 +13049,37 @@ tp.tpElement.StandardNodeTypes = [
     'progress',
     'video'
 ];
+
+
+/**
+Creates, sets-up and returns a textarea tp.tpElement
+@param {HTMLElement|tp.tpElement} [Parent=null] - Optional.
+@returns {tp.tpElement} Returns a tp.tpElement.
+*/
+tp.tpElement.CreateMemo = function (Parent = null) {
+    let CP = new tp.CreateParams();
+    CP.Parent = Parent;
+    CP.CssClasses = 'tp-Memo';
+
+    let Result = new tp.tpElement('textarea', CP);
+
+    Result.SetAttributes({
+        cols: 10,
+        rows: 5
+    });
+    Result.SetStyle({
+        width: 'calc(100% - 6px)',
+        height: 'calc(100% - 6px)',
+        fontFamily: 'monospace',
+        'white-space': 'pre',
+        'overflow': 'auto',
+        'border': 'none',
+        'outline': 'none',
+        'resize': 'none'
+    });
+
+    return Result;
+};
 
 
 // tp.tpElement association ---------------------------------------------------------------
@@ -15012,53 +14997,54 @@ tp.ContentWindow = class extends tp.tpWindow {
         }
     }
 
-    /* static */
-    /**
-    Displays a content window, either as modal or as non-modal.
-    @static
-    @param {boolean} Modal Flag
-    @param {string} Text - The caption title of the window.
-    @param {string|HTMLElement} Content - Element or selector with html content.
-    @param {function} [CloseFunc=null] - Optional. Called when the window closes. A function as <code>function (Args: tp.WindowArgs): void</code>.
-    @param {object} [Creator=null] - Optional. The context (this) for the callback function.
-    @returns {tp.ContentWindow} Returns the <code>tp.ContentWindow</code> dialog box
-    */
-    static Show(Modal, Text, Content, CloseFunc = null, Creator = null) {
-        var Args = new tp.WindowArgs();
-        Args.Creator = Creator;
-        Args.CloseFunc = CloseFunc;
-        Args.Text = Text;
-        Args.Width = 800;
-        Args.Height = 600;
-        Args.ShowFooter = Modal;
-        Args.Content = Content;
 
-        Args.AsModal = Modal;
-        Args.DefaultDialogResult = tp.DialogResult.Cancel;
 
-        var Result = new tp.ContentWindow(Args);
-        if (Modal)
-            Result.ShowModal();
-        else
-            Result.Show();
-        return Result;
-    }
-    /**
-    Displays a content window, either as modal or as non-modal, and returns a Promise.
-    @static
-    @param {boolean} Modal Flag
-    @param {string} Text - The caption title of the window
-    @param {string|HTMLElement} Content - Element or selector with html content
-    @returns {Promise} Returns a Promise with the modal window Args (<code>tp.WindowArgs</code>)
-    */
-    static ShowPromise(Modal, Text, Content) {
-        return new Promise((Resolve, Reject) => {
-            tp.ContentWindow.Show(Modal, Text, Content, (Args) => {
-                Resolve(Args);
-            });
+};
+/* static */
+/**
+Displays a content window, either as modal or as non-modal.
+@static
+@param {boolean} Modal Flag
+@param {string} Text - The caption title of the window.
+@param {string|HTMLElement} Content - Element or selector with html content.
+@param {function} [CloseFunc=null] - Optional. Called when the window closes. A function as <code>function (Args: tp.WindowArgs): void</code>.
+@param {object} [Creator=null] - Optional. The context (this) for the callback function.
+@returns {tp.ContentWindow} Returns the <code>tp.ContentWindow</code> dialog box
+*/
+tp.ContentWindow.Show = function (Modal, Text, Content, CloseFunc = null, Creator = null) {
+    var Args = new tp.WindowArgs();
+    Args.Creator = Creator;
+    Args.CloseFunc = CloseFunc;
+    Args.Text = Text;
+    Args.Width = 800;
+    Args.Height = 600;
+    Args.ShowFooter = Modal;
+    Args.Content = Content;
+
+    Args.AsModal = Modal;
+    Args.DefaultDialogResult = tp.DialogResult.Cancel;
+
+    var Result = new tp.ContentWindow(Args);
+    if (Modal)
+        Result.ShowModal();
+    else
+        Result.Show();
+    return Result;
+};
+/**
+Displays a content window, either as modal or as non-modal, and returns a Promise.
+@static
+@param {boolean} Modal Flag
+@param {string} Text - The caption title of the window
+@param {string|HTMLElement} Content - Element or selector with html content
+@returns {Promise} Returns a Promise with the modal window Args (<code>tp.WindowArgs</code>)
+*/
+tp.ContentWindow.ShowPromise = function (Modal, Text, Content) {
+    return new Promise((Resolve, Reject) => {
+        tp.ContentWindow.Show(Modal, Text, Content, (Args) => {
+            Resolve(Args);
         });
-    }
-
+    });
 };
 //#endregion
 
@@ -15150,35 +15136,37 @@ padding: 4px;
         this.edtMemo.Focus();
     }
 
-    /* static */
-    /**
-     * Shows the dialog modally.
-     * @param {string} MessageText The text to display
-     * @param {string} BoxType The "type" of the dialog, i.e. Information, Error and Question.
-     * @param {function} [CloseFunc=null] Optional. A callback function as function(Args: tp.WindowArgs): void to be called when the dialog closes.
-     * @param {object} [Creator=null] Optional. A context (this) to be used when calling the callback function.
-     * @returns {tp.MessageDialog} Returns the tp.MessageDialog dialog instance.
-     */
-    static Show(MessageText, BoxType, CloseFunc = null, Creator = null) {
-        let Args = new tp.WindowArgs();
-        Args.Width = 500;
-        Args.Height = 300;
-        Args.CloseFunc = CloseFunc;
-        Args.Creator = Creator;
-        Args.BoxType = BoxType;
-        Args.MessageText = MessageText;
-        //Args.fModal = true;
 
-        var Result = new tp.MessageDialog(Args);
-        Result.ShowModal();
-        return Result;
-    }
 
 };
 
 tp.MessageDialog.prototype.BoxType = '';
 tp.MessageDialog.prototype.MessageText = '';
 tp.MessageDialog.prototype.edtMemo = null;      // tp.tpElement
+
+/* static */
+/**
+ * Shows the dialog modally.
+ * @param {string} MessageText The text to display
+ * @param {string} BoxType The "type" of the dialog, i.e. Information, Error and Question.
+ * @param {function} [CloseFunc=null] Optional. A callback function as function(Args: tp.WindowArgs): void to be called when the dialog closes.
+ * @param {object} [Creator=null] Optional. A context (this) to be used when calling the callback function.
+ * @returns {tp.MessageDialog} Returns the tp.MessageDialog dialog instance.
+ */
+tp.MessageDialog.Show = function (MessageText, BoxType, CloseFunc = null, Creator = null) {
+    let Args = new tp.WindowArgs();
+    Args.Width = 500;
+    Args.Height = 300;
+    Args.CloseFunc = CloseFunc;
+    Args.Creator = Creator;
+    Args.BoxType = BoxType;
+    Args.MessageText = MessageText;
+    //Args.fModal = true;
+
+    var Result = new tp.MessageDialog(Args);
+    Result.ShowModal();
+    return Result;
+};
 //#endregion
 
 //#region  Dialog boxes
@@ -15852,26 +15840,26 @@ tp.Language.prototype.fItems = null; // tp.Dictionary = null;
 A static helper class with a list of languages (Language), where each language is a list of string resources of that certain language
 @static
 */
-tp.Languages = class {
+tp.Languages = {
 
     /**
     Finds and returns a {@link tp.Language} language by its code, if any, else null
     @param {string} Code - The two letter code of the language, e.g en, el, it, fr, etc.
     @returns {tp.Language} Returns a {@link tp.Language} language
     */
-    static Find(Code) {
+    Find: function (Code) {
         return tp.FirstOrDefault(tp.Languages.Items, function (item) {
             return tp.IsSameText(Code, item.Code);
         });
-    }
+    },
     /**
     Returns true if a {@link tp.Language} language exists, by its code
     @param {string} Code - The code of the language. The two letter code of the language, e.g en, el, it, fr, etc.
     @returns {boolean} Returns true if a {@link tp.Language}  language exists, by its code
     */
-    static Exists(Code) {
+    Exists: function (Code) {
         return tp.Languages.Find(Code) !== null;
-    }
+    },
     /**
     Adds and returns a new {@link tp.Language} language.
    
@@ -15880,16 +15868,16 @@ tp.Languages = class {
     @param {string} CultureCode - The culture code associated to this language, e.g.  e.g en-US, el-GR, etc.
     @returns {tp.Language} Returns a new {@link tp.Language} language.
     */
-    static Add(Name, Code, CultureCode) {
+    Add: function (Name, Code, CultureCode) {
         var Result = tp.Languages.Find(Code);
         if (tp.IsEmpty(Result)) {
             Result = new tp.Language(Name, Code, CultureCode);
             tp.Languages.Items.push(Result);
         }
         return Result;
-    }
+    },
 
-    static get Current() {
+    get Current() {
         if (this.fCurrent instanceof tp.Language)
             return this.fCurrent;
 
@@ -15897,8 +15885,8 @@ tp.Languages = class {
             return this.Items[0];
 
         return null;
-    }
-    static set Current(v) {
+    },
+    set Current(v) {
         if (v instanceof tp.Language && v !== tp.Languages.fCurrent) {
             tp.Languages.fCurrent = v;
 
@@ -15911,30 +15899,33 @@ tp.Languages = class {
                 });
             }
         }
-    }
+    },
+    /**
+    The list of resource languages.
+    @private
+    @type {tp.Language[]}
+    */
+    Items: [], // tp.Language[];
+
+    /** 
+    The current language.
+    @type {tp.Language}
+    */
+    fCurrent: null,
+    /** 
+    The english language.
+    @type {tp.Language}
+    */
+    En: null,
+    /** 
+    The greek language.
+    @type {tp.Language}
+    */
+    Gr: null
 };
 
-/**
-The list of resource languages.
-@private
-@type {tp.Language[]}
-*/
-tp.Languages.Items = []; // tp.Language[];
-/** 
-The current language.
-@type {tp.Language}
-*/
-tp.Languages.fCurrent;
-/** 
-The english language.
-@type {tp.Language}
-*/
-tp.Languages.En;
-/** 
-The greek language.
-@type {tp.Language}
-*/
-tp.Languages.Gr;
+
+
 
 //#endregion
 
@@ -15943,7 +15934,7 @@ tp.Languages.Gr;
 A static class for getting back string resources
 @static
 */
-tp.Res = class {
+tp.Res = {
 
     // TODO: /App/StringResourceList
 
@@ -15958,7 +15949,7 @@ tp.Res = class {
     @param {Object} [Context] - Optional. The context (this) to be used when calling the callback function
     @param {any} [UserTag] - Optional. A user defined value
      */
-    static GS(Key, ResultFunc, Default = '', Context = null, UserTag = null) {
+    GS: function (Key, ResultFunc, Default = '', Context = null, UserTag = null) {
         // GS = GetString.
         if (tp.IsString(Key) && tp.IsFunction(ResultFunc)) {
             UserTag = UserTag || Key;
@@ -15976,7 +15967,7 @@ tp.Res = class {
                 ResultFunc.call(Context, Default, UserTag);
             }
         }
-    }
+    },
     /**
      Finds a string resource, for the current language, by a key. The string resource is passed back to the caller by calling a callback function.
      In case of failure a specified default string is passed back. <br />
@@ -15988,7 +15979,7 @@ tp.Res = class {
     @param {Object} [Context] - Optional. The context (this) to be used when calling the callback function
     @param {any} [UserTag] - Optional. A user defined value
      */
-    static GetString(Key, ResultFunc, Default = '', Context = null, UserTag = null) {
+    GetString: function (Key, ResultFunc, Default = '', Context = null, UserTag = null) {
         tp.Res.GS(Key, ResultFunc, Default, Context, UserTag);
     }
 };
@@ -16118,39 +16109,38 @@ tp.Culture.prototype.CurrencyDecimals = 0;
 A static helper class with a list of cultures ({@link tp.Culture}) 
 @static
 */
-tp.Cultures = class {
-
+tp.Cultures = {
     /**
      * Finds and returns a {@link tp.Culture} by a specified culture code, i.e. en-US, if any, else null.
      * @param {string} Code The culture code, i.e. en-US
      * @returns {tp.Culture} Returns a {@link tp.Culture}, if any, else null.
      */
-    static Find(Code) {
+    Find: function (Code) {
         return tp.FirstOrDefault(this.Items, function (item) {
             return tp.IsSameText(Code, item.Code);
         });
-    }
+    },
     /**
      * Adds a {@link tp.Culture} instance in the internal cultures list.
      * @param {tp.Culture} Culture The {tp.Culture} to add.
      */
-    static Add(Culture) {
+    Add: function (Culture) {
         if (Culture instanceof tp.Culture && !this.Find(Culture.Code)) {
             this.Items.push(Culture);
         }
-    }
+    },
     /**
      * Sorts the culture list by a specified property.
      * @param {string} [PropName='Code'] Optional. Defaults to 'Code'. The property name to use in sorting the culture list.
      */
-    static Sort(PropName = 'Code') {
+    Sort: function (PropName = 'Code') {
         tp.ListSort(Items, [{ Prop: PropName, Reverse: false }]);
-    }
+    },
 
     /** Gets or sets the current {@link tp.Culture} culture.
      * @type {tp.Culture}
      */
-    static get Current() {
+    get Current() {
         if (this.fCurrent instanceof tp.Culture)
             return this.fCurrent;
 
@@ -16158,15 +16148,19 @@ tp.Cultures = class {
             return this.Items[0];
 
         return null;
-    }
-    static set Current(v) {
+    },
+    set Current(v) {
         if (v instanceof tp.Culture && v !== this.fCurrent) {
             this.fCurrent = v;
         }
-    }
+    },
+
+    fCurrent: null,
+    Items: []
+
 };
 
-tp.Cultures.Items = [];
+
 
 //#endregion
 
