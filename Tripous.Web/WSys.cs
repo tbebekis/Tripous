@@ -155,24 +155,51 @@ namespace Tripous.Web
         /// </summary>
         static public string GetQueryValue(string Key, string Default = "")
         {
-            IQueryCollection QS = Query;
-            return QS != null && QS.ContainsKey(Key) ? QS[Key].ToString() : Default;
+            
+            try
+            {
+                IQueryCollection QS = Query;
+                return QS != null && QS.ContainsKey(Key) ? QS[Key].ToString() : Default;
+            }
+            catch 
+            {
+            }
+
+            return Default;
+            
         }
         /// <summary>
         /// Returns a value from query string, if any, else returns a default value.
         /// </summary>
         static public int GetQueryValue(string Key, int Default = 0)
         {
-            string S = GetQueryValue(Key, "");
-            return !string.IsNullOrWhiteSpace(S) ? Convert.ToInt32(S) : Default;
+            try
+            {
+                string S = GetQueryValue(Key, "");
+                return !string.IsNullOrWhiteSpace(S) ? Convert.ToInt32(S) : Default;
+            }
+            catch
+            {
+            }
+
+            return Default;
         }
         /// <summary>
         /// Returns a value from query string, if any, else returns a default value.
         /// </summary>
         static public bool GetQueryValue(string Key, bool Default = false)
         {
-            string S = GetQueryValue(Key, "");
-            return !string.IsNullOrWhiteSpace(S) ? Convert.ToBoolean(S) : Default;
+            try
+            {
+                string S = GetQueryValue(Key, "");
+                return !string.IsNullOrWhiteSpace(S) ? Convert.ToBoolean(S) : Default;
+            }
+            catch
+            {
+            }
+
+            return Default;
+
         }
 
         /// <summary>
@@ -181,10 +208,16 @@ namespace Tripous.Web
         /// </summary>
         static public string[] GetQueryValueArray(string Key)
         {
-            if (HttpContext != null)
+            try
             {
-                if (HttpContext.Request.Query.ContainsKey(Key))
-                    return HttpContext.Request.Query[Key].ToArray();
+                if (HttpContext != null)
+                {
+                    if (HttpContext.Request.Query.ContainsKey(Key))
+                        return HttpContext.Request.Query[Key].ToArray();
+                }
+            }
+            catch  
+            {
             }
 
             return new string[0];
