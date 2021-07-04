@@ -16474,6 +16474,15 @@ tp.AddLanguagesFunc = null;
 
         if (tp.IsString(CultureCode)) {
 
+            if (tp.IsBlank(CultureCode))
+                CultureCode = 'en-US';
+
+            if (CultureCode.length == 2) {
+                let o = tp.FirstOrDefault(tp.Cultures.Items, (item) => { return item.Code.startsWith(CultureCode) });
+                if (o)
+                    CultureCode = o.Code;
+            }
+
             if (CultureCode.length < 5 || CultureCode[2] !== '-')
                 tp.Throw(`Invalid culture code: ${CultureCode} \nPlease define a Culture in the html lang attribute. Example lang="en-US"`);
 
