@@ -43,15 +43,21 @@ namespace Tripous
 
         /* public */
         /// <summary>
-        /// Loads string resources from a specified source
+        /// Clears the internal resource list
+        /// </summary>
+        public void Clear()
+        {
+            Items.Clear();
+        }        
+        /// <summary>
+        /// Clears the internal list and loads string resources from a specified source
         /// </summary>
         public void LoadFrom(Dictionary<string, string> Source)
         {
+            Items.Clear();
             foreach (var Entry in Source)
                 Items.Add(new ResourceItem(Entry.Key, Entry.Value));
         }
-
-
         /// <summary>
         /// Returns a resource string based on a key, if any, or null. 
         /// <para>If key is not found, it may return the key as the result.</para>
@@ -64,6 +70,10 @@ namespace Tripous
             return Item != null ? Item.Value : (DefaultToKey ? Key : null);
         }
 
-
+        /* properties */
+        /// <summary>
+        /// True when the internal resource list is empty
+        /// </summary>
+        public bool IsEmpty { get { return Items.Count == 0; } }
     }
 }
