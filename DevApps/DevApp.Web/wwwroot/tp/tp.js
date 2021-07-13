@@ -10128,11 +10128,11 @@ tp.AjaxArgs = class {
         this.UriEncodeData = true;
         this.Timeout = 0;
         this.ContentType = 'application/x-www-form-urlencoded; charset=UTF-8';
-        this.Context = null;                    // context for calling the two callbacks
-        this.AntiForgeryToken = '';             // used when POST-ing an html form in Microsoft MVC framework
-        this.OnSuccess = null;                  // function(Args: tp.AjaxArgs)
-        this.OnFailure = null;                  // function(Args: tp.AjaxArgs)
-        this.OnRequestHeaders = null;           // function(Args: tp.AjaxArgs)
+        this.Context = null;                                                    // context for calling the two callbacks
+        this.AntiForgeryToken = '';                                             // used when POST-ing an html form in Microsoft MVC framework
+        this.OnSuccess = null;                                                  // function(Args: tp.AjaxArgs)
+        this.OnFailure = null;                                                  // function(Args: tp.AjaxArgs)
+        this.OnRequestHeaders = tp.AjaxOnRequestHeadersDefaultHandler;          // function(Args: tp.AjaxArgs)
         this.ResponseHandlerFunc = tp.AjaxResponseDefaultHandler;
 
         this.XHR = null;                        // XMLHttpRequest
@@ -10322,6 +10322,13 @@ tp.AjaxResponseDefaultHandler = function (Args) {
     }
 };
 
+/**
+ * The default handler for the OnRequestHeaders event. <br />
+ * Does nothing
+ * @param {any} Args
+ */
+tp.AjaxOnRequestHeadersDefaultHandler = function (Args) {
+};
 //#region Ajax
 
 /**

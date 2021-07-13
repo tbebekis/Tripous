@@ -495,7 +495,40 @@ namespace Tripous.Web
 
             return R != null ? R.Headers["X-Requested-With"] == "XMLHttpRequest" : false;
         }
+        /// <summary>
+        /// Returns true if we are dealing with a mobile device/browser
+        /// <para>FROM: https://stackoverflow.com/questions/13086856/mobile-device-detection-in-asp-net </para>
+        /// </summary>
+        static public bool IsMobile(HttpRequest R = null)
+        {
+            if (R == null && WSys.IsRequestAvailable)
+                R = WSys.HttpRequest;
 
+            if (R != null)
+            {
+                string S = R.Headers[Microsoft.Net.Http.Headers.HeaderNames.UserAgent].ToString();
+                return S.Length >= 4 && (MobileCheck.IsMatch(S) || MobileVersionCheck.IsMatch(S.Substring(0, 4)));
+            }
+
+            return false;
+        }
+        /// <summary>
+        /// Returns true if we are dealing with a search endine bot.
+        /// <para>FROM: https://stackoverflow.com/questions/7576508/how-to-detect-crawlers-in-asp-net-mvc  </para>
+        /// </summary>
+        static public bool IsCrawler(HttpRequest R = null)
+        {
+            if (R == null && WSys.IsRequestAvailable)
+                R = WSys.HttpRequest;
+
+            if (R != null)
+            {
+                string S = R.Headers[Microsoft.Net.Http.Headers.HeaderNames.UserAgent].ToString();
+                return S.Length >= 4 && CrawlerCheck.IsMatch(S);
+            }
+
+            return false;
+        }
 
 
         /* properties */
@@ -511,7 +544,7 @@ namespace Tripous.Web
                 {
                     string Scheme = HttpContext.Request.Scheme;
                     string Host = HttpContext.Request.Host.Host;
-                    string Port = HttpContext.Request.Host.Port != 80 && HttpContext.Request.Host.Port != 443 ? $":{HttpContext.Request.Host.Port}" : "";
+                    string Port = HttpContext.Request.Host.Port.HasValue && HttpContext.Request.Host.Port != 80 && HttpContext.Request.Host.Port != 443 ? $":{HttpContext.Request.Host.Port}" : "";
 
                     return $"{Scheme}://{Host}{Port}";
                 }
@@ -621,39 +654,6 @@ namespace Tripous.Web
         /// True when is development environment.
         /// </summary>
         static public bool IsDevelopment { get { return HostEnvironment.IsDevelopment(); } }
-        /// <summary>
-        /// Returns true if we are dealing with a mobile device/browser
-        /// <para>FROM: https://stackoverflow.com/questions/13086856/mobile-device-detection-in-asp-net </para>
-        /// </summary>
-        static public bool IsMobile
-        {
-            get
-            {
-                if (HttpContext != null)
-                {
-                    string S = HttpContext.Request.Headers[Microsoft.Net.Http.Headers.HeaderNames.UserAgent].ToString();
-                    return S.Length >= 4 && (MobileCheck.IsMatch(S) || MobileVersionCheck.IsMatch(S.Substring(0, 4)));
-                }
 
-                return false;
-            }
-        }
-        /// <summary>
-        /// Returns true if we are dealing with a search endine bot.
-        /// <para>FROM: https://stackoverflow.com/questions/7576508/how-to-detect-crawlers-in-asp-net-mvc  </para>
-        /// </summary>
-        static public bool IsCrawler
-        {
-            get
-            {
-                if (HttpContext != null)
-                {
-                    string S = HttpContext.Request.Headers[Microsoft.Net.Http.Headers.HeaderNames.UserAgent].ToString();
-                    return S.Length >= 4 && CrawlerCheck.IsMatch(S);
-                }
-
-                return false;
-            }
-        }
     }
 }
