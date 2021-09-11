@@ -12821,7 +12821,7 @@ tp.RadioGroup = class extends tp.Control {
             position: 'absolute',
             overflow: 'auto',
             left: '6px',
-            top: tp.Environment.Gecko ? '2px' : '24px',
+            top: '10px',     
             right: '6px',
             bottom: '6px'
         };
