@@ -300,13 +300,14 @@ namespace DevApp.Web
             */
                 .AddJsonOptions(opt => { opt.JsonSerializerOptions.PropertyNamingPolicy = null; });
 
-
+#if DEBUG
             // ● Razor Runtime Compilation
             // see: https://docs.microsoft.com/en-us/aspnet/core/mvc/views/view-compilation
             if (DebugMode && HostEnvironment.IsDevelopment())
             {
                 MvcBuilder.AddRazorRuntimeCompilation();
             }
+#endif
 
         }
         /// <summary>
@@ -348,8 +349,10 @@ namespace DevApp.Web
             // ● Miscs
             if (HostEnvironment.IsDevelopment())
             {
+#if DEBUG
                 app.UseDeveloperExceptionPage();
                 app.UseBrowserLink();           // see: https://docs.microsoft.com/en-us/aspnet/core/client-side/using-browserlink
+#endif
             }
             else
             {
